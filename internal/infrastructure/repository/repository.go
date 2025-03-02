@@ -7,7 +7,6 @@ import (
 	"slices"
 	"sync"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
 	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
 )
 
@@ -60,7 +59,7 @@ func (r *Repository) CreateUser(id int64) error {
 
 func (r *Repository) DeleteUser(id int64) error {
 	if !r.UserExist(id) {
-		return application.ErrUserNotExist{}
+		return domain.ErrUserNotExist{}
 	}
 
 	delete(r.Links, id)
@@ -70,7 +69,7 @@ func (r *Repository) DeleteUser(id int64) error {
 
 func (r *Repository) GetLinks(id int64) ([]domain.Link, error) {
 	if !r.UserExist(id) {
-		return nil, application.ErrUserNotExist{}
+		return nil, domain.ErrUserNotExist{}
 	}
 
 	return r.Links[id], nil
@@ -78,7 +77,7 @@ func (r *Repository) GetLinks(id int64) ([]domain.Link, error) {
 
 func (r *Repository) AddLink(id int64, link domain.Link) error {
 	if !r.UserExist(id) {
-		return application.ErrUserNotExist{}
+		return domain.ErrUserNotExist{}
 	}
 
 	r.mu.Lock()
@@ -90,7 +89,7 @@ func (r *Repository) AddLink(id int64, link domain.Link) error {
 
 func (r *Repository) DeleteLink(id int64, link domain.Link) (domain.Link, error) {
 	if !r.UserExist(id) {
-		return domain.Link{}, application.ErrUserNotExist{}
+		return domain.Link{}, domain.ErrUserNotExist{}
 	}
 
 	r.mu.Lock()

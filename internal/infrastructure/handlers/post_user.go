@@ -6,9 +6,9 @@ import (
 	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
 )
 
-type RegisterUserHandler struct{ Scrapper *application.Scrapper }
+type PostUserHandler struct{ Scrapper *application.Scrapper }
 
-func (h RegisterUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h PostUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	chatID, err := getIDFromString(r.PathValue("id"))
 	if err != nil {
 		sendErrorResponse(w, http.StatusBadRequest, "INVALID_CHAT_ID",

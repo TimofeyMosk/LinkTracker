@@ -1,17 +1,13 @@
 package application
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"log/slog"
-	"net/http"
 	"net/url"
 	"time"
 
 	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	botdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto_bot"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/requests"
+	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/clients"
 
 	"github.com/go-co-op/gocron/v2"
 )
@@ -26,21 +22,25 @@ type Database interface {
 	GetAllUsers() ([]int64, error)
 }
 
-type Scrapper struct {
-	db         Database
-	interval   time.Duration
-	stopSignal chan struct{}
-	botBaseURL string
+type ScrapperClient interface {
+	PostUpdates(link domain.Link, tgID int64) error
 }
 
-func NewScrapper(db Database, interval time.Duration, botBaseURL string) *Scrapper {
-	slog.Info("Creating new Scrapper", "interval", interval, "botBaseURL", botBaseURL)
+type Scrapper struct {
+	db         Database
+	httpClient ScrapperClient
+	interval   time.Duration
+	stopSignal chan struct{}
+}
+
+func NewScrapper(db Database, interval time.Duration, httpClient ScrapperClient) *Scrapper {
+	slog.Info("Creating new Scrapper", "interval", interval)
 
 	return &Scrapper{
 		db:         db,
 		interval:   interval,
 		stopSignal: make(chan struct{}),
-		botBaseURL: botBaseURL,
+		httpClient: httpClient,
 	}
 }
 
@@ -103,42 +103,13 @@ func (s *Scrapper) Scrape() {
 			}
 
 			if activity {
-				resp, err := s.PostUpdates(link, tgID)
+				err := s.httpClient.PostUpdates(link, tgID)
 				if err != nil {
-					slog.Error(err.Error())
-				}
-
-				if !(resp.StatusCode == http.StatusOK) {
-					var errorResponse botdto.ApiErrorResponse
-					_ = json.NewDecoder(resp.Body).Decode(&errorResponse)
-					slog.Error("failed to post updates", "response", errorResponse)
-				}
-
-				err = resp.Body.Close()
-				if err != nil {
-					slog.Error("failed to close response: %v\n", "error", err)
+					slog.Error(err.Error(), "link", link.URL)
 				}
 			}
 		}
 	}
-}
-
-func (s *Scrapper) PostUpdates(link domain.Link, tgID int64) (*http.Response, error) {
-	linkUpdate := botdto.LinkUpdate{
-		Description: nil,
-		Id:          nil,
-		TgChatIds:   &[]int64{tgID},
-		Url:         &link.URL,
-	}
-
-	var data bytes.Buffer
-
-	err := json.NewEncoder(&data).Encode(linkUpdate)
-	if err != nil {
-		return nil, err
-	}
-
-	return requests.PostRequest(s.botBaseURL+"/updates", &data)
 }
 
 func (s *Scrapper) CheckUpdates(linkURL string, lastKnown time.Time) (bool, error) {
@@ -149,21 +120,28 @@ func (s *Scrapper) CheckUpdates(linkURL string, lastKnown time.Time) (bool, erro
 
 	switch parsedURL.Host {
 	case "github.com":
-		isEvent, _, err := CheckGitHubRepoUpdate(linkURL, lastKnown)
+		gitClient := clients.GithubClient{}
+
+		lastUpdate, err := gitClient.GetLastUpdateTimeRepo(linkURL)
 		if err != nil {
+			slog.Error(err.Error(), "linkURL", linkURL)
 			return false, err
 		}
 
-		return isEvent, nil
+		return lastUpdate.After(lastKnown), nil
 	case "stackoverflow.com":
-		isEvent, _, err := CheckStackOverflowQuestionUpdate(linkURL, lastKnown)
+		soClient := clients.StackOverflowClient{}
+
+		lastActivity, err := soClient.GetLastActivityQuestion(linkURL)
 		if err != nil {
+			slog.Error(err.Error(), "linkURL", linkURL)
 			return false, err
 		}
 
-		return isEvent, nil
+		return lastActivity.After(lastKnown), nil
 	default:
-		return false, nil
+		slog.Error("Unsupported host", "host", parsedURL.Host)
+		return false, domain.ErrUnsupportedHost{}
 	}
 }
 
@@ -208,7 +186,7 @@ func (s *Scrapper) AddLink(id int64, link domain.Link) error {
 
 	if !validLink(link.URL) {
 		slog.Error("Invalid link URL", "link", link)
-		return ErrWrongURL{}
+		return domain.ErrWrongURL{}
 	}
 
 	err := s.db.AddLink(id, link)

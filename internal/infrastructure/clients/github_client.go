@@ -1,4 +1,4 @@
-package application
+package clients
 
 import (
 	"encoding/json"
@@ -11,21 +11,23 @@ import (
 	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/requests"
 )
 
+type GithubClient struct{}
+
 type GitHubRepoResponse struct {
 	UpdatedAt string `json:"updated_at"`
 }
 
 // "https://github.com/TimofeyMosk/fractalFlame-image-creator"
 
-func CheckGitHubRepoUpdate(link string, lastKnown time.Time) (bool, time.Time, error) {
+func (GithubClient) GetLastUpdateTimeRepo(link string) (time.Time, error) {
 	apiURL, err := apiGitURLGeneration(link)
 	if err != nil {
-		return false, lastKnown, err
+		return time.Time{}, err
 	}
 
 	resp, err := requests.GetRequest(apiURL)
 	if err != nil {
-		return false, lastKnown, err
+		return time.Time{}, err
 	}
 
 	defer func() {
@@ -37,19 +39,15 @@ func CheckGitHubRepoUpdate(link string, lastKnown time.Time) (bool, time.Time, e
 
 	var repoData GitHubRepoResponse
 	if err := json.NewDecoder(resp.Body).Decode(&repoData); err != nil {
-		return false, lastKnown, err
+		return time.Time{}, err
 	}
 
 	updatedAt, err := time.Parse(time.RFC3339, repoData.UpdatedAt)
 	if err != nil {
-		return false, lastKnown, err
+		return time.Time{}, err
 	}
 
-	if !updatedAt.After(lastKnown) {
-		return false, lastKnown, nil
-	}
-
-	return true, updatedAt, nil
+	return updatedAt, nil
 }
 
 func apiGitURLGeneration(link string) (apiURL string, err error) {

@@ -6,6 +6,8 @@ import (
 	"log/slog"
 	"net/http"
 
+	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
+
 	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
 )
 
@@ -22,7 +24,7 @@ func (h GetLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	links, err := h.Scrapper.GetLinks(tgChatID)
 	if err != nil {
-		if errors.As(err, &application.ErrUserNotExist{}) {
+		if errors.As(err, &domain.ErrUserNotExist{}) {
 			sendErrorResponse(w, http.StatusBadRequest, "CHAT_NOT_EXIST",
 				"Chat not exist", err.Error(), "BadRequest")
 

@@ -1,4 +1,4 @@
-package application
+package clients
 
 import (
 	"encoding/json"
@@ -8,8 +8,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
 	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/requests"
 )
+
+type StackOverflowClient struct {
+}
 
 type SOResponse struct {
 	Items []struct {
@@ -19,15 +23,15 @@ type SOResponse struct {
 
 // https://stackoverflow.com/questions/79467368/horizontal-scroll-component-does-not-work-as-expected-with-overflow
 
-func CheckStackOverflowQuestionUpdate(link string, lastKnown time.Time) (bool, time.Time, error) {
+func (StackOverflowClient) GetLastActivityQuestion(link string) (time.Time, error) {
 	apiURL, err := apiSOUrlGeneration(link)
 	if err != nil {
-		return false, lastKnown, err
+		return time.Time{}, err
 	}
 
 	resp, err := requests.GetRequest(apiURL)
 	if err != nil {
-		return false, lastKnown, err
+		return time.Time{}, err
 	}
 
 	defer func() {
@@ -39,20 +43,16 @@ func CheckStackOverflowQuestionUpdate(link string, lastKnown time.Time) (bool, t
 
 	var soResponse SOResponse
 	if err := json.NewDecoder(resp.Body).Decode(&soResponse); err != nil {
-		return false, lastKnown, err
+		return time.Time{}, err
 	}
 
 	if len(soResponse.Items) == 0 {
-		return false, lastKnown, ErrQuestionNotFound{}
+		return time.Time{}, domain.ErrQuestionNotFound{}
 	}
 
 	lastActivity := time.Unix(soResponse.Items[0].LastActivityDate, 0)
 
-	if lastActivity.After(lastKnown) {
-		return true, lastActivity, nil
-	}
-
-	return false, lastKnown, nil
+	return lastActivity, nil
 }
 
 func apiSOUrlGeneration(link string) (apiURL string, err error) {

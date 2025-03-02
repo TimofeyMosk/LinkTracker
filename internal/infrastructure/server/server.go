@@ -13,7 +13,7 @@ func InitScrapperRouting(scrapper *application.Scrapper) *http.ServeMux {
 	mux.Handle("GET "+"/links", handlers.GetLinksHandler{Scrapper: scrapper})
 	mux.Handle("POST "+"/links", handlers.PostLinksHandler{Scrapper: scrapper})
 	mux.Handle("DELETE "+"/links", handlers.DeleteLinksHandler{Scrapper: scrapper})
-	mux.Handle("POST "+"/tg-chat/{id}", handlers.RegisterUserHandler{Scrapper: scrapper})
+	mux.Handle("POST "+"/tg-chat/{id}", handlers.PostUserHandler{Scrapper: scrapper})
 	mux.Handle("DELETE "+"/tg-chat/{id}", handlers.DeleteUserHandler{Srapper: scrapper})
 
 	return mux
@@ -21,16 +21,16 @@ func InitScrapperRouting(scrapper *application.Scrapper) *http.ServeMux {
 
 func InitBotRouting() *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.Handle("POST"+"/updates", nil)
+	mux.Handle("POST "+"/updates", handlers.PostUpdatesHandler{})
 
 	return mux
 }
 
-func InitServer(addr string, handler http.Handler, readTimeout, writeTumeout time.Duration) *http.Server {
+func InitServer(addr string, handler http.Handler, readTimeout, writeTimeout time.Duration) *http.Server {
 	return &http.Server{
 		Addr:         addr,
 		Handler:      handler,
 		ReadTimeout:  readTimeout,
-		WriteTimeout: writeTumeout,
+		WriteTimeout: writeTimeout,
 	}
 }

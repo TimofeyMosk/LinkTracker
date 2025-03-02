@@ -1,4 +1,4 @@
-package application
+package domain
 
 type ErrUserNotExist struct {
 }
@@ -25,4 +25,22 @@ type ErrWrongURL struct {
 
 func (e ErrWrongURL) Error() string {
 	return "wrong link, expected host ‘stackoverflow.com’ or ‘github.com’"
+}
+
+type ErrUnsupportedHost struct{}
+
+func (e ErrUnsupportedHost) Error() string {
+	return "unsupported host"
+}
+
+type ErrRegistrationUser struct{}
+
+func (e ErrRegistrationUser) Error() string {
+	return "failed to register a user"
+}
+
+type ErrDeletionUser struct{}
+
+func (e ErrDeletionUser) Error() string {
+	return "failed to deletion a user"
 }

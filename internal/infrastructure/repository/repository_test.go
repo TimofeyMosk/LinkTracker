@@ -3,7 +3,6 @@ package repository_test
 import (
 	"testing"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
 	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/repository"
 
 	"github.com/stretchr/testify/assert"
@@ -57,7 +56,7 @@ func TestDeleteUser_NotFound(t *testing.T) {
 	err := repo.DeleteUser(userID)
 
 	assert.Error(t, err)
-	assert.ErrorAs(t, err, &application.ErrUserNotExist{})
+	assert.ErrorAs(t, err, &domain.ErrUserNotExist{})
 }
 
 func TestGetAllUsers(t *testing.T) {
@@ -99,7 +98,7 @@ func TestGetLinks_UserNotFound(t *testing.T) {
 	_, err := repo.GetLinks(userID)
 
 	assert.Error(t, err)
-	assert.ErrorAs(t, err, &application.ErrUserNotExist{})
+	assert.ErrorAs(t, err, &domain.ErrUserNotExist{})
 }
 
 func TestAddLink(t *testing.T) {
@@ -125,7 +124,7 @@ func TestAddLink_UserNotFound(t *testing.T) {
 	err := repo.AddLink(userID, link)
 
 	assert.Error(t, err)
-	assert.ErrorAs(t, err, &application.ErrUserNotExist{})
+	assert.ErrorAs(t, err, &domain.ErrUserNotExist{})
 }
 
 func TestDeleteLink(t *testing.T) {
@@ -152,7 +151,7 @@ func TestDeleteLink_UserNotFound(t *testing.T) {
 	_, err := repo.DeleteLink(userID, link)
 
 	assert.Error(t, err)
-	assert.ErrorAs(t, err, &application.ErrUserNotExist{})
+	assert.ErrorAs(t, err, &domain.ErrUserNotExist{})
 }
 
 func TestDeleteLink_LinkNotFound(t *testing.T) {

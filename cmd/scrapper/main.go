@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
+	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/clients"
 	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/repository"
 	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/server"
 )
@@ -23,7 +24,8 @@ func main() {
 
 	wg := sync.WaitGroup{}
 	rep := repository.NewRepository()
-	scrapper := application.NewScrapper(rep, config.ScrapConfig.Interval, config.ScrapConfig.BotBaseURL)
+	scrapClient := clients.NewScrapperClient(config.ScrapConfig.BotBaseURL)
+	scrapper := application.NewScrapper(rep, config.ScrapConfig.Interval, scrapClient)
 	ser := server.InitServer(
 		config.ScrapConfig.Addr,
 		server.InitScrapperRouting(scrapper),

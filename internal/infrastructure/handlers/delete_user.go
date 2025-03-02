@@ -4,6 +4,8 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
+
 	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
 )
 
@@ -20,7 +22,7 @@ func (h DeleteUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	err = h.Srapper.DeleteUser(chatID)
 	if err != nil {
-		if errors.As(err, &application.ErrUserNotExist{}) {
+		if errors.As(err, &domain.ErrUserNotExist{}) {
 			sendErrorResponse(w, http.StatusNotFound, "CHAT_NOT_EXIST",
 				"Chat not exist", err.Error(), "Not Found")
 		} else {

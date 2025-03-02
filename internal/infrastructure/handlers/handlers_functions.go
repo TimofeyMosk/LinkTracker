@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
+	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_scrapper"
+
 	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto_scrapper"
 )
 
 func sendErrorResponse(w http.ResponseWriter, statusCode int, code, description, exceptionMessage, exceptionName string) {
@@ -45,7 +45,7 @@ func domainLinksToDTO(links []domain.Link, tgID int64) scrapperdto.ListLinksResp
 
 func getIDFromString(s string) (int64, error) {
 	if s == "" {
-		return 0, application.ErrEmptyString{}
+		return 0, domain.ErrEmptyString{}
 	}
 
 	chatID, err := strconv.ParseInt(s, 10, 64)

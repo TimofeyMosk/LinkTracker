@@ -17,9 +17,11 @@ type ScrapperConfig struct {
 }
 
 type BotConfig struct {
-	TgToken         string `yaml:"tg_token" `
-	Addr            string `yaml:"addr"`
-	ScrapperBaseURL string `yaml:"scrapper_baseurl"`
+	TgToken         string        `yaml:"tg_token" `
+	Addr            string        `yaml:"addr"`
+	ScrapperBaseURL string        `yaml:"scrapper_baseurl"`
+	ReadTimeout     time.Duration `yaml:"read_timeout" `
+	WriteTimeout    time.Duration `yaml:"write_timeout" `
 }
 
 type Config struct {
@@ -54,6 +56,8 @@ func ReadYAMLConfig(filePath string) (*Config, error) {
 			TgToken:         viper.GetString("bot.tg_token"),
 			Addr:            viper.GetString("bot.addr"),
 			ScrapperBaseURL: viper.GetString("bot.scrapper_baseurl"),
+			ReadTimeout:     viper.GetDuration("bot.read_timeout"),
+			WriteTimeout:    viper.GetDuration("bot.write_timeout"),
 		},
 		LogsPath: viper.GetString("logger_path"),
 	}

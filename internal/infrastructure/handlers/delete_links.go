@@ -6,9 +6,10 @@ import (
 	"log/slog"
 	"net/http"
 
+	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_scrapper"
+
 	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
 	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto_scrapper"
 )
 
 type DeleteLinksHandler struct{ Scrapper *application.Scrapper }
@@ -34,7 +35,7 @@ func (h DeleteLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	deletedLink, err := h.Scrapper.DeleteLink(tgChatID, link)
 
 	if err != nil {
-		if errors.As(err, &application.ErrUserNotExist{}) {
+		if errors.As(err, &domain.ErrUserNotExist{}) {
 			sendErrorResponse(w, http.StatusNotFound, "CHAT_NOT_EXIST",
 				"Chat not exist", err.Error(), "Not Found")
 		} else {
