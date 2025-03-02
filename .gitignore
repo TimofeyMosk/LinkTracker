@@ -24,3 +24,11 @@ go.work.sum
 
 # env file
 *.env
+
+
+# logs
+logs/
+
+.idea/
+
+*.DS_Store

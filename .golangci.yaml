@@ -27,7 +27,8 @@ linters:
     - nakedret
     - nolintlint
     - rowserrcheck
-    - exportloopref
+#    - exportloopref # ERRO [linters_context] exportloopref: This linter is fully inactivated: it will not produce any reports.
+    - copyloopvar # WARN The linter 'exportloopref' is deprecated (since v1.60.2) due to: Since Go1.22 (loopvar) this linter is no longer relevant. #Replaced by copyloopvar.
     - staticcheck
     - stylecheck
     - typecheck
@@ -49,7 +50,7 @@ linters-settings:
     lines: 70
     statements: 50
   goimports:
-    local-prefixes: PLACE_YOUR_PACKAGE_NAME
+    local-prefixes: "github.com/es-debug/backend-academy-2024-go-template"
   gocritic:
     enabled-tags:
       - style
