@@ -26,8 +26,8 @@ func (h DeleteUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			sendErrorResponse(w, http.StatusNotFound, "CHAT_NOT_EXIST",
 				"Chat not exist", err.Error(), "Not Found")
 		} else {
-			sendErrorResponse(w, http.StatusInternalServerError, "CHAT_NOT_DELETED",
-				"Chat has not been deleted", err.Error(), "Server Error")
+			sendErrorResponse(w, http.StatusBadRequest, "CHAT_NOT_DELETED",
+				"Chat has not been deleted", err.Error(), "BadRequest")
 		}
 
 		return

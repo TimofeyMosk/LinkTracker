@@ -1,16 +1,17 @@
 scrapper:
-  addr: ":8080"
+  address: ":8080"
   bot_baseurl: "http://localhost:8081"
   scrap_interval: 30s
   read_timeout: 5s
   write_timeout: 15s
-
+  bot_client_timeout: 5s
+  logger_path: "./logs/scrapper_logs.txt"
 
 bot:
   tg_token: "your_tg_token"
-  addr: ":8081"
+  address: ":8081"
   scrapper_baseurl: "http://localhost:8080"
   read_timeout: 5s
   write_timeout: 15s
-
-logger_path: "./logs/logs.txt"
+  scrapper_client_timeout: 5s
+  logger_path: "./logs/bot_logs.txt"

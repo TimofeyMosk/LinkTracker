@@ -22,25 +22,25 @@ type Database interface {
 	GetAllUsers() ([]int64, error)
 }
 
-type ScrapperClient interface {
+type BotClient interface {
 	PostUpdates(link domain.Link, tgID int64) error
 }
 
 type Scrapper struct {
 	db         Database
-	httpClient ScrapperClient
+	botClient  BotClient
 	interval   time.Duration
 	stopSignal chan struct{}
 }
 
-func NewScrapper(db Database, interval time.Duration, httpClient ScrapperClient) *Scrapper {
+func NewScrapper(db Database, interval time.Duration, httpClient BotClient) *Scrapper {
 	slog.Info("Creating new Scrapper", "interval", interval)
 
 	return &Scrapper{
 		db:         db,
 		interval:   interval,
 		stopSignal: make(chan struct{}),
-		httpClient: httpClient,
+		botClient:  httpClient,
 	}
 }
 
@@ -103,7 +103,7 @@ func (s *Scrapper) Scrape() {
 			}
 
 			if activity {
-				err := s.httpClient.PostUpdates(link, tgID)
+				err := s.botClient.PostUpdates(link, tgID)
 				if err != nil {
 					slog.Error(err.Error(), "link", link.URL)
 				}
@@ -120,7 +120,7 @@ func (s *Scrapper) CheckUpdates(linkURL string, lastKnown time.Time) (bool, erro
 
 	switch parsedURL.Host {
 	case "github.com":
-		gitClient := clients.GithubClient{}
+		gitClient := clients.NewGitHubHTTPClient()
 
 		lastUpdate, err := gitClient.GetLastUpdateTimeRepo(linkURL)
 		if err != nil {
@@ -130,7 +130,7 @@ func (s *Scrapper) CheckUpdates(linkURL string, lastKnown time.Time) (bool, erro
 
 		return lastUpdate.After(lastKnown), nil
 	case "stackoverflow.com":
-		soClient := clients.StackOverflowClient{}
+		soClient := clients.NewStackOverflowHTTPClient()
 
 		lastActivity, err := soClient.GetLastActivityQuestion(linkURL)
 		if err != nil {
@@ -181,21 +181,21 @@ func (s *Scrapper) GetLinks(id int64) ([]domain.Link, error) {
 	return links, nil
 }
 
-func (s *Scrapper) AddLink(id int64, link domain.Link) error {
+func (s *Scrapper) AddLink(id int64, link domain.Link) (domain.Link, error) {
 	slog.Info("Adding link", "link", link)
 
 	if !validLink(link.URL) {
 		slog.Error("Invalid link URL", "link", link)
-		return domain.ErrWrongURL{}
+		return link, domain.ErrWrongURL{}
 	}
 
 	err := s.db.AddLink(id, link)
 	if err != nil {
 		slog.Error(err.Error())
-		return err
+		return link, err
 	}
 
-	return nil
+	return link, nil
 }
 
 func (s *Scrapper) DeleteLink(id int64, link domain.Link) (domain.Link, error) {

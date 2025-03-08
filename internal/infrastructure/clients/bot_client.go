@@ -1,86 +1,98 @@
 package clients
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
-	"log/slog"
 	"net/http"
+	"net/url"
+	"time"
 
 	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-
-	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_scrapper"
-
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/requests"
+	botdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_bot"
+	"github.com/es-debug/backend-academy-2024-go-template/pkg"
 )
 
-type BotClient struct {
-	scrapperBaseURL string
+type BotHTTPClient struct {
+	client     *http.Client
+	botBaseURL *url.URL
 }
 
-func NewBotClient(scrapperBaseURL string) *BotClient {
-	return &BotClient{scrapperBaseURL: scrapperBaseURL}
-}
-
-func (c *BotClient) RegisterUser(tgID int64) error {
-	url := fmt.Sprintf("%s/tg-chat/%d", c.scrapperBaseURL, tgID)
-	resp, err := requests.PostRequest(url, nil)
+func NewBotHTTPClient(botBaseURL string, timeout time.Duration) (*BotHTTPClient, error) {
+	parsedURL, err := url.Parse(botBaseURL)
 	if err != nil {
-		slog.Error("Post request failed", "error", err)
+		return nil, err
+	}
+
+	return &BotHTTPClient{
+		client:     &http.Client{Timeout: timeout},
+		botBaseURL: parsedURL}, nil
+}
+
+func (c *BotHTTPClient) PostUpdates(link domain.Link, tgID int64) error {
+	endpoint := c.botBaseURL.JoinPath("/updates")
+
+	linkUpdate := botdto.LinkUpdate{
+		Description: nil,
+		Id:          &link.ID,
+		TgChatIds:   &[]int64{tgID},
+		Url:         &link.URL,
+	}
+
+	payload, err := json.Marshal(linkUpdate)
+	if err != nil {
 		return err
 	}
-	if resp != nil {
-		defer func() {
-			if cerr := resp.Body.Close(); cerr != nil {
-				slog.Error("Failed to close response body", "error", cerr)
-			}
-		}()
-	}
 
-	if resp.StatusCode == http.StatusOK {
-		slog.Info("RegisterUser was successful")
-		return nil
-	}
-
-	var errorResponse scrapperdto.ApiErrorResponse
-	if err := json.NewDecoder(resp.Body).Decode(&errorResponse); err != nil {
-		slog.Error("Failed to decode error response", "error", err)
-		return domain.ErrRegistrationUser{}
-	}
-
-	slog.Error("Error registering user", "response", errorResponse)
-	return domain.ErrRegistrationUser{}
-}
-
-func (c *BotClient) DeleteUser(tgID int64) error {
-	url := fmt.Sprintf("%s/tg-chat/%d", c.scrapperBaseURL, tgID)
-	resp, err := requests.DeleteRequest(url, nil)
+	request, err := http.NewRequest(http.MethodPost, endpoint.String(), bytes.NewReader(payload))
 	if err != nil {
-		slog.Error("Delete request failed", "error", err)
 		return err
 	}
-	if resp != nil {
-		defer func() {
-			if cerr := resp.Body.Close(); cerr != nil {
-				slog.Error("Failed to close response body", "error", cerr)
-			}
-		}()
-	}
 
-	if resp.StatusCode == http.StatusOK {
-		slog.Info("DeleteUser was successful")
+	request.Header.Set("Content-Type", "application/json")
+
+	response, err := c.client.Do(request) //nolint:bodyclose // The body closes in a function pkg.SafeClose(response.Body)
+	if err != nil {
+		return err
+	}
+	defer pkg.SafeClose(response.Body)
+
+	switch response.StatusCode {
+	case http.StatusOK:
 		return nil
+	case http.StatusBadRequest:
+		return HandleAPIErrorResponseFromBot(response)
+	default:
+		return domain.ErrUnexpectedStatusCode{StatusCode: response.StatusCode}
 	}
-
-	var errorResponse scrapperdto.ApiErrorResponse
-	if err := json.NewDecoder(resp.Body).Decode(&errorResponse); err != nil {
-		slog.Error("Failed to decode error response", "error", err)
-		return domain.ErrDeletionUser{}
-	}
-
-	slog.Error("Error Deleting user", "response", errorResponse)
-	return domain.ErrDeletionUser{}
 }
 
-func (c *BotClient) AddLink() error {
+func HandleAPIErrorResponseFromBot(resp *http.Response) error {
+	var errorResponse botdto.ApiErrorResponse
+	if err := json.NewDecoder(resp.Body).Decode(&errorResponse); err != nil {
+		return fmt.Errorf("decode error response: %w", err)
+	}
 
+	var apiError = domain.ErrAPI{}
+	if errorResponse.Code != nil {
+		apiError.Code = *errorResponse.Code
+	}
+
+	if errorResponse.Description != nil {
+		apiError.Description = *errorResponse.Description
+	}
+
+	if errorResponse.ExceptionMessage != nil {
+		apiError.ExceptionMessage = *errorResponse.ExceptionMessage
+	}
+
+	if errorResponse.ExceptionName != nil {
+		apiError.ExceptionName = *errorResponse.ExceptionName
+	}
+
+	if errorResponse.Stacktrace != nil {
+		apiError.Stacktrace = *errorResponse.Stacktrace
+	}
+
+	return apiError
 }

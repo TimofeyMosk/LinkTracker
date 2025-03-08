@@ -3,65 +3,255 @@ package clients
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"net/http"
+	"net/url"
+	"time"
 
 	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	botdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_bot"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/requests"
+	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_scrapper"
+	"github.com/es-debug/backend-academy-2024-go-template/pkg"
 )
 
-type ScrapperClient struct {
-	botBaseURL string
+type ScrapperHTTPClient struct {
+	client          *http.Client
+	scrapperBaseURL *url.URL
 }
 
-func NewScrapperClient(botBaseURL string) *ScrapperClient {
-	return &ScrapperClient{botBaseURL: botBaseURL}
-}
-
-func (s *ScrapperClient) PostUpdates(link domain.Link, tgID int64) error {
-	linkUpdate := botdto.LinkUpdate{
-		Description: nil,
-		Id:          nil,
-		TgChatIds:   &[]int64{tgID},
-		Url:         &link.URL,
+func NewScrapperHTTPClient(scrapperBaseURL string, timeout time.Duration) (*ScrapperHTTPClient, error) {
+	parsedURL, err := url.Parse(scrapperBaseURL)
+	if err != nil {
+		return nil, err
 	}
 
-	var data bytes.Buffer
+	return &ScrapperHTTPClient{
+		client:          &http.Client{Timeout: timeout},
+		scrapperBaseURL: parsedURL}, nil
+}
 
-	err := json.NewEncoder(&data).Encode(linkUpdate)
+func (c *ScrapperHTTPClient) RegisterUser(tgID int64) error {
+	endpoint := c.scrapperBaseURL.JoinPath(fmt.Sprintf("/tg-chat/%d", tgID))
+
+	request, err := http.NewRequest(http.MethodPost, endpoint.String(), http.NoBody)
 	if err != nil {
 		return err
 	}
 
-	resp, err := requests.PostRequest(s.botBaseURL+"/updates", &data)
-	defer func() {
-		if Cerr := resp.Body.Close(); Cerr != nil {
-			slog.Error(Cerr.Error())
-		}
-	}()
-
+	response, err := c.client.Do(request) //nolint:bodyclose // The body closes in a function pkg.SafeClose(response.Body)
 	if err != nil {
 		return err
 	}
+	defer pkg.SafeClose(response.Body)
 
-	switch resp.StatusCode {
+	switch response.StatusCode {
 	case http.StatusOK:
-		slog.Info("Sending of messages was successful")
 		return nil
 	case http.StatusBadRequest:
-		var errorResponce botdto.ApiErrorResponse
+		return HandleAPIErrorResponseFromScrapper(response)
+	default:
+		return domain.ErrUnexpectedStatusCode{StatusCode: response.StatusCode}
+	}
+}
 
-		err = json.NewDecoder(resp.Body).Decode(&errorResponce)
-		if err != nil {
-			slog.Error(err.Error())
-			return err
+func (c *ScrapperHTTPClient) DeleteUser(tgID int64) error {
+	endpoint := c.scrapperBaseURL.JoinPath(fmt.Sprintf("/tg-chat/%d", tgID))
+
+	request, err := http.NewRequest(http.MethodDelete, endpoint.String(), http.NoBody)
+	if err != nil {
+		return err
+	}
+
+	response, err := c.client.Do(request) //nolint:bodyclose // The body closes in a function pkg.SafeClose(response.Body)
+	if err != nil {
+		return err
+	}
+
+	defer pkg.SafeClose(response.Body)
+
+	switch response.StatusCode {
+	case http.StatusOK:
+		return nil
+	case http.StatusNotFound:
+		return HandleAPIErrorResponseFromScrapper(response)
+	case http.StatusBadRequest:
+		return HandleAPIErrorResponseFromScrapper(response)
+	default:
+		return domain.ErrUnexpectedStatusCode{StatusCode: response.StatusCode}
+	}
+}
+
+func (c *ScrapperHTTPClient) GetLinks(tgID int64) ([]domain.Link, error) {
+	endpoint := c.scrapperBaseURL.JoinPath("/links")
+
+	request, err := http.NewRequest(http.MethodGet, endpoint.String(), http.NoBody)
+	if err != nil {
+		return nil, err
+	}
+
+	request.Header.Set("Tg-Chat-Id", fmt.Sprint(tgID))
+
+	response, err := c.client.Do(request) //nolint:bodyclose // The body closes in a function pkg.SafeClose(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	defer pkg.SafeClose(response.Body)
+
+	switch response.StatusCode {
+	case http.StatusOK:
+		var listLinksResponse scrapperdto.ListLinksResponse
+		if err := json.NewDecoder(response.Body).Decode(&listLinksResponse); err != nil {
+			return nil, err
 		}
 
-		slog.Error("Error PostUpdates", "response", errorResponce)
+		if listLinksResponse.Links == nil || listLinksResponse.Size == nil {
+			return []domain.Link{}, nil
+		}
+
+		listLinks := make([]domain.Link, 0, len(*listLinksResponse.Links))
+		for _, link := range *listLinksResponse.Links {
+			listLinks = append(listLinks, domain.Link{
+				URL:     *link.Url,
+				Tags:    *link.Tags,
+				Filters: *link.Filters,
+				ID:      *link.Id,
+			})
+		}
+
+		return listLinks, nil
+	case http.StatusBadRequest:
+		return nil, HandleAPIErrorResponseFromScrapper(response)
+	default:
+		return nil, domain.ErrUnexpectedStatusCode{StatusCode: response.StatusCode}
+	}
+}
+
+func (c *ScrapperHTTPClient) AddLink(tgID int64, link domain.Link) error {
+	endpoint := c.scrapperBaseURL.JoinPath("/links")
+
+	payload, err := json.Marshal(LinkToAddLinkRequestDTO(link))
+	if err != nil {
+		return err
+	}
+
+	request, err := http.NewRequest(http.MethodPost, endpoint.String(), bytes.NewReader(payload))
+	if err != nil {
+		return err
+	}
+
+	request.Header.Set("Tg-Chat-Id", fmt.Sprint(tgID))
+
+	response, err := c.client.Do(request) //nolint:bodyclose // The body closes in a function pkg.SafeClose(response.Body)
+	if err != nil {
+		return err
+	}
+
+	defer pkg.SafeClose(response.Body)
+
+	switch response.StatusCode {
+	case http.StatusOK:
+		var responseLink scrapperdto.LinkResponse
+		if err := json.NewDecoder(response.Body).Decode(&responseLink); err != nil {
+			slog.Error("Failed to decode response from scrapper", "error", err.Error())
+			return nil
+		}
+
+		if responseLink.Url != nil && responseLink.Id != nil {
+			slog.Info("Added link", "url", *responseLink.Url, "ID", *responseLink.Id)
+		}
 
 		return nil
+	case http.StatusBadRequest:
+		return HandleAPIErrorResponseFromScrapper(response)
 	default:
+		return domain.ErrUnexpectedStatusCode{StatusCode: response.StatusCode}
+	}
+}
+
+func (c *ScrapperHTTPClient) RemoveLink(tgID int64, link domain.Link) error {
+	endpoint := c.scrapperBaseURL.JoinPath("/links")
+
+	payload, err := json.Marshal(LinkToRemoveListRequestDTO(link))
+	if err != nil {
+		return err
+	}
+
+	request, err := http.NewRequest(http.MethodDelete, endpoint.String(), bytes.NewReader(payload))
+	if err != nil {
+		return err
+	}
+
+	request.Header.Set("Tg-Chat-Id", fmt.Sprint(tgID))
+
+	response, err := c.client.Do(request) //nolint:bodyclose // The body closes in a function pkg.SafeClose(response.Body)
+	if err != nil {
+		return err
+	}
+
+	defer pkg.SafeClose(response.Body)
+
+	switch response.StatusCode {
+	case http.StatusOK:
+		var responseLink scrapperdto.LinkResponse
+		if err := json.NewDecoder(response.Body).Decode(&responseLink); err != nil {
+			slog.Error("Failed to decode response from scrapper", "error", err.Error())
+		}
+
+		if responseLink.Url != nil && responseLink.Id != nil {
+			slog.Info("Removed link", "url", *responseLink.Url)
+		}
+
 		return nil
+	case http.StatusBadRequest:
+		return HandleAPIErrorResponseFromScrapper(response)
+	case http.StatusNotFound:
+		return HandleAPIErrorResponseFromScrapper(response)
+	default:
+		return domain.ErrUnexpectedStatusCode{StatusCode: response.StatusCode}
+	}
+}
+
+func HandleAPIErrorResponseFromScrapper(resp *http.Response) error {
+	var errorResponse scrapperdto.ApiErrorResponse
+	if err := json.NewDecoder(resp.Body).Decode(&errorResponse); err != nil {
+		return fmt.Errorf("decode error response: %w", err)
+	}
+
+	var apiError = domain.ErrAPI{}
+	if errorResponse.Code != nil {
+		apiError.Code = *errorResponse.Code
+	}
+
+	if errorResponse.Description != nil {
+		apiError.Description = *errorResponse.Description
+	}
+
+	if errorResponse.ExceptionMessage != nil {
+		apiError.ExceptionMessage = *errorResponse.ExceptionMessage
+	}
+
+	if errorResponse.ExceptionName != nil {
+		apiError.ExceptionName = *errorResponse.ExceptionName
+	}
+
+	if errorResponse.Stacktrace != nil {
+		apiError.Stacktrace = *errorResponse.Stacktrace
+	}
+
+	return apiError
+}
+
+func LinkToAddLinkRequestDTO(link domain.Link) scrapperdto.AddLinkRequest {
+	return scrapperdto.AddLinkRequest{
+		Link:    &link.URL,
+		Tags:    &link.Tags,
+		Filters: &link.Filters,
+	}
+}
+
+func LinkToRemoveListRequestDTO(link domain.Link) scrapperdto.RemoveLinkRequest {
+	return scrapperdto.RemoveLinkRequest{
+		Link: &link.URL,
 	}
 }

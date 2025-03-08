@@ -20,6 +20,7 @@ func sendErrorResponse(w http.ResponseWriter, statusCode int, code, description,
 		Description:      &description,
 		ExceptionMessage: &exceptionMessage,
 		ExceptionName:    &exceptionName,
+		Stacktrace:       nil,
 	}
 
 	err := json.NewEncoder(w).Encode(errorResponse)
@@ -28,10 +29,11 @@ func sendErrorResponse(w http.ResponseWriter, statusCode int, code, description,
 	}
 }
 
-func domainLinksToDTO(links []domain.Link, tgID int64) scrapperdto.ListLinksResponse {
+func domainLinksToDTO(links []domain.Link) scrapperdto.ListLinksResponse {
 	linksResponse := make([]scrapperdto.LinkResponse, len(links))
 	for i := range links {
-		linksResponse[i] = scrapperdto.LinkResponse{Id: &tgID,
+		linksResponse[i] = scrapperdto.LinkResponse{
+			Id:      &links[i].ID,
 			Url:     &links[i].URL,
 			Tags:    &links[i].Tags,
 			Filters: &links[i].Filters,

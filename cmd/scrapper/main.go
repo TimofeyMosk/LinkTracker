@@ -20,12 +20,18 @@ func main() {
 		return
 	}
 
-	application.InitLogger(config.LogsPath)
+	application.InitLogger(config.ScrapConfig.LogsPath)
 
 	wg := sync.WaitGroup{}
 	rep := repository.NewRepository()
-	scrapClient := clients.NewScrapperClient(config.ScrapConfig.BotBaseURL)
-	scrapper := application.NewScrapper(rep, config.ScrapConfig.Interval, scrapClient)
+
+	botHTTPClient, err := clients.NewBotHTTPClient(config.ScrapConfig.BotBaseURL, config.ScrapConfig.BotClientTimeout)
+	if err != nil {
+		fmt.Printf("Error creating scrapper client: %v\n", err)
+		return
+	}
+
+	scrapper := application.NewScrapper(rep, config.ScrapConfig.Interval, botHTTPClient)
 	ser := server.InitServer(
 		config.ScrapConfig.Addr,
 		server.InitScrapperRouting(scrapper),

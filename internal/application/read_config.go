@@ -9,25 +9,28 @@ import (
 )
 
 type ScrapperConfig struct {
-	Addr         string        `yaml:"addr"`
-	BotBaseURL   string        `yaml:"bot_baseurl"`
-	Interval     time.Duration `yaml:"scrap_interval" `
-	ReadTimeout  time.Duration `yaml:"read_timeout" `
-	WriteTimeout time.Duration `yaml:"write_timeout" `
+	Addr             string        `yaml:"address"`
+	BotBaseURL       string        `yaml:"bot_baseurl"`
+	Interval         time.Duration `yaml:"scrap_interval" `
+	ReadTimeout      time.Duration `yaml:"read_timeout" `
+	WriteTimeout     time.Duration `yaml:"write_timeout" `
+	BotClientTimeout time.Duration `yaml:"bot_client_timeout" `
+	LogsPath         string        `yaml:"logger_path" `
 }
 
 type BotConfig struct {
-	TgToken         string        `yaml:"tg_token" `
-	Addr            string        `yaml:"addr"`
-	ScrapperBaseURL string        `yaml:"scrapper_baseurl"`
-	ReadTimeout     time.Duration `yaml:"read_timeout" `
-	WriteTimeout    time.Duration `yaml:"write_timeout" `
+	TgToken               string        `yaml:"tg_token" `
+	Addr                  string        `yaml:"address"`
+	ScrapperBaseURL       string        `yaml:"scrapper_baseurl"`
+	ReadTimeout           time.Duration `yaml:"read_timeout" `
+	WriteTimeout          time.Duration `yaml:"write_timeout" `
+	ScrapperClientTimeout time.Duration `yaml:"scrapper_client_timeout" `
+	LogsPath              string        `yaml:"logger_path" `
 }
 
 type Config struct {
 	ScrapConfig ScrapperConfig `yaml:"scrapper" `
 	BotConfig   BotConfig      `yaml:"bot" `
-	LogsPath    string         `yaml:"logger_path" `
 }
 
 func ReadYAMLConfig(filePath string) (*Config, error) {
@@ -46,20 +49,23 @@ func ReadYAMLConfig(filePath string) (*Config, error) {
 	viper.AutomaticEnv()
 	config := Config{
 		ScrapConfig: ScrapperConfig{
-			Addr:         viper.GetString("scrapper.addr"),
-			BotBaseURL:   viper.GetString("scrapper.bot_baseurl"),
-			Interval:     viper.GetDuration("scrapper.scrap_interval"),
-			ReadTimeout:  viper.GetDuration("scrapper.read_timeout"),
-			WriteTimeout: viper.GetDuration("scrapper.write_timeout"),
+			Addr:             viper.GetString("scrapper.address"),
+			BotBaseURL:       viper.GetString("scrapper.bot_baseurl"),
+			Interval:         viper.GetDuration("scrapper.scrap_interval"),
+			ReadTimeout:      viper.GetDuration("scrapper.read_timeout"),
+			WriteTimeout:     viper.GetDuration("scrapper.write_timeout"),
+			BotClientTimeout: viper.GetDuration("scrapper.bot_client_timeout"),
+			LogsPath:         viper.GetString("scrapper.logger_path"),
 		},
 		BotConfig: BotConfig{
-			TgToken:         viper.GetString("bot.tg_token"),
-			Addr:            viper.GetString("bot.addr"),
-			ScrapperBaseURL: viper.GetString("bot.scrapper_baseurl"),
-			ReadTimeout:     viper.GetDuration("bot.read_timeout"),
-			WriteTimeout:    viper.GetDuration("bot.write_timeout"),
+			TgToken:               viper.GetString("bot.tg_token"),
+			Addr:                  viper.GetString("bot.address"),
+			ScrapperBaseURL:       viper.GetString("bot.scrapper_baseurl"),
+			ReadTimeout:           viper.GetDuration("bot.read_timeout"),
+			WriteTimeout:          viper.GetDuration("bot.write_timeout"),
+			ScrapperClientTimeout: viper.GetDuration("bot.scrapper_client_timeout"),
+			LogsPath:              viper.GetString("bot.logger_path"),
 		},
-		LogsPath: viper.GetString("logger_path"),
 	}
 
 	// Replace with a token from an environment variable if one exists

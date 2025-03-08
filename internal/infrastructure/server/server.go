@@ -11,7 +11,7 @@ import (
 func InitScrapperRouting(scrapper *application.Scrapper) *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.Handle("GET "+"/links", handlers.GetLinksHandler{Scrapper: scrapper})
-	mux.Handle("POST "+"/links", handlers.PostLinksHandler{Scrapper: scrapper})
+	mux.Handle("POST "+"/links", handlers.PostLinkHandler{Scrapper: scrapper})
 	mux.Handle("DELETE "+"/links", handlers.DeleteLinksHandler{Scrapper: scrapper})
 	mux.Handle("POST "+"/tg-chat/{id}", handlers.PostUserHandler{Scrapper: scrapper})
 	mux.Handle("DELETE "+"/tg-chat/{id}", handlers.DeleteUserHandler{Srapper: scrapper})
@@ -19,9 +19,9 @@ func InitScrapperRouting(scrapper *application.Scrapper) *http.ServeMux {
 	return mux
 }
 
-func InitBotRouting() *http.ServeMux {
+func InitBotRouting(bot *application.Bot) *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.Handle("POST "+"/updates", handlers.PostUpdatesHandler{})
+	mux.Handle("POST "+"/updates", handlers.PostUpdatesHandler{Bot: bot})
 
 	return mux
 }

@@ -3,15 +3,26 @@ package clients
 import (
 	"encoding/json"
 	"fmt"
-	"log/slog"
+	"net/http"
 	"net/url"
 	"strings"
 	"time"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/requests"
+	"github.com/es-debug/backend-academy-2024-go-template/pkg"
 )
 
-type GithubClient struct{}
+const (
+	githubAPIBaseURL  = "https://api.github.com"
+	githubHTTPTimeout = 5 * time.Second
+)
+
+type GitHubHTTPClient struct {
+	Client *http.Client
+}
+
+func NewGitHubHTTPClient() *GitHubHTTPClient {
+	return &GitHubHTTPClient{Client: &http.Client{Timeout: githubHTTPTimeout}}
+}
 
 type GitHubRepoResponse struct {
 	UpdatedAt string `json:"updated_at"`
@@ -19,26 +30,25 @@ type GitHubRepoResponse struct {
 
 // "https://github.com/TimofeyMosk/fractalFlame-image-creator"
 
-func (GithubClient) GetLastUpdateTimeRepo(link string) (time.Time, error) {
+func (c *GitHubHTTPClient) GetLastUpdateTimeRepo(link string) (time.Time, error) {
 	apiURL, err := apiGitURLGeneration(link)
 	if err != nil {
 		return time.Time{}, err
 	}
 
-	resp, err := requests.GetRequest(apiURL)
+	request, err := http.NewRequest("GET", apiURL, http.NoBody)
 	if err != nil {
 		return time.Time{}, err
 	}
 
-	defer func() {
-		Cerr := resp.Body.Close()
-		if Cerr != nil {
-			slog.Error("failed to close response: %v\n", "error", Cerr)
-		}
-	}()
+	response, err := c.Client.Do(request) //nolint:bodyclose // The body closes in a function pkg.SafeClose(response.Body)
+	if err != nil {
+		return time.Time{}, err
+	}
+	defer pkg.SafeClose(response.Body)
 
 	var repoData GitHubRepoResponse
-	if err := json.NewDecoder(resp.Body).Decode(&repoData); err != nil {
+	if err := json.NewDecoder(response.Body).Decode(&repoData); err != nil {
 		return time.Time{}, err
 	}
 
@@ -50,7 +60,7 @@ func (GithubClient) GetLastUpdateTimeRepo(link string) (time.Time, error) {
 	return updatedAt, nil
 }
 
-func apiGitURLGeneration(link string) (apiURL string, err error) {
+func apiGitURLGeneration(link string) (string, error) {
 	parsedURL, err := url.Parse(link)
 	if err != nil {
 		return "", err
@@ -62,7 +72,7 @@ func apiGitURLGeneration(link string) (apiURL string, err error) {
 	}
 
 	owner, repo := parts[0], parts[1]
-	apiURL = fmt.Sprintf("https://api.github.com/repos/%s/%s", owner, repo)
+	apiURL := fmt.Sprintf("%s/repos/%s/%s", githubAPIBaseURL, owner, repo)
 
-	return
+	return apiURL, err
 }

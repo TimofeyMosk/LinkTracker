@@ -6,9 +6,8 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-
 	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
+	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
 )
 
 type GetLinksHandler struct{ Scrapper *application.Scrapper }
@@ -31,13 +30,13 @@ func (h GetLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		sendErrorResponse(w, http.StatusInternalServerError, "LINKS_NOT_RECEIVED",
+		sendErrorResponse(w, http.StatusBadRequest, "LINKS_NOT_RECEIVED",
 			"Links not received", err.Error(), "Server Error")
 
 		return
 	}
 
-	responseData := domainLinksToDTO(links, tgChatID)
+	responseData := domainLinksToDTO(links)
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")

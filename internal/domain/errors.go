@@ -1,10 +1,18 @@
 package domain
 
+import "fmt"
+
 type ErrUserNotExist struct {
 }
 
 func (e ErrUserNotExist) Error() string {
 	return "user not exists"
+}
+
+type ErrUserAlreadyExist struct{}
+
+func (e ErrUserAlreadyExist) Error() string {
+	return "user already exists"
 }
 
 type ErrEmptyString struct{}
@@ -43,4 +51,32 @@ type ErrDeletionUser struct{}
 
 func (e ErrDeletionUser) Error() string {
 	return "failed to deletion a user"
+}
+
+type ErrAPI struct {
+	Code             string
+	Description      string
+	ExceptionMessage string
+	ExceptionName    string
+	Stacktrace       []string
+}
+
+func (e ErrAPI) Error() string { //nolint:gocritic // This is an error, it should not address by pointer
+	return fmt.Sprintf("api error %s: %s", e.Code, e.Description)
+}
+
+type ErrUnexpectedStatusCode struct {
+	StatusCode int
+}
+
+func (e ErrUnexpectedStatusCode) Error() string {
+	return fmt.Sprintf("unexpected status code [%d]", e.StatusCode)
+}
+
+type ErrNoRequiredAttribute struct {
+	Attribute string
+}
+
+func (e ErrNoRequiredAttribute) Error() string {
+	return fmt.Sprintf("no required attribute [%s]", e.Attribute)
 }

@@ -2,13 +2,16 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
+
+	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
 
 	botdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_bot"
 )
 
-type PostUpdatesHandler struct{}
+type PostUpdatesHandler struct {
+	Bot *application.Bot
+}
 
 func (handler PostUpdatesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var requestBody botdto.LinkUpdate
@@ -17,8 +20,9 @@ func (handler PostUpdatesHandler) ServeHTTP(w http.ResponseWriter, r *http.Reque
 			"Invalid or missing request body", err.Error(), "BadRequest")
 	}
 
-	// logic tg bots
-	fmt.Printf("%+v", requestBody)
+	for i := range *requestBody.TgChatIds {
+		handler.Bot.SendMessage((*requestBody.TgChatIds)[i], "Было обновление : "+*requestBody.Url)
+	}
 
 	w.WriteHeader(http.StatusOK)
 }

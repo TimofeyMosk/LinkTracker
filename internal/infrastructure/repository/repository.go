@@ -24,7 +24,10 @@ func NewRepository() *Repository {
 }
 
 func (r *Repository) GetAllUsers() ([]int64, error) {
+	r.mu.RLock()
 	usersIDs := slices.Collect(maps.Keys(r.Links))
+	r.mu.RUnlock()
+
 	return usersIDs, nil
 }
 
@@ -52,7 +55,9 @@ func (r *Repository) CreateUser(id int64) error {
 		return fmt.Errorf("user with id %d already exists", id)
 	}
 
+	r.mu.Lock()
 	r.Links[id] = []domain.Link{}
+	r.mu.Unlock()
 
 	return nil
 }
@@ -62,7 +67,9 @@ func (r *Repository) DeleteUser(id int64) error {
 		return domain.ErrUserNotExist{}
 	}
 
+	r.mu.Lock()
 	delete(r.Links, id)
+	r.mu.Unlock()
 
 	return nil
 }
@@ -71,6 +78,9 @@ func (r *Repository) GetLinks(id int64) ([]domain.Link, error) {
 	if !r.UserExist(id) {
 		return nil, domain.ErrUserNotExist{}
 	}
+
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 
 	return r.Links[id], nil
 }

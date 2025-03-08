@@ -39,8 +39,8 @@ func (h DeleteLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			sendErrorResponse(w, http.StatusNotFound, "CHAT_NOT_EXIST",
 				"Chat not exist", err.Error(), "Not Found")
 		} else {
-			sendErrorResponse(w, http.StatusInternalServerError, "DELETE_LINK_FAILED",
-				"Failed to delete link", err.Error(), "Server Error")
+			sendErrorResponse(w, http.StatusBadRequest, "DELETE_LINK_FAILED",
+				"Failed to delete link", err.Error(), "BadRequest")
 		}
 	}
 

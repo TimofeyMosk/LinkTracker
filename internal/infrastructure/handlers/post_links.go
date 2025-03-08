@@ -12,9 +12,9 @@ import (
 	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
 )
 
-type PostLinksHandler struct{ Scrapper *application.Scrapper }
+type PostLinkHandler struct{ Scrapper *application.Scrapper }
 
-func (h PostLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h PostLinkHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	tgChatID, err := getIDFromString(r.Header.Get("Tg-Chat-Id"))
 	if err != nil {
 		sendErrorResponse(w, http.StatusBadRequest, "INVALID_CHAT_ID",
@@ -31,19 +31,21 @@ func (h PostLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	link := domain.Link{
-		URL:     *addLinkRequest.Link,
-		Tags:    *addLinkRequest.Tags,
-		Filters: *addLinkRequest.Filters,
-		ID:      0}
+	link, err := AddLinkRequestDtoToLink(addLinkRequest)
+	if err != nil {
+		sendErrorResponse(w, http.StatusBadRequest, "INVALID_REQUEST_BODY",
+			"Invalid or missing request body", err.Error(), "BadRequest")
 
-	err = h.Scrapper.AddLink(tgChatID, link)
+		return
+	}
+
+	link, err = h.Scrapper.AddLink(tgChatID, link)
 	if err != nil {
 		if errors.As(err, &domain.ErrUserNotExist{}) {
-			sendErrorResponse(w, http.StatusNotFound, "CHAT_NOT_EXIST",
-				"Chat not exist", err.Error(), "Not Found")
+			sendErrorResponse(w, http.StatusBadRequest, "CHAT_NOT_EXIST",
+				"Chat not exist", err.Error(), "BadRequest")
 		} else {
-			sendErrorResponse(w, http.StatusInternalServerError, "ADD_LINK_FAILED",
+			sendErrorResponse(w, http.StatusBadRequest, "ADD_LINK_FAILED",
 				"Failed to added link", err.Error(), "Server Error")
 		}
 
@@ -51,10 +53,10 @@ func (h PostLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	linkResponse := scrapperdto.LinkResponse{
-		Id:      &tgChatID,
-		Url:     addLinkRequest.Link,
-		Tags:    addLinkRequest.Tags,
-		Filters: addLinkRequest.Filters,
+		Id:      &link.ID,
+		Url:     &link.URL,
+		Tags:    &link.Tags,
+		Filters: &link.Filters,
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -64,4 +66,18 @@ func (h PostLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		slog.Error(err.Error())
 	}
+}
+
+func AddLinkRequestDtoToLink(addLinkRequest scrapperdto.AddLinkRequest) (domain.Link, error) {
+	var link domain.Link
+
+	if addLinkRequest.Link == nil {
+		return link, domain.ErrNoRequiredAttribute{Attribute: "link"}
+	}
+
+	link.URL = *addLinkRequest.Link
+	link.Tags = *addLinkRequest.Tags
+	link.Filters = *addLinkRequest.Filters
+
+	return link, nil
 }

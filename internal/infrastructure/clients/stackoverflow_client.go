@@ -3,16 +3,29 @@ package clients
 import (
 	"encoding/json"
 	"fmt"
-	"log/slog"
+	"net/http"
 	"net/url"
 	"strings"
 	"time"
 
+	"github.com/es-debug/backend-academy-2024-go-template/pkg"
+
 	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/requests"
 )
 
-type StackOverflowClient struct {
+const (
+	stackOverflowAPIBaseURL  = "https://api.stackexchange.com/2.2"
+	stackOverflowHTTPTimeout = 5 * time.Second
+)
+
+type StackOverflowHTTPClient struct {
+	Client *http.Client
+}
+
+func NewStackOverflowHTTPClient() *StackOverflowHTTPClient {
+	return &StackOverflowHTTPClient{
+		Client: &http.Client{Timeout: stackOverflowHTTPTimeout},
+	}
 }
 
 type SOResponse struct {
@@ -21,28 +34,27 @@ type SOResponse struct {
 	} `json:"items"`
 }
 
-// https://stackoverflow.com/questions/79467368/horizontal-scroll-component-does-not-work-as-expected-with-overflow
+//https://stackoverflow.com/questions/79467368/horizontal-scroll-component-does-not-work-as-expected-with-overflow
 
-func (StackOverflowClient) GetLastActivityQuestion(link string) (time.Time, error) {
+func (c *StackOverflowHTTPClient) GetLastActivityQuestion(link string) (time.Time, error) {
 	apiURL, err := apiSOUrlGeneration(link)
 	if err != nil {
 		return time.Time{}, err
 	}
 
-	resp, err := requests.GetRequest(apiURL)
+	request, err := http.NewRequest("GET", apiURL, http.NoBody)
 	if err != nil {
 		return time.Time{}, err
 	}
 
-	defer func() {
-		Cerr := resp.Body.Close()
-		if Cerr != nil {
-			slog.Error("failed to close response: %v\n", "error", Cerr)
-		}
-	}()
+	response, err := c.Client.Do(request) //nolint:bodyclose // The body closes in a function pkg.SafeClose(response.Body)
+	if err != nil {
+		return time.Time{}, err
+	}
+	defer pkg.SafeClose(response.Body)
 
 	var soResponse SOResponse
-	if err := json.NewDecoder(resp.Body).Decode(&soResponse); err != nil {
+	if err := json.NewDecoder(response.Body).Decode(&soResponse); err != nil {
 		return time.Time{}, err
 	}
 
@@ -55,7 +67,7 @@ func (StackOverflowClient) GetLastActivityQuestion(link string) (time.Time, erro
 	return lastActivity, nil
 }
 
-func apiSOUrlGeneration(link string) (apiURL string, err error) {
+func apiSOUrlGeneration(link string) (string, error) {
 	parsedURL, err := url.Parse(link)
 	if err != nil {
 		return "", err
@@ -67,7 +79,7 @@ func apiSOUrlGeneration(link string) (apiURL string, err error) {
 	}
 
 	questionID := parts[1]
-	apiURL = fmt.Sprintf("https://api.stackexchange.com/2.2/questions/%s?order=desc&sort=activity&site=stackoverflow", questionID)
+	apiURL := fmt.Sprintf("%s/questions/%s?order=desc&sort=activity&site=stackoverflow", stackOverflowAPIBaseURL, questionID)
 
-	return
+	return apiURL, err
 }
