@@ -3,25 +3,28 @@ package handlers_test
 import (
 	"encoding/json"
 	"errors"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_scrapper"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers/mocks"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
+	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
+	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_scrapper"
+	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers"
+	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers/mocks"
 )
 
 func TestGetLinksHandler_InvalidChatID(t *testing.T) {
 	mockScrapper := &mocks.Scrapper{}
 	handler := handlers.GetLinksHandler{Scrapper: mockScrapper}
 
-	req := httptest.NewRequest(http.MethodGet, "/links", nil)
+	req := httptest.NewRequest(http.MethodGet, "/links", http.NoBody)
 	req.Header.Set("Tg-Chat-Id", "invalid-chat-id")
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -41,8 +44,9 @@ func TestGetLinksHandler_UserNotExist(t *testing.T) {
 		Once()
 
 	handler := handlers.GetLinksHandler{Scrapper: mockScrapper}
-	req := httptest.NewRequest(http.MethodGet, "/links", nil)
+	req := httptest.NewRequest(http.MethodGet, "/links", http.NoBody)
 	req.Header.Set("Tg-Chat-Id", strconv.FormatInt(tgID, 10))
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -65,8 +69,9 @@ func TestGetLinksHandler_GenericError(t *testing.T) {
 		Once()
 
 	handler := handlers.GetLinksHandler{Scrapper: mockScrapper}
-	req := httptest.NewRequest(http.MethodGet, "/links", nil)
+	req := httptest.NewRequest(http.MethodGet, "/links", http.NoBody)
 	req.Header.Set("Tg-Chat-Id", strconv.FormatInt(tgID, 10))
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -96,8 +101,9 @@ func TestGetLinksHandler_Success(t *testing.T) {
 		Once()
 
 	handler := handlers.GetLinksHandler{Scrapper: mockScrapper}
-	req := httptest.NewRequest(http.MethodGet, "/links", nil)
+	req := httptest.NewRequest(http.MethodGet, "/links", http.NoBody)
 	req.Header.Set("Tg-Chat-Id", strconv.FormatInt(tgID, 10))
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -108,7 +114,7 @@ func TestGetLinksHandler_Success(t *testing.T) {
 	var responseData scrapperdto.ListLinksResponse
 	err := json.NewDecoder(rr.Body).Decode(&responseData)
 	require.NoError(t, err)
-	require.Equal(t, *responseData.Size, int32(len(expectedLinks)))
+	require.Equal(t, *responseData.Size, int32(len(expectedLinks))) //nolint:gosec // overflow impossibly
 	assert.Equal(t, expectedLinks[0].URL, *(*responseData.Links)[0].Url)
 
 	mockScrapper.AssertExpectations(t)

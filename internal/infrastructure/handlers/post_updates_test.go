@@ -3,17 +3,18 @@ package handlers_test
 import (
 	"bytes"
 	"encoding/json"
-	botdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_bot"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers/mocks"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	botdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_bot"
+	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers"
+	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers/mocks"
 )
 
 func TestPostUpdatesHandler_InvalidRequestBody(t *testing.T) {
-
 	bot := &mocks.Bot{}
 	handler := handlers.PostUpdatesHandler{Bot: bot}
 	request := httptest.NewRequest(http.MethodPost, "/updates", bytes.NewReader([]byte("invalid json")))

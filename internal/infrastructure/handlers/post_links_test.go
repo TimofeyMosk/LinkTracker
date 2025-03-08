@@ -4,25 +4,28 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_scrapper"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers/mocks"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/require"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
+
+	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
+	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_scrapper"
+	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers"
+	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers/mocks"
 )
 
 func TestPostLinkHandler_InvalidChatID(t *testing.T) {
 	mockScrapper := &mocks.Scrapper{}
 	handler := handlers.PostLinkHandler{Scrapper: mockScrapper}
-	req := httptest.NewRequest(http.MethodPost, "/links", nil)
+	req := httptest.NewRequest(http.MethodPost, "/links", http.NoBody)
 	req.Header.Set("Tg-Chat-Id", "invalid")
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -38,6 +41,7 @@ func TestPostLinkHandler_InvalidRequestBody(t *testing.T) {
 	handler := handlers.PostLinkHandler{Scrapper: mockScrapper}
 	req := httptest.NewRequest(http.MethodPost, "/links", bytes.NewReader([]byte("invalid json")))
 	req.Header.Set("Tg-Chat-Id", "123")
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -60,6 +64,7 @@ func TestPostLinkHandler_InvalidLinkConversion(t *testing.T) {
 	handler := handlers.PostLinkHandler{Scrapper: mockScrapper}
 	req := httptest.NewRequest(http.MethodPost, "/links", bytes.NewReader(reqBody))
 	req.Header.Set("Tg-Chat-Id", "123")
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -72,7 +77,7 @@ func TestPostLinkHandler_InvalidLinkConversion(t *testing.T) {
 
 func TestPostLinkHandler_ScrapperError_ChatNotExist(t *testing.T) {
 	tgChatID := int64(123)
-	linkURL := "https://github.com/user/repo"
+	linkURL := GitUserRepo
 	reqData := scrapperdto.AddLinkRequest{
 		Link:    &linkURL,
 		Tags:    &[]string{"tag1", "tag2"},
@@ -92,6 +97,7 @@ func TestPostLinkHandler_ScrapperError_ChatNotExist(t *testing.T) {
 	handler := handlers.PostLinkHandler{Scrapper: mockScrapper}
 	req := httptest.NewRequest(http.MethodPost, "/links", bytes.NewReader(reqBody))
 	req.Header.Set("Tg-Chat-Id", strconv.FormatInt(tgChatID, 10))
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -126,6 +132,7 @@ func TestPostLinkHandler_ScrapperError_Generic(t *testing.T) {
 	handler := handlers.PostLinkHandler{Scrapper: mockScrapper}
 	req := httptest.NewRequest(http.MethodPost, "/links", bytes.NewReader(reqBody))
 	req.Header.Set("Tg-Chat-Id", strconv.FormatInt(tgChatID, 10))
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -165,12 +172,14 @@ func TestPostLinkHandler_Success(t *testing.T) {
 	handler := handlers.PostLinkHandler{Scrapper: mockScrapper}
 	req := httptest.NewRequest(http.MethodPost, "/links", bytes.NewReader(reqBody))
 	req.Header.Set("Tg-Chat-Id", strconv.FormatInt(tgChatID, 10))
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
 
 	assert.Equal(t, http.StatusOK, rr.Code)
 	assert.Equal(t, "application/json", rr.Header().Get("Content-Type"))
+
 	var response scrapperdto.LinkResponse
 	err = json.NewDecoder(rr.Body).Decode(&response)
 	require.NoError(t, err)

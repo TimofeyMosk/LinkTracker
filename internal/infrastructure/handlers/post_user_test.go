@@ -2,13 +2,15 @@ package handlers_test
 
 import (
 	"errors"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers/mocks"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+
+	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers"
+	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers/mocks"
 )
 
 func TestPostUserHandler_Success(t *testing.T) {
@@ -17,7 +19,7 @@ func TestPostUserHandler_Success(t *testing.T) {
 
 	handler := handlers.PostUserHandler{Scrapper: mockScrapper}
 
-	req := httptest.NewRequest(http.MethodPost, "/users/123", nil)
+	req := httptest.NewRequest(http.MethodPost, "/users/123", http.NoBody)
 	req.SetPathValue("id", "123")
 
 	rec := httptest.NewRecorder()
@@ -34,14 +36,13 @@ func TestPostUserHandler_InvalidChatID(t *testing.T) {
 
 	handler := handlers.PostUserHandler{Scrapper: mockScrapper}
 
-	req := httptest.NewRequest(http.MethodPost, "/users/invalid", nil)
+	req := httptest.NewRequest(http.MethodPost, "/users/invalid", http.NoBody)
 	req.SetPathValue("id", "invalid")
 
 	rec := httptest.NewRecorder()
 	handler.ServeHTTP(rec, req)
 
 	assert.Equal(t, http.StatusBadRequest, rec.Code)
-
 }
 
 func TestPostUserHandler_ScrapperError(t *testing.T) {
@@ -50,7 +51,7 @@ func TestPostUserHandler_ScrapperError(t *testing.T) {
 
 	handler := handlers.PostUserHandler{Scrapper: mockScrapper}
 
-	req := httptest.NewRequest(http.MethodPost, "/users/123", nil)
+	req := httptest.NewRequest(http.MethodPost, "/users/123", http.NoBody)
 	req.SetPathValue("id", "123")
 
 	rec := httptest.NewRecorder()

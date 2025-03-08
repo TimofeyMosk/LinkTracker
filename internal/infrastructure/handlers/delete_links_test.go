@@ -21,6 +21,8 @@ import (
 	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers/mocks"
 )
 
+const GitUserRepo = "https://github.com/user/repo"
+
 func TestDeleteLinksHandler_InvalidChatID(t *testing.T) {
 	mockScrapper := &mocks.Scrapper{}
 	handler := handlers.DeleteLinksHandler{Scrapper: mockScrapper}
@@ -58,14 +60,14 @@ func TestDeleteLinksHandler_UserNotExist(t *testing.T) {
 	tgChatID := int64(123)
 	mockScrapper.
 		On("DeleteLink", tgChatID, mock.MatchedBy(func(link domain.Link) bool {
-			return link.URL == "https://github.com/user/repo"
+			return link.URL == GitUserRepo
 		})).
 		Return(domain.Link{}, domain.ErrUserNotExist{}).
 		Once()
 
 	handler := handlers.DeleteLinksHandler{Scrapper: mockScrapper}
 
-	linkURL := "https://github.com/user/repo"
+	linkURL := GitUserRepo
 	removeReq := scrapperdto.RemoveLinkRequest{Link: &linkURL}
 	reqBody, err := json.Marshal(removeReq)
 	require.NoError(t, err)
@@ -89,14 +91,14 @@ func TestDeleteLinksHandler_DeleteLinkFailed(t *testing.T) {
 	tgChatID := int64(123)
 	mockScrapper.
 		On("DeleteLink", tgChatID, mock.MatchedBy(func(link domain.Link) bool {
-			return link.URL == "https://github.com/user/repo"
+			return link.URL == GitUserRepo
 		})).
 		Return(domain.Link{}, errors.New("delete failed")).
 		Once()
 
 	handler := handlers.DeleteLinksHandler{Scrapper: mockScrapper}
 
-	linkURL := "https://github.com/user/repo"
+	linkURL := GitUserRepo
 	removeReq := scrapperdto.RemoveLinkRequest{Link: &linkURL}
 	reqBody, err := json.Marshal(removeReq)
 	require.NoError(t, err)
@@ -119,7 +121,7 @@ func TestDeleteLinksHandler_Success(t *testing.T) {
 	mockScrapper := &mocks.Scrapper{}
 	tgChatID := int64(123)
 	expectedLink := domain.Link{
-		URL:     "https://github.com/user/repo",
+		URL:     GitUserRepo,
 		Tags:    []string{"tag1", "tag2"},
 		Filters: []string{"filter1"},
 		ID:      0,

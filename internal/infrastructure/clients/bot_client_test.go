@@ -2,13 +2,15 @@ package clients_test
 
 import (
 	"errors"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/clients"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
+	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/clients"
 )
 
 func TestBotHTTPClient_PostUpdates_Success(t *testing.T) {
@@ -51,7 +53,7 @@ func TestBotHTTPClient_PostUpdates_BadRequest(t *testing.T) {
 }
 
 func TestBotHTTPClient_PostUpdates_UnexpectedStatusCode(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
 	defer server.Close()

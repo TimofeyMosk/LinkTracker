@@ -3,22 +3,24 @@ package handlers_test
 import (
 	"errors"
 	"fmt"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers/mocks"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
+	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers"
+	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers/mocks"
 )
 
 func TestDeleteUserHandler_InvalidChatID(t *testing.T) {
 	mockScrapper := &mocks.Scrapper{}
 	handler := handlers.DeleteUserHandler{Scrapper: mockScrapper}
 	id := "errorID"
-	req := httptest.NewRequest(http.MethodDelete, fmt.Sprintf("/users/%s", id), nil)
+	req := httptest.NewRequest(http.MethodDelete, fmt.Sprintf("/users/%s", id), http.NoBody)
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -37,8 +39,9 @@ func TestDeleteUserHandler_UserNotExist(t *testing.T) {
 		Once()
 
 	handler := handlers.DeleteUserHandler{Scrapper: mockScrapper}
-	req := httptest.NewRequest(http.MethodDelete, fmt.Sprintf("/users/%d", tgID), nil)
+	req := httptest.NewRequest(http.MethodDelete, fmt.Sprintf("/users/%d", tgID), http.NoBody)
 	req.SetPathValue("id", strconv.Itoa(int(tgID)))
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -60,7 +63,7 @@ func TestDeleteUserHandler_ChatNotDeleted(t *testing.T) {
 		Once()
 
 	handler := handlers.DeleteUserHandler{Scrapper: mockScrapper}
-	req := httptest.NewRequest(http.MethodDelete, fmt.Sprintf("/users/%d", tgID), nil)
+	req := httptest.NewRequest(http.MethodDelete, fmt.Sprintf("/users/%d", tgID), http.NoBody)
 	req.SetPathValue("id", strconv.Itoa(int(tgID)))
 
 	rr := httptest.NewRecorder()
@@ -83,8 +86,9 @@ func TestDeleteUserHandler_Success(t *testing.T) {
 		Once()
 
 	handler := handlers.DeleteUserHandler{Scrapper: mockScrapper}
-	req := httptest.NewRequest(http.MethodDelete, fmt.Sprintf("/users/%d", tgID), nil)
+	req := httptest.NewRequest(http.MethodDelete, fmt.Sprintf("/users/%d", tgID), http.NoBody)
 	req.SetPathValue("id", strconv.Itoa(int(tgID)))
+
 	rr := httptest.NewRecorder()
 
 	// Act
