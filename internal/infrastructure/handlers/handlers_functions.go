@@ -11,6 +11,18 @@ import (
 	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
 )
 
+type Bot interface {
+	SendMessage(chatID int64, message string)
+}
+
+type Scrapper interface {
+	AddUser(id int64) error
+	DeleteUser(id int64) error
+	GetLinks(id int64) ([]domain.Link, error)
+	AddLink(id int64, link domain.Link) (domain.Link, error)
+	DeleteLink(id int64, link domain.Link) (domain.Link, error)
+}
+
 func sendErrorResponse(w http.ResponseWriter, statusCode int, code, description, exceptionMessage, exceptionName string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)

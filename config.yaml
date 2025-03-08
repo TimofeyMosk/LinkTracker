@@ -1,7 +1,7 @@
 scrapper:
   address: ":8080"
   bot_baseurl: "http://localhost:8081"
-  scrap_interval: 30s
+  scrap_interval: 5m
   read_timeout: 5s
   write_timeout: 15s
   bot_client_timeout: 5s

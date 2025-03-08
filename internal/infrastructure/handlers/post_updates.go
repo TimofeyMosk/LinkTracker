@@ -4,13 +4,11 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
-
 	botdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_bot"
 )
 
 type PostUpdatesHandler struct {
-	Bot *application.Bot
+	Bot Bot
 }
 
 func (handler PostUpdatesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -18,6 +16,14 @@ func (handler PostUpdatesHandler) ServeHTTP(w http.ResponseWriter, r *http.Reque
 	if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
 		sendErrorResponse(w, http.StatusBadRequest, "INVALID_REQUEST_BODY",
 			"Invalid or missing request body", err.Error(), "BadRequest")
+
+		return
+	}
+
+	if requestBody.TgChatIds == nil || requestBody.Url == nil {
+		sendErrorResponse(w, http.StatusBadRequest, "MISSING_REQUIRED_FIELDS",
+			"`TgChatIds` or `Url` is missing", "", "BadRequest")
+		return
 	}
 
 	for i := range *requestBody.TgChatIds {

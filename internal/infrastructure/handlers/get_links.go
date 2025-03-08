@@ -6,11 +6,10 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
 	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
 )
 
-type GetLinksHandler struct{ Scrapper *application.Scrapper }
+type GetLinksHandler struct{ Scrapper Scrapper }
 
 func (h GetLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	tgChatID, err := getIDFromString(r.Header.Get("Tg-Chat-Id"))

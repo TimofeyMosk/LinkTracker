@@ -23,7 +23,7 @@ func SignalWarden(signals ...os.Signal) chan struct{} {
 	return result
 }
 
-func StopSignalReceiving(scrapper *Scrapper, server *http.Server) {
+func StopScrapperSignalReceiving(scrapper *Scrapper, server *http.Server) {
 	<-SignalWarden(syscall.SIGINT, syscall.SIGTERM)
 
 	err := scrapper.Stop()
@@ -32,6 +32,17 @@ func StopSignalReceiving(scrapper *Scrapper, server *http.Server) {
 	}
 
 	err = server.Shutdown(context.Background())
+	if err != nil {
+		slog.Error(err.Error())
+	}
+}
+
+func StopBotSignalReceiving(bot *Bot, server *http.Server) {
+	<-SignalWarden(syscall.SIGINT, syscall.SIGTERM)
+
+	bot.Stop()
+
+	err := server.Shutdown(context.Background())
 	if err != nil {
 		slog.Error(err.Error())
 	}

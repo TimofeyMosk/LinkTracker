@@ -8,11 +8,10 @@ import (
 
 	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_scrapper"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
 	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
 )
 
-type DeleteLinksHandler struct{ Scrapper *application.Scrapper }
+type DeleteLinksHandler struct{ Scrapper Scrapper }
 
 func (h DeleteLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	tgChatID, err := getIDFromString(r.Header.Get("Tg-Chat-Id"))

@@ -9,7 +9,7 @@ import (
 )
 
 type ScrapperConfig struct {
-	Addr             string        `yaml:"address"`
+	Address          string        `yaml:"address"`
 	BotBaseURL       string        `yaml:"bot_baseurl"`
 	Interval         time.Duration `yaml:"scrap_interval" `
 	ReadTimeout      time.Duration `yaml:"read_timeout" `
@@ -20,7 +20,7 @@ type ScrapperConfig struct {
 
 type BotConfig struct {
 	TgToken               string        `yaml:"tg_token" `
-	Addr                  string        `yaml:"address"`
+	Address               string        `yaml:"address"`
 	ScrapperBaseURL       string        `yaml:"scrapper_baseurl"`
 	ReadTimeout           time.Duration `yaml:"read_timeout" `
 	WriteTimeout          time.Duration `yaml:"write_timeout" `
@@ -49,7 +49,7 @@ func ReadYAMLConfig(filePath string) (*Config, error) {
 	viper.AutomaticEnv()
 	config := Config{
 		ScrapConfig: ScrapperConfig{
-			Addr:             viper.GetString("scrapper.address"),
+			Address:          viper.GetString("scrapper.address"),
 			BotBaseURL:       viper.GetString("scrapper.bot_baseurl"),
 			Interval:         viper.GetDuration("scrapper.scrap_interval"),
 			ReadTimeout:      viper.GetDuration("scrapper.read_timeout"),
@@ -59,7 +59,7 @@ func ReadYAMLConfig(filePath string) (*Config, error) {
 		},
 		BotConfig: BotConfig{
 			TgToken:               viper.GetString("bot.tg_token"),
-			Addr:                  viper.GetString("bot.address"),
+			Address:               viper.GetString("bot.address"),
 			ScrapperBaseURL:       viper.GetString("bot.scrapper_baseurl"),
 			ReadTimeout:           viper.GetDuration("bot.read_timeout"),
 			WriteTimeout:          viper.GetDuration("bot.write_timeout"),

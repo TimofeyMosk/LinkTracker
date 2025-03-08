@@ -33,21 +33,21 @@ type Scrapper struct {
 	stopSignal chan struct{}
 }
 
-func NewScrapper(db Database, interval time.Duration, httpClient BotClient) *Scrapper {
+func NewScrapper(db Database, interval time.Duration, botClient BotClient) *Scrapper {
 	slog.Info("Creating new Scrapper", "interval", interval)
 
 	return &Scrapper{
 		db:         db,
 		interval:   interval,
 		stopSignal: make(chan struct{}),
-		botClient:  httpClient,
+		botClient:  botClient,
 	}
 }
 
 func (s *Scrapper) Run() error {
 	sched, err := gocron.NewScheduler()
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("Failed to create scheduler", "error", err.Error())
 		return fmt.Errorf("could not create sheduler: %w", err)
 	}
 
@@ -57,7 +57,7 @@ func (s *Scrapper) Run() error {
 	)
 
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("Failed to create job", "error", err.Error())
 		return fmt.Errorf("could not create job: %w", err)
 	}
 
@@ -69,7 +69,7 @@ func (s *Scrapper) Run() error {
 
 	err = sched.Shutdown()
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("Failed to shutdown scrapper", "error", err.Error())
 		return fmt.Errorf("could not shutdown scrapper: %w", err)
 	}
 
@@ -82,7 +82,10 @@ func (s *Scrapper) Stop() error {
 }
 
 func (s *Scrapper) Scrape() {
-	slog.Info("Scrape")
+	slog.Info("Scrape start")
+
+	countChecks := 0
+	successfullyChecks := 0
 
 	usersID, err := s.db.GetAllUsers()
 	if err != nil {
@@ -93,23 +96,30 @@ func (s *Scrapper) Scrape() {
 	for _, tgID := range usersID {
 		links, err := s.db.GetLinks(tgID)
 		if err != nil {
-			slog.Error("User links could not be retrieved", "error", err.Error())
+			slog.Error("User links could not be retrieved", "error", err.Error(), "tgID", tgID)
 		}
 
 		for _, link := range links {
+			countChecks++
+
 			activity, err := s.CheckUpdates(link.URL, time.Now().Add(-5*time.Minute))
 			if err != nil {
-				slog.Error(err.Error())
+				slog.Error("Failed to check for updates on the link", "error", err.Error(), "link", link.URL)
+				continue
 			}
+
+			successfullyChecks++
 
 			if activity {
 				err := s.botClient.PostUpdates(link, tgID)
 				if err != nil {
-					slog.Error(err.Error(), "link", link.URL)
+					slog.Error("Failed to send user updates", "error", err.Error(), "link", link.URL)
 				}
 			}
 		}
 	}
+
+	slog.Info("Scrape finished", "countChecks", countChecks, "successfullyChecks", successfullyChecks)
 }
 
 func (s *Scrapper) CheckUpdates(linkURL string, lastKnown time.Time) (bool, error) {
@@ -118,8 +128,13 @@ func (s *Scrapper) CheckUpdates(linkURL string, lastKnown time.Time) (bool, erro
 		return false, err
 	}
 
+	const (
+		github        = "github.com"
+		stackoverflow = "stackoverflow.com"
+	)
+
 	switch parsedURL.Host {
-	case "github.com":
+	case github:
 		gitClient := clients.NewGitHubHTTPClient()
 
 		lastUpdate, err := gitClient.GetLastUpdateTimeRepo(linkURL)
@@ -129,7 +144,7 @@ func (s *Scrapper) CheckUpdates(linkURL string, lastKnown time.Time) (bool, erro
 		}
 
 		return lastUpdate.After(lastKnown), nil
-	case "stackoverflow.com":
+	case stackoverflow:
 		soClient := clients.NewStackOverflowHTTPClient()
 
 		lastActivity, err := soClient.GetLastActivityQuestion(linkURL)
@@ -150,7 +165,7 @@ func (s *Scrapper) AddUser(id int64) error {
 
 	err := s.db.CreateUser(id)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("Failed to add user", "error", err.Error(), "tgID", id)
 		return err
 	}
 
@@ -158,11 +173,11 @@ func (s *Scrapper) AddUser(id int64) error {
 }
 
 func (s *Scrapper) DeleteUser(id int64) error {
-	slog.Info("Deleting user")
+	slog.Info("Deleting user", "tgID", id)
 
 	err := s.db.DeleteUser(id)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("Failed to delete user", "error", err.Error(), "tgID", id)
 		return err
 	}
 
@@ -170,11 +185,11 @@ func (s *Scrapper) DeleteUser(id int64) error {
 }
 
 func (s *Scrapper) GetLinks(id int64) ([]domain.Link, error) {
-	slog.Info("Getting links")
+	slog.Info("Getting links", "tgID", id)
 
 	links, err := s.db.GetLinks(id)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("Failed to get links", "error", err.Error(), "tgID", id)
 		return nil, err
 	}
 
@@ -182,16 +197,16 @@ func (s *Scrapper) GetLinks(id int64) ([]domain.Link, error) {
 }
 
 func (s *Scrapper) AddLink(id int64, link domain.Link) (domain.Link, error) {
-	slog.Info("Adding link", "link", link)
+	slog.Info("Adding link", "tgID", id, "link", link)
 
 	if !validLink(link.URL) {
-		slog.Error("Invalid link URL", "link", link)
+		slog.Error("Invalid link URL", "tgID", id, "link", link)
 		return link, domain.ErrWrongURL{}
 	}
 
 	err := s.db.AddLink(id, link)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("Failed to add link", "error", err.Error(), "tgID", id, "link", link)
 		return link, err
 	}
 
@@ -199,11 +214,11 @@ func (s *Scrapper) AddLink(id int64, link domain.Link) (domain.Link, error) {
 }
 
 func (s *Scrapper) DeleteLink(id int64, link domain.Link) (domain.Link, error) {
-	slog.Info("Deleting link", "link", link)
+	slog.Info("Deleting link", "tgID", id, "link", link)
 
 	deletedLink, err := s.db.DeleteLink(id, link)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("Failed to remove link", "error", err.Error(), "tgID", id, "link", link)
 		return domain.Link{}, err
 	}
 

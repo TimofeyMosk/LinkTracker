@@ -27,7 +27,7 @@ func NewTelegramHTTPClient(token string) (*TelegramHTTPClient, error) {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 	updates := bot.GetUpdatesChan(u)
-	bot.Debug = true
+	bot.Debug = false
 
 	return &TelegramHTTPClient{
 		bot:     bot,
@@ -40,6 +40,10 @@ func setBotCommands(bot *tgbotapi.BotAPI) error {
 	_, err := bot.Request(cfg)
 
 	return err
+}
+
+func (c *TelegramHTTPClient) StopReceivingUpdates() {
+	c.bot.StopReceivingUpdates()
 }
 
 func (c *TelegramHTTPClient) GetUpdates() tgbotapi.UpdatesChannel {

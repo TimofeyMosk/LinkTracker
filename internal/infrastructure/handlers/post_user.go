@@ -2,11 +2,9 @@ package handlers
 
 import (
 	"net/http"
-
-	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
 )
 
-type PostUserHandler struct{ Scrapper *application.Scrapper }
+type PostUserHandler struct{ Scrapper Scrapper }
 
 func (h PostUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	chatID, err := getIDFromString(r.PathValue("id"))

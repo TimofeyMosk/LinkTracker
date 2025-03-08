@@ -32,13 +32,13 @@ func main() {
 	}
 
 	scrapper := application.NewScrapper(rep, config.ScrapConfig.Interval, botHTTPClient)
-	ser := server.InitServer(
-		config.ScrapConfig.Addr,
+	serv := server.InitServer(
+		config.ScrapConfig.Address,
 		server.InitScrapperRouting(scrapper),
 		config.ScrapConfig.ReadTimeout,
 		config.ScrapConfig.WriteTimeout)
 
-	go application.StopSignalReceiving(scrapper, ser)
+	go application.StopScrapperSignalReceiving(scrapper, serv)
 
 	wg.Add(1)
 
@@ -50,10 +50,12 @@ func main() {
 		wg.Done()
 	}()
 
-	if err := ser.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+	if err := serv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		fmt.Println("server failed to start or finished with error", err)
+		slog.Error("server failed to start or finished with error", "error", err)
 	} else {
-		fmt.Println("application stopped")
+		fmt.Println("server stopped")
+		slog.Info("server stopped")
 	}
 
 	wg.Wait()
