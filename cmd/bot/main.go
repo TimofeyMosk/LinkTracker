@@ -35,7 +35,7 @@ func main() {
 		return
 	}
 
-	bot := application.NewBot(scrapperHTTPClient, tgClient, 20)
+	bot := application.NewBot(scrapperHTTPClient, tgClient, 8)
 
 	wg.Add(1)
 

@@ -1,11 +1,14 @@
 package application
 
 import (
+	"context"
 	"fmt"
+	"golang.org/x/time/rate"
 	"log/slog"
 	"net/url"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
 
@@ -25,7 +28,7 @@ type LinkWithState struct {
 	state int
 }
 
-type ScrapperHTTPClient interface {
+type ScrapperClient interface {
 	RegisterUser(tgID int64) error
 	DeleteUser(tgID int64) error
 	AddLink(tgID int64, link domain.Link) error
@@ -41,24 +44,32 @@ type TelegramClient interface {
 
 type Bot struct {
 	tgAPI              TelegramClient
-	scrapperHTTPClient ScrapperHTTPClient
-	UserState          map[int64]LinkWithState
+	scrapperHTTPClient ScrapperClient
+	userState          map[int64]LinkWithState
 	mu                 sync.RWMutex
 	workerCount        int
+	globalLimiter      *rate.Limiter
 }
 
-func NewBot(scrapperClient ScrapperHTTPClient, tgClient TelegramClient, countWorkers int) *Bot {
+func NewBot(scrapperClient ScrapperClient, tgClient TelegramClient, countWorkers int) *Bot {
 	slog.Info("Bot create")
 
 	return &Bot{
 		tgAPI:              tgClient,
 		scrapperHTTPClient: scrapperClient,
-		UserState:          make(map[int64]LinkWithState),
+		userState:          make(map[int64]LinkWithState),
 		workerCount:        countWorkers,
+		globalLimiter:      rate.NewLimiter(rate.Every(time.Second/30), 30),
 	}
 }
 
 func (bot *Bot) SendMessage(chatID int64, text string) {
+	err := bot.globalLimiter.Wait(context.Background())
+	if err != nil {
+		slog.Error("Rate limit error", "error", err)
+		return
+	}
+
 	message, err := bot.tgAPI.SendMessage(chatID, text)
 	if err != nil {
 		slog.Error("Failed to send message", "error", err.Error(), "chatId", chatID, "text", text)
@@ -69,35 +80,42 @@ func (bot *Bot) SendMessage(chatID int64, text string) {
 }
 
 func (bot *Bot) Start() {
-	jobs := make(chan *tgbotapi.Message, 100)
+	jobs := make([]chan *tgbotapi.Message, bot.workerCount)
+	for i := range jobs {
+		jobs[i] = make(chan *tgbotapi.Message, 100)
+	}
+
 	wg := sync.WaitGroup{}
 
 	for i := 0; i < bot.workerCount; i++ {
 		wg.Add(1)
 
-		go func() {
+		go func(workerID int) {
 			defer wg.Done()
 
-			for msg := range jobs {
+			for msg := range jobs[workerID] {
 				if msg.IsCommand() {
 					bot.handleCommand(msg)
 				} else {
 					bot.changeState(msg)
 				}
 			}
-		}()
+		}(i)
 	}
 
 	updates := bot.tgAPI.GetUpdates()
 	for update := range updates {
 		if update.Message != nil {
-			if update.Message != nil {
-				jobs <- update.Message
-			}
+			chatID := update.Message.Chat.ID
+			index := chatID % int64(bot.workerCount)
+			jobs[index] <- update.Message
 		}
 	}
 
-	close(jobs)
+	for i := range jobs {
+		close(jobs[i])
+	}
+
 	wg.Wait()
 	slog.Info("Bot has stopped")
 }
@@ -124,7 +142,7 @@ func (bot *Bot) handleCommand(message *tgbotapi.Message) {
 	}
 }
 func (bot *Bot) changeState(message *tgbotapi.Message) {
-	if val, ok := bot.UserState[message.Chat.ID]; ok {
+	if val, ok := bot.userState[message.Chat.ID]; ok {
 		switch val.state {
 		case NotState:
 			return
@@ -148,7 +166,6 @@ func (bot *Bot) commandStart(message *tgbotapi.Message) {
 	err := bot.scrapperHTTPClient.RegisterUser(message.Chat.ID)
 	if err != nil {
 		bot.SendMessage(message.Chat.ID, "Не удалось выполнить операцию")
-
 		return
 	}
 
@@ -174,7 +191,7 @@ func (bot *Bot) commandHelp(message *tgbotapi.Message) {
 func (bot *Bot) commandTrack(message *tgbotapi.Message) {
 	slog.Info("Command /track execution", "chatId", message.Chat.ID)
 	bot.mu.Lock()
-	bot.UserState[message.Chat.ID] = LinkWithState{Link: domain.Link{}, state: WaitingLink}
+	bot.userState[message.Chat.ID] = LinkWithState{Link: domain.Link{}, state: WaitingLink}
 	bot.mu.Unlock()
 	bot.SendMessage(message.Chat.ID, "Введите адрес ссылки (поддерживается только gitHub и stackOverFlow")
 }
@@ -182,7 +199,7 @@ func (bot *Bot) commandTrack(message *tgbotapi.Message) {
 func (bot *Bot) commandUntrack(message *tgbotapi.Message) {
 	slog.Info("Command /untrack execution", "chatId", message.Chat.ID)
 	bot.mu.Lock()
-	bot.UserState[message.Chat.ID] = LinkWithState{Link: domain.Link{}, state: WaitingDelete}
+	bot.userState[message.Chat.ID] = LinkWithState{Link: domain.Link{}, state: WaitingDelete}
 	bot.mu.Unlock()
 	bot.SendMessage(message.Chat.ID, "Введите адрес ссылки")
 }
@@ -207,7 +224,7 @@ func (bot *Bot) stateWaitLink(message *tgbotapi.Message) {
 	link := message.Text
 	if validateLink(link) {
 		bot.mu.Lock()
-		bot.UserState[message.Chat.ID] = LinkWithState{
+		bot.userState[message.Chat.ID] = LinkWithState{
 			Link:  domain.Link{URL: link},
 			state: WaitingTags}
 		bot.mu.Unlock()
@@ -216,14 +233,14 @@ func (bot *Bot) stateWaitLink(message *tgbotapi.Message) {
 		bot.SendMessage(message.Chat.ID, "Поддерживается только gitHub(https://github.com/{owner}/{repo}) и "+
 			"stackOverflow(https://stackoverflow.com/questions/{id}). Повторите команду /track")
 		bot.mu.Lock()
-		delete(bot.UserState, message.Chat.ID)
+		delete(bot.userState, message.Chat.ID)
 		bot.mu.Unlock()
 	}
 }
 
 func (bot *Bot) stateWaitTags(message *tgbotapi.Message) {
 	bot.mu.RLock()
-	tempLinkWithState := bot.UserState[message.Chat.ID]
+	tempLinkWithState := bot.userState[message.Chat.ID]
 	bot.mu.RUnlock()
 
 	if message.Text == "-" {
@@ -235,14 +252,14 @@ func (bot *Bot) stateWaitTags(message *tgbotapi.Message) {
 	tempLinkWithState.state = WaitingFilters
 
 	bot.mu.Lock()
-	bot.UserState[message.Chat.ID] = tempLinkWithState
+	bot.userState[message.Chat.ID] = tempLinkWithState
 	bot.mu.Unlock()
 	bot.SendMessage(message.Chat.ID, "Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек ")
 }
 
 func (bot *Bot) stateWaitFilters(message *tgbotapi.Message) {
 	bot.mu.RLock()
-	tempLinkWithState := bot.UserState[message.Chat.ID]
+	tempLinkWithState := bot.userState[message.Chat.ID]
 	bot.mu.RUnlock()
 
 	if message.Text == "-" {
@@ -256,12 +273,13 @@ func (bot *Bot) stateWaitFilters(message *tgbotapi.Message) {
 	err := bot.scrapperHTTPClient.AddLink(message.Chat.ID, tempLinkWithState.Link)
 	if err != nil {
 		slog.Error(err.Error())
+		bot.SendMessage(message.Chat.ID, "Не удалось выполнить операцию")
 		return
 	}
 
 	bot.SendMessage(message.Chat.ID, "Ссылка отслеживается")
 	bot.mu.Lock()
-	delete(bot.UserState, message.Chat.ID)
+	delete(bot.userState, message.Chat.ID)
 	bot.mu.Unlock()
 }
 
@@ -276,11 +294,11 @@ func (bot *Bot) stateWaitDelete(message *tgbotapi.Message) {
 
 		bot.SendMessage(message.Chat.ID, "Ссылка успешно удалена")
 	} else {
-		bot.SendMessage(message.Chat.ID, "Поддерживается только gitHub и stackOverflow. Повторите команду")
+		bot.SendMessage(message.Chat.ID, "Поддерживается только gitHub и stackOverflow. Не удалось выполнить операцию")
 	}
 
 	bot.mu.Lock()
-	delete(bot.UserState, message.Chat.ID)
+	delete(bot.userState, message.Chat.ID)
 	bot.mu.Unlock()
 }
 

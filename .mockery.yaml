@@ -9,3 +9,11 @@ packages:
     interfaces:
       Scrapper:
       Bot:
+  github.com/es-debug/backend-academy-2024-go-template/internal/application:
+    config:
+      dir: "{{.InterfaceDir}}/mocks"
+    interfaces:
+      Database:
+      BotClient:
+      ScrapperClient:
+      TelegramClient:

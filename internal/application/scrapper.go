@@ -6,10 +6,9 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/clients"
-
 	"github.com/go-co-op/gocron/v2"
+
+	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
 )
 
 type Database interface {
@@ -102,7 +101,7 @@ func (s *Scrapper) Scrape() {
 		for _, link := range links {
 			countChecks++
 
-			activity, err := s.CheckUpdates(link.URL, time.Now().Add(-5*time.Minute))
+			activity, err := CheckUpdates(link.URL, time.Now().Add(-5*time.Minute))
 			if err != nil {
 				slog.Error("Failed to check for updates on the link", "error", err.Error(), "link", link.URL)
 				continue
@@ -120,44 +119,6 @@ func (s *Scrapper) Scrape() {
 	}
 
 	slog.Info("Scrape finished", "countChecks", countChecks, "successfullyChecks", successfullyChecks)
-}
-
-func (s *Scrapper) CheckUpdates(linkURL string, lastKnown time.Time) (bool, error) {
-	parsedURL, err := url.Parse(linkURL)
-	if err != nil {
-		return false, err
-	}
-
-	const (
-		github        = "github.com"
-		stackoverflow = "stackoverflow.com"
-	)
-
-	switch parsedURL.Host {
-	case github:
-		gitClient := clients.NewGitHubHTTPClient()
-
-		lastUpdate, err := gitClient.GetLastUpdateTimeRepo(linkURL)
-		if err != nil {
-			slog.Error(err.Error(), "linkURL", linkURL)
-			return false, err
-		}
-
-		return lastUpdate.After(lastKnown), nil
-	case stackoverflow:
-		soClient := clients.NewStackOverflowHTTPClient()
-
-		lastActivity, err := soClient.GetLastActivityQuestion(linkURL)
-		if err != nil {
-			slog.Error(err.Error(), "linkURL", linkURL)
-			return false, err
-		}
-
-		return lastActivity.After(lastKnown), nil
-	default:
-		slog.Error("Unsupported host", "host", parsedURL.Host)
-		return false, domain.ErrUnsupportedHost{}
-	}
 }
 
 func (s *Scrapper) AddUser(id int64) error {
