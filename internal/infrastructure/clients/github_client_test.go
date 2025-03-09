@@ -15,8 +15,10 @@ import (
 	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/clients"
 )
 
+const gitOwnerRepo = "https://github.com/owner/repo"
+
 // newTestGitHubHTTPClient создаёт клиент, который перенаправляет запросы, начинающиеся с githubAPIBaseURL, на testServer.
-func newTestGitHubHTTPClient(testServerURL string, timeout time.Duration) *clients.GitHubHTTPClient {
+func newTestGitHubHTTPClient(testServerURL string, _ time.Duration) *clients.GitHubHTTPClient {
 	client := clients.NewGitHubHTTPClient()
 	client.Client.Transport = roundTripFunc(func(req *http.Request) (*http.Response, error) {
 		if strings.HasPrefix(req.URL.String(), "https://api.github.com") {
@@ -53,7 +55,7 @@ func TestGitHubHTTPClient_GetLastUpdateTimeRepo_Success(t *testing.T) {
 	defer ts.Close()
 
 	client := newTestGitHubHTTPClient(ts.URL, 5*time.Second)
-	link := "https://github.com/owner/repo"
+	link := gitOwnerRepo
 
 	// Act
 	result, err := client.GetLastUpdateTimeRepo(link)
@@ -65,14 +67,14 @@ func TestGitHubHTTPClient_GetLastUpdateTimeRepo_Success(t *testing.T) {
 
 func TestGitHubHTTPClient_GetLastUpdateTimeRepo_InvalidJSON(t *testing.T) {
 	// Arrange: сервер возвращает некорректный JSON.
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("invalid json"))
 	}))
 	defer ts.Close()
 
 	client := newTestGitHubHTTPClient(ts.URL, 5*time.Second)
-	link := "https://github.com/owner/repo"
+	link := gitOwnerRepo
 
 	// Act
 	_, err := client.GetLastUpdateTimeRepo(link)
@@ -83,7 +85,7 @@ func TestGitHubHTTPClient_GetLastUpdateTimeRepo_InvalidJSON(t *testing.T) {
 
 func TestGitHubHTTPClient_GetLastUpdateTimeRepo_InvalidTimeFormat(t *testing.T) {
 	// Arrange: сервер возвращает JSON с неверным форматом времени.
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_ = json.NewEncoder(w).Encode(map[string]string{
 			"updated_at": "not-a-time",
@@ -92,7 +94,7 @@ func TestGitHubHTTPClient_GetLastUpdateTimeRepo_InvalidTimeFormat(t *testing.T) 
 	defer ts.Close()
 
 	client := newTestGitHubHTTPClient(ts.URL, 5*time.Second)
-	link := "https://github.com/owner/repo"
+	link := gitOwnerRepo
 
 	// Act
 	_, err := client.GetLastUpdateTimeRepo(link)

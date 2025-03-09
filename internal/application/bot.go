@@ -3,12 +3,13 @@ package application
 import (
 	"context"
 	"fmt"
-	"golang.org/x/time/rate"
 	"log/slog"
 	"net/url"
 	"strings"
 	"sync"
 	"time"
+
+	"golang.org/x/time/rate"
 
 	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
 
@@ -274,6 +275,7 @@ func (bot *Bot) stateWaitFilters(message *tgbotapi.Message) {
 	if err != nil {
 		slog.Error(err.Error())
 		bot.SendMessage(message.Chat.ID, "Не удалось выполнить операцию")
+
 		return
 	}
 

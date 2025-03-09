@@ -13,6 +13,8 @@ import (
 	"github.com/es-debug/backend-academy-2024-go-template/internal/application/mocks"
 )
 
+const exampleURL = "https://github.com/TimofeyMosk/fractalFlame-image-creator"
+
 func TestBot_Start_CommandStart_Success(t *testing.T) {
 	mockTelegram := &mocks.TelegramClient{}
 	mockScrapper := &mocks.ScrapperClient{}
@@ -21,7 +23,9 @@ func TestBot_Start_CommandStart_Success(t *testing.T) {
 	command := "/start"
 	updates := make(chan tgbotapi.Update, 1)
 	updates <- tgbotapi.Update{
-		Message: &tgbotapi.Message{Text: command, Chat: &tgbotapi.Chat{ID: 123}, Entities: []tgbotapi.MessageEntity{{Type: "bot_command", Offset: 0, Length: len(command)}}},
+		Message: &tgbotapi.Message{Text: command,
+			Chat:     &tgbotapi.Chat{ID: 123},
+			Entities: []tgbotapi.MessageEntity{{Type: "bot_command", Offset: 0, Length: len(command)}}},
 	}
 	close(updates)
 	mockTelegram.On("GetUpdates").Return(tgbotapi.UpdatesChannel(updates)).Once()
@@ -42,7 +46,9 @@ func TestBot_Start_CommandStart_RegisterError(t *testing.T) {
 	command := "/start"
 	updates := make(chan tgbotapi.Update, 1)
 	updates <- tgbotapi.Update{
-		Message: &tgbotapi.Message{Text: command, Chat: &tgbotapi.Chat{ID: 123}, Entities: []tgbotapi.MessageEntity{{Type: "bot_command", Offset: 0, Length: len(command)}}},
+		Message: &tgbotapi.Message{Text: command,
+			Chat:     &tgbotapi.Chat{ID: 123},
+			Entities: []tgbotapi.MessageEntity{{Type: "bot_command", Offset: 0, Length: len(command)}}},
 	}
 	close(updates)
 	mockTelegram.On("GetUpdates").Return(tgbotapi.UpdatesChannel(updates)).Once()
@@ -61,7 +67,9 @@ func TestBot_Start_CommandHelp(t *testing.T) {
 	command := "/help"
 	updates := make(chan tgbotapi.Update, 1)
 	updates <- tgbotapi.Update{
-		Message: &tgbotapi.Message{Text: command, Chat: &tgbotapi.Chat{ID: 123}, Entities: []tgbotapi.MessageEntity{{Type: "bot_command", Offset: 0, Length: len(command)}}},
+		Message: &tgbotapi.Message{Text: command,
+			Chat:     &tgbotapi.Chat{ID: 123},
+			Entities: []tgbotapi.MessageEntity{{Type: "bot_command", Offset: 0, Length: len(command)}}},
 	}
 	close(updates)
 	mockTelegram.On("GetUpdates").Return(tgbotapi.UpdatesChannel(updates)).Once()
@@ -83,10 +91,12 @@ func TestBot_Start_CommandTrack(t *testing.T) {
 	mockScrapper := &mocks.ScrapperClient{}
 	bot := application.NewBot(mockScrapper, mockTelegram, 8)
 	command := "/track"
-	linkURL := "https://github.com/TimofeyMosk/fractalFlame-image-creator"
+	linkURL := exampleURL
 	updates := make(chan tgbotapi.Update, 100)
 	updates <- tgbotapi.Update{
-		Message: &tgbotapi.Message{Text: command, Chat: &tgbotapi.Chat{ID: 123}, Entities: []tgbotapi.MessageEntity{{Type: "bot_command", Offset: 0, Length: len(command)}}},
+		Message: &tgbotapi.Message{Text: command,
+			Chat:     &tgbotapi.Chat{ID: 123},
+			Entities: []tgbotapi.MessageEntity{{Type: "bot_command", Offset: 0, Length: len(command)}}},
 	}
 	updates <- tgbotapi.Update{
 		Message: &tgbotapi.Message{Text: linkURL, Chat: &tgbotapi.Chat{ID: 123}},
@@ -103,12 +113,15 @@ func TestBot_Start_CommandTrack(t *testing.T) {
 	mockTelegram.On("SendMessage", mock.AnythingOfType("int64"),
 		"Введите адрес ссылки (поддерживается только gitHub и stackOverFlow").Return(tgbotapi.Message{}, nil).Once()
 	mockTelegram.On("SendMessage", mock.AnythingOfType("int64"),
-		"Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек ").Return(tgbotapi.Message{}, nil).Once()
+		"Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек ").
+		Return(tgbotapi.Message{}, nil).Once()
 	mockTelegram.On("SendMessage", mock.AnythingOfType("int64"),
-		"Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек ").Return(tgbotapi.Message{}, nil).Once()
+		"Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек ").
+		Return(tgbotapi.Message{}, nil).Once()
 	mockTelegram.On("SendMessage", mock.AnythingOfType("int64"),
 		"Ссылка отслеживается").Return(tgbotapi.Message{}, nil).Once()
-	mockScrapper.On("AddLink", mock.AnythingOfType("int64"), domain.Link{URL: linkURL, Tags: []string{}, Filters: []string{}, ID: 0}).Return(nil)
+	mockScrapper.On("AddLink", mock.AnythingOfType("int64"), domain.Link{URL: linkURL,
+		Tags: []string{}, Filters: []string{}, ID: 0}).Return(nil)
 
 	bot.Start()
 
@@ -121,10 +134,12 @@ func TestBot_Start_CommandUnTrack(t *testing.T) {
 	mockScrapper := &mocks.ScrapperClient{}
 	bot := application.NewBot(mockScrapper, mockTelegram, 8)
 	command := "/untrack"
-	linkURL := "https://github.com/TimofeyMosk/fractalFlame-image-creator"
+	linkURL := exampleURL
 	updates := make(chan tgbotapi.Update, 100)
 	updates <- tgbotapi.Update{
-		Message: &tgbotapi.Message{Text: command, Chat: &tgbotapi.Chat{ID: 123}, Entities: []tgbotapi.MessageEntity{{Type: "bot_command", Offset: 0, Length: len(command)}}},
+		Message: &tgbotapi.Message{Text: command,
+			Chat:     &tgbotapi.Chat{ID: 123},
+			Entities: []tgbotapi.MessageEntity{{Type: "bot_command", Offset: 0, Length: len(command)}}},
 	}
 	updates <- tgbotapi.Update{
 		Message: &tgbotapi.Message{Text: linkURL, Chat: &tgbotapi.Chat{ID: 123}},
@@ -156,11 +171,13 @@ func TestBot_Start_CommandList(t *testing.T) {
 	mockScrapper := &mocks.ScrapperClient{}
 	bot := application.NewBot(mockScrapper, mockTelegram, 8)
 	command := "/list"
-	linkURL1 := "https://github.com/TimofeyMosk/fractalFlame-image-creator"
+	linkURL1 := exampleURL
 	linkURL2 := "https://github.com/central-university-dev/go-TimofeyMosk"
 	updates := make(chan tgbotapi.Update, 100)
 	updates <- tgbotapi.Update{
-		Message: &tgbotapi.Message{Text: command, Chat: &tgbotapi.Chat{ID: 123}, Entities: []tgbotapi.MessageEntity{{Type: "bot_command", Offset: 0, Length: len(command)}}},
+		Message: &tgbotapi.Message{Text: command,
+			Chat:     &tgbotapi.Chat{ID: 123},
+			Entities: []tgbotapi.MessageEntity{{Type: "bot_command", Offset: 0, Length: len(command)}}},
 	}
 	close(updates)
 

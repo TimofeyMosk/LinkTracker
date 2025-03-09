@@ -15,6 +15,8 @@ import (
 	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/clients"
 )
 
+const soQuestion = "https://stackoverflow.com/questions/12345/some-question-title"
+
 type roundTripFunc func(req *http.Request) (*http.Response, error)
 
 func (f roundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
@@ -22,7 +24,7 @@ func (f roundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
 }
 
 // newTestClient создаёт экземпляр StackOverflowHTTPClient, чей транспорт перенаправляет запросы на testServer.
-func newTestClient(testServerURL string, timeout time.Duration) *clients.StackOverflowHTTPClient {
+func newTestClient(testServerURL string, _ time.Duration) *clients.StackOverflowHTTPClient {
 	client := clients.NewStackOverflowHTTPClient()
 	// Переопределяем Transport, чтобы перенаправлять запросы, начинающиеся с реального API-адреса,
 	// на адрес нашего тестового сервера.
@@ -46,7 +48,6 @@ func newTestClient(testServerURL string, timeout time.Duration) *clients.StackOv
 }
 
 func TestStackOverflowHTTPClient_GetLastActivityQuestion_Success(t *testing.T) {
-	// Arrange: тестовый сервер возвращает корректный JSON с одним элементом.
 	expectedTimestamp := time.Now().Unix()
 	soResponse := map[string]interface{}{
 		"items": []map[string]interface{}{
@@ -65,68 +66,55 @@ func TestStackOverflowHTTPClient_GetLastActivityQuestion_Success(t *testing.T) {
 	defer ts.Close()
 
 	client := newTestClient(ts.URL, 5*time.Second)
-	// Используем корректную ссылку StackOverflow.
-	link := "https://stackoverflow.com/questions/12345/some-question-title"
+	link := soQuestion
 
-	// Act
 	lastActivity, err := client.GetLastActivityQuestion(link)
 
-	// Assert
 	require.NoError(t, err)
 	assert.Equal(t, time.Unix(expectedTimestamp, 0), lastActivity)
 }
 
 func TestStackOverflowHTTPClient_GetLastActivityQuestion_NoItems(t *testing.T) {
-	// Arrange: сервер возвращает JSON с пустым items.
 	soResponse := map[string]interface{}{
 		"items": []interface{}{},
 	}
 
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_ = json.NewEncoder(w).Encode(soResponse)
 	}))
 	defer ts.Close()
 
 	client := newTestClient(ts.URL, 5*time.Second)
-	link := "https://stackoverflow.com/questions/12345/some-question-title"
+	link := soQuestion
 
-	// Act
 	_, err := client.GetLastActivityQuestion(link)
 
-	// Assert: ожидается ошибка ErrQuestionNotFound.
 	require.Error(t, err)
-	_, ok := err.(domain.ErrQuestionNotFound)
-	assert.True(t, ok)
+	assert.ErrorAs(t, err, &domain.ErrQuestionNotFound{})
 }
 
 func TestStackOverflowHTTPClient_GetLastActivityQuestion_InvalidJSON(t *testing.T) {
-	// Arrange: сервер возвращает некорректный JSON.
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("invalid json"))
 	}))
 	defer ts.Close()
 
 	client := newTestClient(ts.URL, 5*time.Second)
-	link := "https://stackoverflow.com/questions/12345/some-question-title"
+	link := soQuestion
 
-	// Act
 	_, err := client.GetLastActivityQuestion(link)
 
-	// Assert: ошибка декодирования JSON.
 	require.Error(t, err)
 }
 
 func TestStackOverflowHTTPClient_GetLastActivityQuestion_InvalidLink(t *testing.T) {
-	// Arrange: передаём ссылку, которая не соответствует ожидаемому формату.
 	client := clients.NewStackOverflowHTTPClient()
 	invalidLink := "https://stackoverflow.com/users/12345" // не questions
 
-	// Act
 	_, err := client.GetLastActivityQuestion(invalidLink)
 
-	// Assert: ожидается ошибка, сформированная в apiSOUrlGeneration.
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "wrong url format")
 }

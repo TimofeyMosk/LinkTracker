@@ -48,7 +48,7 @@ func TestScrapperHTTPClient_RegisterUser_BadRequest(t *testing.T) {
 		Stacktrace:       &[]string{"line1", "line2"},
 	}
 
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		_ = json.NewEncoder(w).Encode(errorResp)
 	}))
@@ -60,6 +60,7 @@ func TestScrapperHTTPClient_RegisterUser_BadRequest(t *testing.T) {
 	err = client.RegisterUser(12345)
 
 	var apiErr domain.ErrAPI
+
 	require.Error(t, err)
 	assert.ErrorAs(t, err, &apiErr)
 	assert.Equal(t, "ERR_INVALID", apiErr.Code)
@@ -67,7 +68,7 @@ func TestScrapperHTTPClient_RegisterUser_BadRequest(t *testing.T) {
 }
 
 func TestScrapperHTTPClient_RegisterUser_UnexpectedStatus(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
 	defer server.Close()
@@ -78,6 +79,7 @@ func TestScrapperHTTPClient_RegisterUser_UnexpectedStatus(t *testing.T) {
 	err = client.RegisterUser(12345)
 
 	var unexpected domain.ErrUnexpectedStatusCode
+
 	require.Error(t, err)
 	assert.ErrorAs(t, err, &unexpected)
 	assert.Equal(t, http.StatusInternalServerError, unexpected.StatusCode)
@@ -105,7 +107,7 @@ func TestScrapperHTTPClient_DeleteUser_NotFound(t *testing.T) {
 		Description: ptrString("Chat not exist"),
 	}
 
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		_ = json.NewEncoder(w).Encode(errorResp)
 	}))
@@ -117,6 +119,7 @@ func TestScrapperHTTPClient_DeleteUser_NotFound(t *testing.T) {
 	err = client.DeleteUser(12345)
 
 	var apiErr domain.ErrAPI
+
 	require.Error(t, err)
 	assert.ErrorAs(t, err, &apiErr)
 	assert.Equal(t, "ERR_NOT_FOUND", apiErr.Code)
@@ -124,7 +127,7 @@ func TestScrapperHTTPClient_DeleteUser_NotFound(t *testing.T) {
 }
 
 func TestScrapperHTTPClient_DeleteUser_UnexpectedStatus(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
 	defer server.Close()
@@ -135,6 +138,7 @@ func TestScrapperHTTPClient_DeleteUser_UnexpectedStatus(t *testing.T) {
 	err = client.DeleteUser(12345)
 
 	var unexpected domain.ErrUnexpectedStatusCode
+
 	require.Error(t, err)
 	assert.ErrorAs(t, err, &unexpected)
 	assert.Equal(t, http.StatusInternalServerError, unexpected.StatusCode)
@@ -149,7 +153,7 @@ func TestScrapperHTTPClient_GetLinks_Success(t *testing.T) {
 		Filters: &[]string{"filter1"},
 	}
 	links := []scrapperdto.LinkResponse{linkResponse}
-	size := int32(len(links))
+	size := int32(len(links)) //nolint:gosec // overflow impossible
 	listResp := scrapperdto.ListLinksResponse{
 		Links: &links,
 		Size:  &size,
@@ -188,9 +192,9 @@ func TestScrapperHTTPClient_GetLinks_BadRequest(t *testing.T) {
 		Description: ptrString("Invalid input"),
 	}
 
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(errorResp)
+		_ = json.NewEncoder(w).Encode(errorResp)
 	}))
 	defer server.Close()
 
@@ -205,6 +209,7 @@ func TestScrapperHTTPClient_GetLinks_BadRequest(t *testing.T) {
 	assert.Nil(t, result)
 
 	var apiErr domain.ErrAPI
+
 	require.Error(t, err)
 	assert.ErrorAs(t, err, &apiErr)
 	assert.Equal(t, "ERR_BAD_REQUEST", apiErr.Code)
@@ -213,7 +218,7 @@ func TestScrapperHTTPClient_GetLinks_BadRequest(t *testing.T) {
 
 func TestScrapperHTTPClient_GetLinks_UnexpectedStatus(t *testing.T) {
 	// Arrange: сервер возвращает неожиданный статус (500)
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
 	defer server.Close()
@@ -227,6 +232,7 @@ func TestScrapperHTTPClient_GetLinks_UnexpectedStatus(t *testing.T) {
 	assert.Nil(t, result)
 
 	var unexpected domain.ErrUnexpectedStatusCode
+
 	require.Error(t, err)
 	assert.ErrorAs(t, err, &unexpected)
 	assert.Equal(t, http.StatusInternalServerError, unexpected.StatusCode)
@@ -244,7 +250,7 @@ func TestScrapperHTTPClient_AddLink_Success(t *testing.T) {
 		assert.Equal(t, http.MethodPost, r.Method)
 		assert.Equal(t, "12345", r.Header.Get("Tg-Chat-Id"))
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(linkResponse)
+		_ = json.NewEncoder(w).Encode(linkResponse)
 	}))
 	defer server.Close()
 
@@ -269,9 +275,9 @@ func TestScrapperHTTPClient_AddLink_BadRequest(t *testing.T) {
 		Description: ptrString("Failed to add link"),
 	}
 
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(errorResp)
+		_ = json.NewEncoder(w).Encode(errorResp)
 	}))
 	defer server.Close()
 
@@ -288,6 +294,7 @@ func TestScrapperHTTPClient_AddLink_BadRequest(t *testing.T) {
 	err = client.AddLink(12345, testLink)
 
 	var apiErr domain.ErrAPI
+
 	require.Error(t, err)
 	assert.ErrorAs(t, err, &apiErr)
 	assert.Equal(t, "ERR_ADD_LINK", apiErr.Code)
@@ -295,7 +302,7 @@ func TestScrapperHTTPClient_AddLink_BadRequest(t *testing.T) {
 }
 
 func TestScrapperHTTPClient_AddLink_UnexpectedStatus(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
 	defer server.Close()
@@ -313,6 +320,7 @@ func TestScrapperHTTPClient_AddLink_UnexpectedStatus(t *testing.T) {
 	err = client.AddLink(12345, testLink)
 
 	var unexpected domain.ErrUnexpectedStatusCode
+
 	require.Error(t, err)
 	assert.ErrorAs(t, err, &unexpected)
 	assert.Equal(t, http.StatusInternalServerError, unexpected.StatusCode)
@@ -330,7 +338,7 @@ func TestScrapperHTTPClient_RemoveLink_Success(t *testing.T) {
 		assert.Equal(t, http.MethodDelete, r.Method)
 		assert.Equal(t, "12345", r.Header.Get("Tg-Chat-Id"))
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(linkResponse)
+		_ = json.NewEncoder(w).Encode(linkResponse)
 	}))
 	defer server.Close()
 
@@ -355,9 +363,9 @@ func TestScrapperHTTPClient_RemoveLink_BadRequest(t *testing.T) {
 		Description: ptrString("Failed to remove link"),
 	}
 
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(errorResp)
+		_ = json.NewEncoder(w).Encode(errorResp)
 	}))
 	defer server.Close()
 
@@ -374,6 +382,7 @@ func TestScrapperHTTPClient_RemoveLink_BadRequest(t *testing.T) {
 	err = client.RemoveLink(12345, testLink)
 
 	var apiErr domain.ErrAPI
+
 	require.Error(t, err)
 	assert.ErrorAs(t, err, &apiErr)
 	assert.Equal(t, "ERR_REMOVE_LINK", apiErr.Code)
@@ -381,7 +390,7 @@ func TestScrapperHTTPClient_RemoveLink_BadRequest(t *testing.T) {
 }
 
 func TestScrapperHTTPClient_RemoveLink_UnexpectedStatus(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
 	defer server.Close()
@@ -399,6 +408,7 @@ func TestScrapperHTTPClient_RemoveLink_UnexpectedStatus(t *testing.T) {
 	err = client.RemoveLink(12345, testLink)
 
 	var unexpected domain.ErrUnexpectedStatusCode
+
 	require.Error(t, err)
 	assert.ErrorAs(t, err, &unexpected)
 	assert.Equal(t, http.StatusInternalServerError, unexpected.StatusCode)
