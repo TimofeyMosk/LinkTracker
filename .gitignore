@@ -26,9 +26,6 @@ go.work.sum
 *.env
 
 
-# logs
-bot_logs.txt
-scrapper_logs.txt
 
 .idea/
 
