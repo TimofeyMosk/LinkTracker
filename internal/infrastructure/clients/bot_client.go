@@ -4,13 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"time"
 
 	"LinkTracker/internal/domain"
 	botdto "LinkTracker/internal/infrastructure/dto/dto_bot"
-	"LinkTracker/pkg"
 )
 
 type BotHTTPClient struct {
@@ -51,11 +51,16 @@ func (c *BotHTTPClient) PostUpdates(link domain.Link, tgID int64) error {
 
 	request.Header.Set("Content-Type", "application/json")
 
-	response, err := c.client.Do(request) //nolint:bodyclose // The body closes in a function pkg.SafeClose(response.Body)
+	response, err := c.client.Do(request)
 	if err != nil {
 		return err
 	}
-	defer pkg.SafeClose(response.Body)
+
+	defer func() {
+		if Cerr := response.Body.Close(); Cerr != nil {
+			slog.Error("could not close resource", "error", Cerr.Error())
+		}
+	}()
 
 	switch response.StatusCode {
 	case http.StatusOK:

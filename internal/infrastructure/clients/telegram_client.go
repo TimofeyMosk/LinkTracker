@@ -123,7 +123,7 @@ func setBotCommands(bot *tgbotapi.BotAPI, botCommands []tgbotapi.BotCommand) err
 }
 
 func (t *TelegramHTTPClient) SendMessage(chatID int64, text string) {
-	err := t.globalLimiter.Wait(context.Background())
+	err := t.globalLimiter.Wait(context.TODO())
 	if err != nil {
 		slog.Error("Rate limit error", "chatID", chatID, "text", text, "error", err.Error())
 	}

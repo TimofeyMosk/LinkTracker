@@ -28,6 +28,8 @@ packages:
       Database:
       BotClient:
       ScrapperClient:
+      GitHubClient:
+      StackOverflowClient:
   LinkTracker/internal/infrastructure/clients:
     config:
       dir: "{{.InterfaceDir}}/mocks"

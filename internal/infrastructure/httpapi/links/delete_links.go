@@ -37,6 +37,7 @@ func (h DeleteLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	link := domain.Link{URL: *removeLinkRequest.Link, Tags: nil, Filters: nil, ID: 0}
+
 	deletedLink, err := h.LinkDeleter.DeleteLink(tgChatID, link)
 	if err != nil {
 		if errors.As(err, &domain.ErrUserNotExist{}) {
@@ -44,12 +45,12 @@ func (h DeleteLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				"Chat not exist", err.Error(), "Not Found")
 
 			return
-		} else {
-			httpapi.SendErrorResponse(w, http.StatusBadRequest, "DELETE_LINK_FAILED",
-				"Failed to delete link", err.Error(), "BadRequest")
-
-			return
 		}
+
+		httpapi.SendErrorResponse(w, http.StatusBadRequest, "DELETE_LINK_FAILED",
+			"Failed to delete link", err.Error(), "BadRequest")
+
+		return
 	}
 
 	linkResponse := scrapperdto.LinkResponse{

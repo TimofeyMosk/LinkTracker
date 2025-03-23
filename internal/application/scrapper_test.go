@@ -1,101 +1,107 @@
 package application_test
 
-// import (
-//	"testing"
-//	"time"
-//
-//	"github.com/stretchr/testify/assert"
-//	"github.com/stretchr/testify/require"
-//
-//	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
-//	"github.com/es-debug/backend-academy-2024-go-template/internal/application/mocks"
-//	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-//)
-//
-// func TestScrapper_AddUser_Success(t *testing.T) {
-//	dbMock := &mocks.Database{}
-//	botClientMock := &mocks.BotClient{}
-//
-//	dbMock.On("CreateUser", int64(123)).Return(nil)
-//
-//	s := application.NewScrapper(dbMock, 1*time.Second, botClientMock)
-//
-//	err := s.AddUser(123)
-//
-//	require.NoError(t, err)
-//	dbMock.AssertExpectations(t)
-//}
-//
-// func TestScrapper_DeleteUser_Success(t *testing.T) {
-//	dbMock := &mocks.Database{}
-//	botClientMock := &mocks.BotClient{}
-//
-//	dbMock.On("DeleteUser", int64(123)).Return(nil)
-//
-//	s := application.NewScrapper(dbMock, 1*time.Second, botClientMock)
-//
-//	err := s.DeleteUser(123)
-//
-//	require.NoError(t, err)
-//	dbMock.AssertExpectations(t)
-//}
-//
-// func TestScrapper_GetLinks_Success(t *testing.T) {
-//	dbMock := &mocks.Database{}
-//	botClientMock := &mocks.BotClient{}
-//	expectedLinks := []domain.Link{
-//		{ID: 1, URL: "https://github.com/owner/repo", Tags: []string{"go"}, Filters: []string{"active"}},
-//	}
-//	dbMock.On("GetUserLinks", int64(123)).Return(expectedLinks, nil)
-//
-//	s := application.NewScrapper(dbMock, 1*time.Second, botClientMock)
-//
-//	links, err := s.GetUserLinks(123)
-//
-//	require.NoError(t, err)
-//	assert.Equal(t, expectedLinks, links)
-//	dbMock.AssertExpectations(t)
-//}
-//
-// func TestScrapper_AddLink_Success(t *testing.T) {
-//	dbMock := &mocks.Database{}
-//	botClientMock := &mocks.BotClient{}
-//	link := domain.Link{ID: 1, URL: "https://github.com/owner/repo", Tags: []string{"go"}, Filters: []string{"active"}}
-//	dbMock.On("AddLink", int64(123), link).Return(nil)
-//
-//	s := application.NewScrapper(dbMock, 1*time.Second, botClientMock)
-//
-//	returnedLink, err := s.AddLink(123, link)
-//
-//	require.NoError(t, err)
-//	assert.Equal(t, link, returnedLink)
-//	dbMock.AssertExpectations(t)
-//}
-//
-// func TestScrapper_AddLink_Invalid(t *testing.T) {
-//	dbMock := &mocks.Database{}
-//	botClientMock := &mocks.BotClient{}
-//	invalidLink := domain.Link{ID: 1, URL: "https://google.com", Tags: []string{}, Filters: []string{}}
-//
-//	s := application.NewScrapper(dbMock, 1*time.Second, botClientMock)
-//
-//	_, err := s.AddLink(123, invalidLink)
-//
-//	require.Error(t, err)
-//	assert.Equal(t, domain.ErrWrongURL{}, err)
-//}
-//
-// func TestScrapper_DeleteLink_Success(t *testing.T) {
-//	dbMock := &mocks.Database{}
-//	botClientMock := &mocks.BotClient{}
-//	link := domain.Link{ID: 1, URL: "https://github.com/owner/repo", Tags: []string{"go"}, Filters: []string{"active"}}
-//	dbMock.On("DeleteLink", int64(123), link).Return(link, nil)
-//
-//	s := application.NewScrapper(dbMock, 1*time.Second, botClientMock)
-//
-//	returnedLink, err := s.DeleteLink(123, link)
-//
-//	require.NoError(t, err)
-//	assert.Equal(t, link, returnedLink)
-//	dbMock.AssertExpectations(t)
-//}
+import (
+	"errors"
+	"testing"
+	"time"
+
+	"github.com/stretchr/testify/assert"
+
+	"LinkTracker/internal/application"
+	"LinkTracker/internal/application/mocks"
+	"LinkTracker/internal/domain"
+)
+
+func Test_Scrapper_AddLink_Success(t *testing.T) {
+	db := &mocks.Database{}
+	bot := &mocks.BotClient{}
+	gitClient := &mocks.GitHubClient{}
+	soClient := &mocks.StackOverflowClient{}
+	scrapper := application.NewScrapper(db, time.Minute, bot, gitClient, soClient)
+	tgID := int64(123)
+	newLink := domain.Link{URL: "https://github.com/example/example"}
+
+	db.On("GetUserLinks", tgID).Return([]domain.Link{{URL: "https://github.com/example2/example2"}}, nil)
+	db.On("AddLink", tgID, newLink).Return(nil)
+	link, err := scrapper.AddLink(tgID, newLink)
+
+	assert.NoError(t, err)
+	assert.Equal(t, newLink, link)
+}
+
+func Test_Scrapper_AddLink_AlreadyTracking(t *testing.T) {
+	db := &mocks.Database{}
+	bot := &mocks.BotClient{}
+	gitClient := &mocks.GitHubClient{}
+	soClient := &mocks.StackOverflowClient{}
+	scrapper := application.NewScrapper(db, time.Minute, bot, gitClient, soClient)
+	tgID := int64(123)
+	newLink := domain.Link{URL: "https://github.com/example/example"}
+
+	db.On("GetUserLinks", tgID).Return([]domain.Link{{URL: "https://github.com/example2/example2"}, newLink}, nil)
+
+	_, err := scrapper.AddLink(tgID, newLink)
+
+	assert.Error(t, err)
+	assert.Equal(t, domain.ErrLinkAlreadyTracking{}, err)
+}
+
+func Test_Scrapper_AddLink_GetUserLinksError(t *testing.T) {
+	db := &mocks.Database{}
+	bot := &mocks.BotClient{}
+	gitClient := &mocks.GitHubClient{}
+	soClient := &mocks.StackOverflowClient{}
+	scrapper := application.NewScrapper(db, time.Minute, bot, gitClient, soClient)
+	tgID := int64(123)
+	newLink := domain.Link{URL: "https://github.com/example/example"}
+
+	db.On("GetUserLinks", tgID).Return(nil, errors.New("some error"))
+
+	_, err := scrapper.AddLink(tgID, newLink)
+
+	assert.Error(t, err)
+}
+
+func Test_Scrapper_AddLink_AddLinkError(t *testing.T) {
+	db := &mocks.Database{}
+	bot := &mocks.BotClient{}
+	gitClient := &mocks.GitHubClient{}
+	soClient := &mocks.StackOverflowClient{}
+	scrapper := application.NewScrapper(db, time.Minute, bot, gitClient, soClient)
+	tgID := int64(123)
+	newLink := domain.Link{URL: "https://github.com/example/example"}
+
+	db.On("GetUserLinks", tgID).Return([]domain.Link{{URL: "https://github.com/example2/example2"}}, nil)
+	db.On("AddLink", tgID, newLink).Return(errors.New("some error"))
+
+	_, err := scrapper.AddLink(tgID, newLink)
+
+	assert.Error(t, err)
+}
+
+func Test_Scrapper_Scrape(t *testing.T) {
+	db := &mocks.Database{}
+	bot := &mocks.BotClient{}
+	gitClient := &mocks.GitHubClient{}
+	soClient := &mocks.StackOverflowClient{}
+	scrapper := application.NewScrapper(db, time.Minute, bot, gitClient, soClient)
+	tgID1 := int64(1)
+	tgID2 := int64(2)
+	link1 := domain.Link{URL: "https://github.com/example1/example1"}
+	link2 := domain.Link{URL: "https://stackoverflow.com/example2/example2"}
+
+	db.On("GetAllUsers").Return([]int64{tgID1, tgID2}, nil).Once()
+	db.On("GetUserLinks", tgID1).Return([]domain.Link{link1}, nil).Once()
+	db.On("GetUserLinks", tgID2).Return([]domain.Link{link2}, nil).Once()
+	gitClient.On("GetLastUpdateTimeRepo", link1.URL).Return(time.Now(), nil).Once()
+	soClient.On("GetLastActivityQuestion", link2.URL).Return(time.Now(), nil).Once()
+	bot.On("PostUpdates", link1, tgID1).Return(nil).Once()
+	bot.On("PostUpdates", link2, tgID2).Return(nil).Once()
+
+	scrapper.Scrape()
+
+	bot.AssertExpectations(t)
+	gitClient.AssertExpectations(t)
+	soClient.AssertExpectations(t)
+	db.AssertExpectations(t)
+}

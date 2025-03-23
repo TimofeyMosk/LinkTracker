@@ -3,12 +3,11 @@ package clients
 import (
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
-
-	"LinkTracker/pkg"
 )
 
 const (
@@ -41,11 +40,16 @@ func (c *GitHubHTTPClient) GetLastUpdateTimeRepo(link string) (time.Time, error)
 		return time.Time{}, err
 	}
 
-	response, err := c.Client.Do(request) //nolint:bodyclose // The body closes in a function pkg.SafeClose(response.Body)
+	response, err := c.Client.Do(request)
 	if err != nil {
 		return time.Time{}, err
 	}
-	defer pkg.SafeClose(response.Body)
+
+	defer func() {
+		if Cerr := response.Body.Close(); Cerr != nil {
+			slog.Error("could not close resource", "error", Cerr.Error())
+		}
+	}()
 
 	var repoData GitHubRepoResponse
 	if err := json.NewDecoder(response.Body).Decode(&repoData); err != nil {

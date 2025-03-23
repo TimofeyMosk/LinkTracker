@@ -9,15 +9,14 @@ import (
 	"testing"
 	"time"
 
+	"LinkTracker/internal/infrastructure/clients"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"LinkTracker/internal/infrastructure/clients"
 )
 
 const gitOwnerRepo = "https://github.com/owner/repo"
 
-// newTestGitHubHTTPClient создаёт клиент, который перенаправляет запросы, начинающиеся с githubAPIBaseURL, на testServer.
 func newTestGitHubHTTPClient(testServerURL string, _ time.Duration) *clients.GitHubHTTPClient {
 	client := clients.NewGitHubHTTPClient()
 	client.Client.Transport = roundTripFunc(func(req *http.Request) (*http.Response, error) {

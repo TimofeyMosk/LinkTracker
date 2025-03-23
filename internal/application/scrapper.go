@@ -33,32 +33,44 @@ type BotClient interface {
 	PostUpdates(link domain.Link, tgID int64) error
 }
 
+type GitHubClient interface {
+	GetLastUpdateTimeRepo(link string) (time.Time, error)
+}
+
+type StackOverflowClient interface {
+	GetLastActivityQuestion(link string) (time.Time, error)
+}
+
 type Scrapper struct {
 	db         Database
 	botClient  BotClient
+	gitClient  GitHubClient
+	soClient   StackOverflowClient
 	interval   time.Duration
 	stopSignal chan struct{}
 }
 
-func NewScrapper(db Database, interval time.Duration, botClient BotClient) *Scrapper {
+func NewScrapper(db Database, interval time.Duration, botClient BotClient, gitClient GitHubClient, soClient StackOverflowClient) *Scrapper {
 	slog.Info("Creating new Scrapper", "interval", interval)
 
 	return &Scrapper{
 		db:         db,
 		interval:   interval,
-		stopSignal: make(chan struct{}),
 		botClient:  botClient,
+		gitClient:  gitClient,
+		soClient:   soClient,
+		stopSignal: make(chan struct{}),
 	}
 }
 
 func (s *Scrapper) Run() error {
-	sched, err := gocron.NewScheduler()
+	scheduler, err := gocron.NewScheduler()
 	if err != nil {
 		slog.Error("Failed to create scheduler", "error", err.Error())
 		return fmt.Errorf("could not create sheduler: %w", err)
 	}
 
-	_, err = sched.NewJob(
+	_, err = scheduler.NewJob(
 		gocron.DurationJob(s.interval),
 		gocron.NewTask(s.Scrape),
 	)
@@ -69,12 +81,12 @@ func (s *Scrapper) Run() error {
 	}
 
 	slog.Info("Starts scrapper")
-	sched.Start()
+	scheduler.Start()
 
 	<-s.stopSignal
 	slog.Info("Shutting down scrapper")
 
-	err = sched.Shutdown()
+	err = scheduler.Shutdown()
 	if err != nil {
 		slog.Error("Failed to shutdown scrapper", "error", err.Error())
 		return fmt.Errorf("could not shutdown scrapper: %w", err)
@@ -109,7 +121,7 @@ func (s *Scrapper) Scrape() {
 		for _, link := range links {
 			countChecks++
 
-			activity, err := CheckUpdates(link.URL, time.Now().Add(-5*time.Minute))
+			activity, err := s.checkUpdates(link.URL, time.Now().Add(-1*s.interval))
 			if err != nil {
 				slog.Error("Failed to check for updates on the link", "error", err.Error(), "link", link.URL)
 				continue
@@ -127,6 +139,40 @@ func (s *Scrapper) Scrape() {
 	}
 
 	slog.Info("Scrape finished", "countChecks", countChecks, "successfullyChecks", successfullyChecks)
+}
+
+func (s *Scrapper) checkUpdates(linkURL string, lastKnown time.Time) (bool, error) {
+	parsedURL, err := url.Parse(linkURL)
+	if err != nil {
+		return false, err
+	}
+
+	const (
+		github        = "github.com"
+		stackoverflow = "stackoverflow.com"
+	)
+
+	switch parsedURL.Host {
+	case github:
+		lastUpdate, err := s.gitClient.GetLastUpdateTimeRepo(linkURL)
+		if err != nil {
+			slog.Error(err.Error(), "linkURL", linkURL)
+			return false, err
+		}
+
+		return lastUpdate.After(lastKnown), nil
+	case stackoverflow:
+		lastActivity, err := s.soClient.GetLastActivityQuestion(linkURL)
+		if err != nil {
+			slog.Error(err.Error(), "linkURL", linkURL)
+			return false, err
+		}
+
+		return lastActivity.After(lastKnown), nil
+	default:
+		slog.Error("Unsupported host", "host", parsedURL.Host)
+		return false, domain.ErrUnsupportedHost{}
+	}
 }
 
 func (s *Scrapper) AddUser(id int64) error {

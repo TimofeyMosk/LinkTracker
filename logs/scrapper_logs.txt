@@ -1,0 +1,157 @@
+time=2025-03-21T19:55:00.978+04:00 level=INFO msg="Creating new repository"
+time=2025-03-21T19:55:00.979+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-21T19:55:00.979+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-21T19:55:10.406+04:00 level=INFO msg="Adding user"
+time=2025-03-21T19:55:14.396+04:00 level=INFO msg="Adding user"
+time=2025-03-21T19:55:14.397+04:00 level=ERROR msg="Failed to add user" error="user with id 503492049 already exists" tgID=503492049
+time=2025-03-21T19:55:19.926+04:00 level=INFO msg="Adding user"
+time=2025-03-21T19:55:19.926+04:00 level=ERROR msg="Failed to add user" error="user with id 503492049 already exists" tgID=503492049
+time=2025-03-21T19:55:21.767+04:00 level=INFO msg="Adding user"
+time=2025-03-21T19:55:21.767+04:00 level=ERROR msg="Failed to add user" error="user with id 503492049 already exists" tgID=503492049
+time=2025-03-21T19:55:48.042+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-21T19:55:48.042+04:00 level=INFO msg="server stopped"
+time=2025-03-21T19:59:05.063+04:00 level=INFO msg="Creating new repository"
+time=2025-03-21T19:59:05.063+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-21T19:59:05.064+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-21T19:59:33.672+04:00 level=INFO msg="Adding user"
+time=2025-03-21T20:00:16.573+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[chill] Filters:[] ID:0}"
+time=2025-03-21T20:00:22.007+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-21T20:00:32.883+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-21T20:00:35.870+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-21T20:04:05.050+04:00 level=INFO msg="Scrape start"
+time=2025-03-21T20:04:05.475+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:04:05.475+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:04:05.555+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:04:05.555+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:04:05.555+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=0
+time=2025-03-21T20:09:05.080+04:00 level=INFO msg="Scrape start"
+time=2025-03-21T20:09:05.392+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:09:05.392+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:09:05.453+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:09:05.453+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:09:05.453+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=0
+time=2025-03-21T20:09:18.201+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-21T20:09:18.201+04:00 level=INFO msg="server stopped"
+time=2025-03-21T20:09:44.890+04:00 level=INFO msg="Creating new repository"
+time=2025-03-21T20:09:44.891+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-21T20:09:44.891+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-21T20:09:59.711+04:00 level=INFO msg="Adding user"
+time=2025-03-21T20:10:10.425+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-21T20:10:13.086+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-21T20:10:24.249+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[chill] Filters:[hill] ID:0}"
+time=2025-03-21T20:11:36.466+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-21T20:11:36.466+04:00 level=INFO msg="server stopped"
+time=2025-03-21T20:11:44.819+04:00 level=INFO msg="Creating new repository"
+time=2025-03-21T20:11:44.819+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-21T20:11:44.819+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-21T20:12:06.447+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-21T20:12:06.447+04:00 level=ERROR msg="Failed to get links" error="user not exists" tgID=503492049
+time=2025-03-21T20:12:23.653+04:00 level=INFO msg="Adding user"
+time=2025-03-21T20:12:31.841+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-21T20:12:46.176+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-21T20:16:44.808+04:00 level=INFO msg="Scrape start"
+time=2025-03-21T20:16:45.157+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:16:45.157+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:16:45.157+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=0
+time=2025-03-21T20:26:17.457+04:00 level=INFO msg="Scrape start"
+time=2025-03-21T20:26:17.795+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:26:17.796+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:26:17.796+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=0
+time=2025-03-21T20:26:44.820+04:00 level=INFO msg="Scrape start"
+time=2025-03-21T20:26:44.998+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:26:44.998+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:26:44.998+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=0
+time=2025-03-21T20:31:44.812+04:00 level=INFO msg="Scrape start"
+time=2025-03-21T20:31:45.142+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:31:45.142+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:31:45.142+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=0
+time=2025-03-21T20:34:12.301+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-21T20:34:12.301+04:00 level=INFO msg="server stopped"
+time=2025-03-21T20:39:28.835+04:00 level=INFO msg="Creating new repository"
+time=2025-03-21T20:39:28.835+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-21T20:39:28.837+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-21T20:39:41.515+04:00 level=INFO msg="Adding user"
+time=2025-03-21T20:40:00.118+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-21T20:40:19.286+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-21T20:41:06.819+04:00 level=INFO msg="Adding user"
+time=2025-03-21T20:41:06.819+04:00 level=ERROR msg="Failed to add user" error="user with id 503492049 already exists" tgID=503492049
+time=2025-03-21T20:41:18.358+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-21T20:43:14.714+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-21T20:43:14.714+04:00 level=INFO msg="server stopped"
+time=2025-03-21T20:47:33.750+04:00 level=INFO msg="Creating new repository"
+time=2025-03-21T20:47:33.750+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-21T20:47:33.752+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-21T20:47:41.352+04:00 level=INFO msg="Adding user"
+time=2025-03-21T20:47:55.817+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-21T20:48:08.657+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-21T20:49:03.023+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-21T20:50:29.972+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-21T20:52:33.744+04:00 level=INFO msg="Scrape start"
+time=2025-03-21T20:52:34.144+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:52:34.144+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-21T20:52:34.144+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=0
+time=2025-03-21T20:54:09.564+04:00 level=INFO msg="Adding user"
+time=2025-03-21T20:54:09.564+04:00 level=ERROR msg="Failed to add user" error="user with id 503492049 already exists" tgID=503492049
+time=2025-03-21T20:54:24.351+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-21T20:54:37.556+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-21T20:54:37.556+04:00 level=INFO msg="server stopped"
+time=2025-03-22T13:16:29.626+04:00 level=INFO msg="Creating new repository"
+time=2025-03-22T13:16:29.626+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-22T13:16:29.627+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-22T13:16:40.307+04:00 level=INFO msg="Adding user"
+time=2025-03-22T13:16:44.708+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-22T13:17:12.642+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-22T13:17:12.642+04:00 level=INFO msg="server stopped"
+time=2025-03-22T13:22:04.871+04:00 level=INFO msg="Creating new repository"
+time=2025-03-22T13:22:04.871+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-22T13:22:04.872+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-22T13:22:07.790+04:00 level=INFO msg="Adding user"
+time=2025-03-22T13:22:15.672+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-22T13:22:30.286+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-22T13:22:32.384+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-22T13:22:38.390+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-22T13:22:44.992+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-22T13:23:13.118+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-22T13:23:16.827+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-22T13:23:25.098+04:00 level=INFO msg="Deleting link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-22T13:23:28.274+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-22T13:24:14.868+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-22T13:24:27.156+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[Gil] ID:0}"
+time=2025-03-22T13:24:32.376+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-22T13:27:04.862+04:00 level=INFO msg="Scrape start"
+time=2025-03-22T13:27:05.223+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-22T13:27:05.223+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-22T13:27:05.223+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=0
+time=2025-03-22T13:28:48.637+04:00 level=INFO msg="server stopped"
+time=2025-03-22T13:28:48.638+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-22T22:08:00.975+04:00 level=INFO msg="Creating new repository"
+time=2025-03-22T22:08:00.975+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-22T22:08:00.975+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-22T22:11:32.248+04:00 level=INFO msg="Adding user"
+time=2025-03-22T22:12:05.725+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-22T22:12:05.725+04:00 level=INFO msg="server stopped"
+time=2025-03-22T22:38:25.945+04:00 level=INFO msg="Creating new repository"
+time=2025-03-22T22:38:25.945+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-22T22:38:25.946+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-22T22:38:32.641+04:00 level=INFO msg="Adding user"
+time=2025-03-22T22:38:49.749+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2025-spring/blob/main/Go/seminar05/_2_pgx.md Tags:[] Filters:[] ID:0}"
+time=2025-03-22T22:38:54.102+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-22T22:39:03.671+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2025-spring/blob/main/Go/seminar05/_2_pgx.md Tags:[] Filters:[] ID:0}"
+time=2025-03-22T22:39:09.523+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-22T22:39:21.441+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-22T22:39:21.441+04:00 level=INFO msg="server stopped"
+time=2025-03-22T22:40:28.781+04:00 level=INFO msg="Creating new repository"
+time=2025-03-22T22:40:28.781+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-22T22:40:28.782+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-22T22:40:48.898+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-22T22:40:48.898+04:00 level=ERROR msg="Failed to get links" error="user not exists" tgID=503492049
+time=2025-03-22T22:40:49.131+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-22T22:40:49.131+04:00 level=ERROR msg="Failed to get links" error="user not exists" tgID=503492049
+time=2025-03-22T22:41:21.104+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-22T22:41:21.104+04:00 level=INFO msg="server stopped"
+time=2025-03-23T21:30:08.484+04:00 level=INFO msg="Creating new repository"
+time=2025-03-23T21:30:08.485+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-23T21:30:08.486+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-23T21:30:18.936+04:00 level=INFO msg="Adding user"
+time=2025-03-23T21:30:37.203+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-23T21:30:37.203+04:00 level=INFO msg="server stopped"

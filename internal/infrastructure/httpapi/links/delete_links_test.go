@@ -1,20 +1,22 @@
 package links_test
 
 import (
-	"LinkTracker/internal/domain"
-	scrapperdto "LinkTracker/internal/infrastructure/dto/dto_scrapper"
-	"LinkTracker/internal/infrastructure/httpapi/links"
-	"LinkTracker/internal/infrastructure/httpapi/links/mocks"
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
+	"LinkTracker/internal/domain"
+	scrapperdto "LinkTracker/internal/infrastructure/dto/dto_scrapper"
+	"LinkTracker/internal/infrastructure/httpapi/links"
+	"LinkTracker/internal/infrastructure/httpapi/links/mocks"
 )
 
 // const GitUserRepo = "https://github.com/user/repo"
@@ -23,6 +25,7 @@ func Test_DeleteLinksHandler_InvalidChatID(t *testing.T) {
 	handler := links.DeleteLinksHandler{LinkDeleter: mockScrapper}
 	request := httptest.NewRequest(http.MethodPost, "/links", http.NoBody)
 	request.Header.Set("Tg-Chat-Id", "invalid_chat_id")
+
 	responseRecorder := httptest.NewRecorder()
 
 	handler.ServeHTTP(responseRecorder, request)
@@ -132,7 +135,10 @@ func Test_DeleteLinksHandler_Success(t *testing.T) {
 		ID:      0,
 	}
 
-	mockScrapper.On("DeleteLink", tgChatID, domain.Link{URL: "https://github.com/example/example", Tags: nil, Filters: nil, ID: 0}).Return(expectedLink, nil).Once()
+	mockScrapper.On("DeleteLink", tgChatID, domain.Link{
+		URL: "https://github.com/example/example", Tags: nil, Filters: nil, ID: 0}).
+		Return(expectedLink, nil).Once()
+
 	handler := links.DeleteLinksHandler{LinkDeleter: mockScrapper}
 
 	linkURL := expectedLink.URL

@@ -1,0 +1,295 @@
+time=2025-03-21T19:55:06.542+04:00 level=INFO msg="TgBOTApi create"
+time=2025-03-21T19:55:10.403+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-21T19:55:10.497+04:00 level=INFO msg="Sent message" chatId=503492049 text="Добро пожаловать в LinkTracker, это приложение для отслеживание изменений на github и stackoverflow.Для получения списка команд введите /help"
+time=2025-03-21T19:55:12.448+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-03-21T19:55:12.541+04:00 level=INFO msg="Sent message" chatId=503492049 text="📝Доступные команды:\n\n/start - Начало работы с ботом\n/help - Помощь по командам\n/track - Начать отслеживание ссылки\n/untrack - Прекратить отслеживание\n/list - Список отслеживаемых ссылок"
+time=2025-03-21T19:55:14.396+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-21T19:55:14.577+04:00 level=INFO msg="Sent message" chatId=503492049 text="Не удалось выполнить операцию"
+time=2025-03-21T19:55:19.924+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-21T19:55:20.044+04:00 level=INFO msg="Sent message" chatId=503492049 text="Не удалось выполнить операцию"
+time=2025-03-21T19:55:21.767+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-21T19:55:21.931+04:00 level=INFO msg="Sent message" chatId=503492049 text="Не удалось выполнить операцию"
+time=2025-03-21T19:55:43.543+04:00 level=INFO msg="TgBOTApi stopping. Waiting for running functions to execute"
+time=2025-03-21T19:55:43.543+04:00 level=INFO msg="server stopped"
+time=2025-03-21T19:55:49.039+04:00 level=INFO msg="TgBOTApi create"
+time=2025-03-21T19:56:16.619+04:00 level=INFO msg="TgBOTApi stopping. Waiting for running functions to execute"
+time=2025-03-21T19:56:16.619+04:00 level=INFO msg="server stopped"
+time=2025-03-21T19:59:09.364+04:00 level=INFO msg="TgBOTApi create"
+time=2025-03-21T19:59:33.670+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-21T19:59:33.760+04:00 level=INFO msg="Sent message" chatId=503492049 text="Добро пожаловать в LinkTracker, это приложение для отслеживание изменений на github и stackoverflow.Для получения списка команд введите /help"
+time=2025-03-21T19:59:38.400+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-03-21T19:59:38.490+04:00 level=INFO msg="Sent message" chatId=503492049 text="📝Доступные команды:\n\n/start - Начало работы с ботом\n/help - Помощь по командам\n/track - Начать отслеживание ссылки\n/untrack - Прекратить отслеживание\n/list - Список отслеживаемых ссылок"
+time=2025-03-21T19:59:41.863+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T19:59:41.977+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T19:59:47.209+04:00 level=INFO msg="Sent message" chatId=503492049 text="Поддерживается только gitHub(https://github.com/{owner}/{repo}) и stackOverflow(https://stackoverflow.com/questions/{id}). Повторите команду /track"
+time=2025-03-21T20:00:03.879+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T20:00:03.989+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T20:00:06.855+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-21T20:00:14.354+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-21T20:00:16.573+04:00 level=INFO msg="Added link" url=https://github.com/central-university-dev/go-TimofeyMosk ID=0
+time=2025-03-21T20:00:17.291+04:00 level=INFO msg="Sent message" chatId=503492049 text="Ссылка отслеживается"
+time=2025-03-21T20:00:22.005+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-21T20:00:22.117+04:00 level=INFO msg="Sent message" chatId=503492049 text="Список отслеживаемых ссылок:\nhttps://github.com/central-university-dev/go-TimofeyMosk Tags: chill"
+time=2025-03-21T20:00:28.454+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T20:00:28.548+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T20:00:30.085+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-21T20:00:32.236+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-21T20:00:32.884+04:00 level=INFO msg="Added link" url=https://github.com/central-university-dev/go-TimofeyMosk ID=0
+time=2025-03-21T20:00:32.985+04:00 level=INFO msg="Sent message" chatId=503492049 text="Ссылка отслеживается"
+time=2025-03-21T20:00:35.870+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-21T20:00:35.975+04:00 level=INFO msg="Sent message" chatId=503492049 text="Список отслеживаемых ссылок:\nhttps://github.com/central-university-dev/go-TimofeyMosk Tags: chill \nhttps://github.com/central-university-dev/go-TimofeyMosk"
+time=2025-03-21T20:09:01.052+04:00 level=INFO msg="TgBOTApi stopping. Waiting for running functions to execute"
+time=2025-03-21T20:09:01.053+04:00 level=INFO msg="server stopped"
+time=2025-03-21T20:09:49.063+04:00 level=INFO msg="TgBOTApi create"
+time=2025-03-21T20:09:59.708+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-21T20:09:59.877+04:00 level=INFO msg="Sent message" chatId=503492049 text="Добро пожаловать в LinkTracker, это приложение для отслеживание изменений на github и stackoverflow.Для получения списка команд введите /help"
+time=2025-03-21T20:10:02.639+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-03-21T20:10:02.737+04:00 level=INFO msg="Sent message" chatId=503492049 text="📝Доступные команды:\n\n/start - Начало работы с ботом\n/help - Помощь по командам\n/track - Начать отслеживание ссылки\n/untrack - Прекратить отслеживание\n/list - Список отслеживаемых ссылок"
+time=2025-03-21T20:10:05.201+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T20:10:05.295+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T20:10:06.667+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-21T20:10:09.564+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-21T20:10:10.426+04:00 level=INFO msg="Added link" url=https://github.com/central-university-dev/go-TimofeyMosk ID=0
+time=2025-03-21T20:10:10.623+04:00 level=INFO msg="Sent message" chatId=503492049 text="Ссылка отслеживается"
+time=2025-03-21T20:10:13.085+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-21T20:10:13.185+04:00 level=INFO msg="Sent message" chatId=503492049 text="Список отслеживаемых ссылок:\nhttps://github.com/central-university-dev/go-TimofeyMosk"
+time=2025-03-21T20:10:15.240+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T20:10:15.339+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T20:10:18.050+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-21T20:10:21.789+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-21T20:10:24.250+04:00 level=ERROR msg="api error ADD_LINK_FAILED: Failed to added link"
+time=2025-03-21T20:10:24.415+04:00 level=INFO msg="Sent message" chatId=503492049 text="Не удалось выполнить операцию"
+time=2025-03-21T20:11:59.480+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T20:11:59.787+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T20:12:03.880+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-21T20:12:05.111+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-21T20:12:06.448+04:00 level=ERROR msg="api error CHAT_NOT_EXIST: Chat not exist"
+time=2025-03-21T20:12:06.539+04:00 level=INFO msg="Sent message" chatId=503492049 text="Не удалось выполнить операцию"
+time=2025-03-21T20:12:23.651+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-21T20:12:23.749+04:00 level=INFO msg="Sent message" chatId=503492049 text="Добро пожаловать в LinkTracker, это приложение для отслеживание изменений на github и stackoverflow.Для получения списка команд введите /help"
+time=2025-03-21T20:12:26.779+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T20:12:26.864+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T20:12:29.161+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-21T20:12:30.708+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-21T20:12:31.842+04:00 level=INFO msg="Added link" url=https://github.com/central-university-dev/go-TimofeyMosk ID=0
+time=2025-03-21T20:12:31.948+04:00 level=INFO msg="Sent message" chatId=503492049 text="Ссылка отслеживается"
+time=2025-03-21T20:12:36.818+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T20:12:36.943+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T20:12:43.636+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-21T20:12:45.290+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-21T20:12:51.175+04:00 level=ERROR msg="Post \"http://localhost:8080/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"
+time=2025-03-21T20:12:51.275+04:00 level=INFO msg="Sent message" chatId=503492049 text="Не удалось выполнить операцию"
+time=2025-03-21T20:14:45.481+04:00 level=INFO msg="TgBOTApi stopping. Waiting for running functions to execute"
+time=2025-03-21T20:14:45.481+04:00 level=INFO msg="server stopped"
+time=2025-03-21T20:15:16.704+04:00 level=INFO msg="TgBOTApi has stopped"
+time=2025-03-21T20:39:13.019+04:00 level=INFO msg="TgBOTApi create"
+time=2025-03-21T20:39:41.513+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-21T20:39:41.634+04:00 level=INFO msg="Sent message" chatId=503492049 text="Добро пожаловать в LinkTracker, это приложение для отслеживание изменений на github и stackoverflow.Для получения списка команд введите /help"
+time=2025-03-21T20:39:45.090+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T20:39:45.259+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T20:39:48.496+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-21T20:39:55.232+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-21T20:40:00.118+04:00 level=INFO msg="Added link" url=https://github.com/central-university-dev/go-TimofeyMosk ID=0
+time=2025-03-21T20:40:00.304+04:00 level=INFO msg="Sent message" chatId=503492049 text="Ссылка отслеживается"
+time=2025-03-21T20:40:05.743+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T20:40:05.843+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T20:40:08.164+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-21T20:40:09.145+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-21T20:40:25.015+04:00 level=ERROR msg="api error LINKS_ALREADY_EXIST: Links already tracking"
+time=2025-03-21T20:40:51.265+04:00 level=INFO msg="TgBOTApi stopping. Waiting for running functions to execute"
+time=2025-03-21T20:40:51.265+04:00 level=INFO msg="server stopped"
+time=2025-03-21T20:40:51.457+04:00 level=INFO msg="Sent message" chatId=503492049 text="Не удалось выполнить операцию"
+time=2025-03-21T20:41:01.095+04:00 level=INFO msg="TgBOTApi create"
+time=2025-03-21T20:41:06.817+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-21T20:41:06.911+04:00 level=INFO msg="Sent message" chatId=503492049 text="Не удалось выполнить операцию"
+time=2025-03-21T20:41:10.288+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T20:41:10.754+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T20:41:12.096+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-21T20:41:13.455+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-21T20:41:19.666+04:00 level=ERROR msg="api error LINKS_ALREADY_EXIST: link already tracking"
+time=2025-03-21T20:41:30.341+04:00 level=INFO msg="TgBOTApi stopping. Waiting for running functions to execute"
+time=2025-03-21T20:41:30.341+04:00 level=INFO msg="server stopped"
+time=2025-03-21T20:41:30.523+04:00 level=INFO msg="Sent message" chatId=503492049 text="Не удалось выполнить операцию"
+time=2025-03-21T20:42:08.454+04:00 level=INFO msg="TgBOTApi has stopped"
+time=2025-03-21T20:47:31.333+04:00 level=INFO msg="TgBOTApi create"
+time=2025-03-21T20:47:41.349+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-21T20:47:41.460+04:00 level=INFO msg="Sent message" chatId=503492049 text="Добро пожаловать в LinkTracker, это приложение для отслеживание изменений на github и stackoverflow.Для получения списка команд введите /help"
+time=2025-03-21T20:47:43.104+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-03-21T20:47:43.285+04:00 level=INFO msg="Sent message" chatId=503492049 text="📝Доступные команды:\n\n/start - Начало работы с ботом\n/help - Помощь по командам\n/track - Начать отслеживание ссылки\n/untrack - Прекратить отслеживание\n/list - Список отслеживаемых ссылок"
+time=2025-03-21T20:47:46.792+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T20:47:46.944+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T20:47:48.498+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-21T20:47:50.591+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-21T20:47:55.817+04:00 level=INFO msg="Added link" url=https://github.com/central-university-dev/go-TimofeyMosk ID=0
+time=2025-03-21T20:47:55.966+04:00 level=INFO msg="Sent message" chatId=503492049 text="Ссылка отслеживается"
+time=2025-03-21T20:48:02.358+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T20:48:02.562+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T20:48:04.706+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-21T20:48:05.444+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-21T20:48:09.789+04:00 level=ERROR msg="api error LINKS_ALREADY_EXIST: link already tracking"
+time=2025-03-21T20:48:29.169+04:00 level=INFO msg="TgBOTApi stopping. Waiting for running functions to execute"
+time=2025-03-21T20:48:29.170+04:00 level=INFO msg="server stopped"
+time=2025-03-21T20:48:29.267+04:00 level=INFO msg="Sent message" chatId=503492049 text="Не удалось выполнить операцию"
+time=2025-03-21T20:48:52.231+04:00 level=INFO msg="TgBOTApi create"
+time=2025-03-21T20:48:54.587+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T20:48:54.682+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T20:48:57.540+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-21T20:48:59.079+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-21T20:49:04.524+04:00 level=ERROR msg="api error LINKS_ALREADY_EXIST: link already tracking"
+time=2025-03-21T20:49:16.704+04:00 level=INFO msg="Sent message" chatId=503492049 text="Не удалось выполнить операцию"
+time=2025-03-21T20:50:20.292+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T20:50:20.392+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T20:50:24.230+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-21T20:50:25.875+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-21T20:50:34.838+04:00 level=ERROR msg="api error LINKS_ALREADY_EXIST: link already tracking"
+time=2025-03-21T20:52:12.033+04:00 level=INFO msg="Sent message" chatId=503492049 text="Не удалось выполнить операцию"
+time=2025-03-21T20:52:12.993+04:00 level=INFO msg="TgBOTApi stopping. Waiting for running functions to execute"
+time=2025-03-21T20:52:12.993+04:00 level=INFO msg="server stopped"
+time=2025-03-21T20:54:03.617+04:00 level=INFO msg="TgBOTApi create"
+time=2025-03-21T20:54:09.562+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-21T20:54:09.666+04:00 level=INFO msg="Sent message" chatId=503492049 text="Не удалось выполнить операцию"
+time=2025-03-21T20:54:12.335+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-21T20:54:12.553+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-21T20:54:17.362+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-21T20:54:20.184+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-21T20:54:26.154+04:00 level=ERROR msg="api error LINKS_ALREADY_EXIST: link already tracking"
+time=2025-03-21T20:54:27.759+04:00 level=INFO msg="Sent message" chatId=503492049 text="Данная ссылка уже отслеживается."
+time=2025-03-21T20:54:37.607+04:00 level=INFO msg="TgBOTApi stopping. Waiting for running functions to execute"
+time=2025-03-21T20:54:37.607+04:00 level=INFO msg="server stopped"
+time=2025-03-22T13:16:24.073+04:00 level=INFO msg="TgBOTApi create"
+time=2025-03-22T13:16:40.305+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-22T13:16:40.430+04:00 level=INFO msg="Sent message" chatId=503492049 text="Добро пожаловать в LinkTracker, это приложение для отслеживание изменений на github и stackoverflow.Для получения списка команд введите /help"
+time=2025-03-22T13:16:42.693+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-03-22T13:16:42.784+04:00 level=INFO msg="Sent message" chatId=503492049 text="📝Доступные команды:\n\n/start - Начало работы с ботом\n/help - Помощь по командам\n/track - Начать отслеживание ссылки\n/untrack - Прекратить отслеживание\n/list - Список отслеживаемых ссылок"
+time=2025-03-22T13:16:44.708+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T13:16:44.863+04:00 level=INFO msg="Sent message" chatId=503492049 text="Список отслеживаемых ссылок:"
+time=2025-03-22T13:17:03.533+04:00 level=INFO msg="Sent message" chatId=503492049 text="Команда не распознана. Введите /help , чтобы увидеть список доступных команд"
+time=2025-03-22T13:17:12.642+04:00 level=INFO msg="TgBOTApi stopping. Waiting for running functions to execute"
+time=2025-03-22T13:17:12.642+04:00 level=INFO msg="server stopped"
+time=2025-03-22T13:17:38.991+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-03-22T13:17:39.081+04:00 level=INFO msg="Sent message" chatId=503492049 text="📝Доступные команды:\n\n/start - Начало работы с ботом\n/help - Помощь по командам\n/track - Начать отслеживание ссылки\n/untrack - Прекратить отслеживание\n/list - Список отслеживаемых ссылок"
+time=2025-03-22T13:17:39.081+04:00 level=INFO msg="TgBOTApi has stopped"
+time=2025-03-22T13:22:01.136+04:00 level=INFO msg="TgBOTApi create"
+time=2025-03-22T13:22:01.200+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-03-22T13:22:01.333+04:00 level=INFO msg="Sent message" chatId=503492049 text="📝Доступные команды:\n\n/start - Начало работы с ботом\n/help - Помощь по командам\n/track - Начать отслеживание ссылки\n/untrack - Прекратить отслеживание\n/list - Список отслеживаемых ссылок"
+time=2025-03-22T13:22:07.788+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-22T13:22:07.904+04:00 level=INFO msg="Sent message" chatId=503492049 text="Добро пожаловать в LinkTracker, это приложение для отслеживание изменений на github и stackoverflow.Для получения списка команд введите /help"
+time=2025-03-22T13:22:11.268+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-03-22T13:22:11.448+04:00 level=INFO msg="Sent message" chatId=503492049 text="📝Доступные команды:\n\n/start - Начало работы с ботом\n/help - Помощь по командам\n/track - Начать отслеживание ссылки\n/untrack - Прекратить отслеживание\n/list - Список отслеживаемых ссылок"
+time=2025-03-22T13:22:15.670+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T13:22:15.822+04:00 level=INFO msg="Sent message" chatId=503492049 text="Список отслеживаемых ссылок пуст. Добавьте ссылки с помошью /track"
+time=2025-03-22T13:22:15.964+04:00 level=INFO msg="Sent message" chatId=503492049 text="Список отслеживаемых ссылок:"
+time=2025-03-22T13:22:25.335+04:00 level=INFO msg="TgBOTApi stopping. Waiting for running functions to execute"
+time=2025-03-22T13:22:25.335+04:00 level=INFO msg="server stopped"
+time=2025-03-22T13:22:30.284+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T13:22:30.374+04:00 level=INFO msg="Sent message" chatId=503492049 text="Список отслеживаемых ссылок пуст. Добавьте ссылки с помошью /track"
+time=2025-03-22T13:22:30.477+04:00 level=INFO msg="Sent message" chatId=503492049 text="Список отслеживаемых ссылок:"
+time=2025-03-22T13:22:30.477+04:00 level=INFO msg="TgBOTApi has stopped"
+time=2025-03-22T13:22:32.315+04:00 level=INFO msg="TgBOTApi create"
+time=2025-03-22T13:22:32.382+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T13:22:32.469+04:00 level=INFO msg="Sent message" chatId=503492049 text="Список отслеживаемых ссылок пуст. Добавьте ссылки с помошью /track"
+time=2025-03-22T13:22:38.388+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T13:22:38.479+04:00 level=INFO msg="Sent message" chatId=503492049 text="Список отслеживаемых ссылок пуст. Добавьте ссылки с помошью /track"
+time=2025-03-22T13:22:44.990+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T13:22:45.076+04:00 level=INFO msg="Sent message" chatId=503492049 text="Список отслеживаемых ссылок пуст. Добавьте ссылки с помошью /track"
+time=2025-03-22T13:22:59.394+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-22T13:22:59.477+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-22T13:23:04.798+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-22T13:23:10.028+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-22T13:23:13.119+04:00 level=INFO msg="Added link" url=https://github.com/central-university-dev/go-TimofeyMosk ID=0
+time=2025-03-22T13:23:13.211+04:00 level=INFO msg="Sent message" chatId=503492049 text="Ссылка отслеживается"
+time=2025-03-22T13:23:16.826+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T13:23:16.953+04:00 level=INFO msg="Sent message" chatId=503492049 text="Список отслеживаемых ссылок:\nhttps://github.com/central-university-dev/go-TimofeyMosk"
+time=2025-03-22T13:23:20.999+04:00 level=INFO msg="Command /untrack execution" chatId=503492049
+time=2025-03-22T13:23:21.107+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки"
+time=2025-03-22T13:23:25.099+04:00 level=INFO msg="Removed link" url=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-22T13:23:25.228+04:00 level=INFO msg="Sent message" chatId=503492049 text="Ссылка успешно удалена"
+time=2025-03-22T13:23:28.273+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T13:23:28.366+04:00 level=INFO msg="Sent message" chatId=503492049 text="Список отслеживаемых ссылок пуст. Добавьте ссылки с помошью /track"
+time=2025-03-22T13:24:04.214+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-22T13:24:04.301+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-22T13:24:07.066+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-22T13:24:12.693+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-22T13:24:14.868+04:00 level=INFO msg="Added link" url=https://github.com/central-university-dev/go-TimofeyMosk ID=0
+time=2025-03-22T13:24:14.991+04:00 level=INFO msg="Sent message" chatId=503492049 text="Ссылка отслеживается"
+time=2025-03-22T13:24:20.597+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-22T13:24:20.681+04:00 level=INFO msg="Sent message" chatId=503492049 text="Введите адрес ссылки (поддерживается только gitHub и stackOverFlow"
+time=2025-03-22T13:24:23.149+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
+time=2025-03-22T13:24:25.188+04:00 level=INFO msg="Sent message" chatId=503492049 text="Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
+time=2025-03-22T13:24:27.157+04:00 level=ERROR msg="api error LINKS_ALREADY_EXIST: link already tracking"
+time=2025-03-22T13:24:27.245+04:00 level=INFO msg="Sent message" chatId=503492049 text="Данная ссылка уже отслеживается."
+time=2025-03-22T13:24:32.374+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T13:24:32.462+04:00 level=INFO msg="Sent message" chatId=503492049 text="Список отслеживаемых ссылок:\nhttps://github.com/central-university-dev/go-TimofeyMosk"
+time=2025-03-22T13:28:48.637+04:00 level=INFO msg="TgBOTApi stopping. Waiting for running functions to execute"
+time=2025-03-22T13:28:48.638+04:00 level=INFO msg="server stopped"
+time=2025-03-22T13:29:32.798+04:00 level=INFO msg="TgBOTApi has stopped"
+time=2025-03-22T22:07:56.207+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-22T22:08:44.997+04:00 level=INFO msg="server stopped"
+time=2025-03-22T22:08:46.636+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-22T22:09:21.290+04:00 level=INFO msg="server stopped"
+time=2025-03-22T22:09:22.545+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-22T22:10:46.404+04:00 level=INFO msg="server stopped"
+time=2025-03-22T22:10:47.047+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-22T22:11:14.027+04:00 level=INFO msg="server stopped"
+time=2025-03-22T22:11:15.312+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-22T22:11:32.246+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-22T22:11:53.311+04:00 level=INFO msg="server stopped"
+time=2025-03-22T22:19:46.860+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-22T22:19:48.102+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-22T22:19:48.340+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T22:19:48.342+04:00 level=ERROR msg="Failed to get links" error="Get \"http://localhost:8080/links\": dial tcp [::1]:8080: connect: connection refused" chatId=503492049
+time=2025-03-22T22:19:52.285+04:00 level=INFO msg="server stopped"
+time=2025-03-22T22:24:04.234+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-22T22:24:06.644+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T22:24:06.646+04:00 level=ERROR msg="Failed to get links" error="Get \"http://localhost:8080/links\": dial tcp [::1]:8080: connect: connection refused" chatId=503492049
+time=2025-03-22T22:24:10.130+04:00 level=INFO msg="server stopped"
+time=2025-03-22T22:33:24.759+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-22T22:33:28.260+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T22:33:28.266+04:00 level=ERROR msg="Failed to get links" error="Get \"http://localhost:8080/links\": dial tcp [::1]:8080: connect: connection refused" chatId=503492049
+time=2025-03-22T22:33:30.227+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-03-22T22:33:35.348+04:00 level=INFO msg="server stopped"
+time=2025-03-22T22:38:16.123+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-22T22:38:32.640+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-22T22:38:35.976+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-22T22:38:49.750+04:00 level=INFO msg="Added link" url=https://github.com/central-university-dev/backend-academy-2025-spring/blob/main/Go/seminar05/_2_pgx.md ID=0
+time=2025-03-22T22:38:54.102+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T22:38:59.585+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-22T22:39:03.672+04:00 level=ERROR msg="api error LINKS_ALREADY_EXIST: link already tracking"
+time=2025-03-22T22:39:09.522+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T22:39:25.004+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T22:39:25.006+04:00 level=ERROR msg="Failed to get links" error="Get \"http://localhost:8080/links\": dial tcp [::1]:8080: connect: connection refused" chatId=503492049
+time=2025-03-22T22:39:28.037+04:00 level=INFO msg="server stopped"
+time=2025-03-22T22:40:43.305+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-22T22:40:47.819+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-22T22:40:48.896+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T22:40:48.899+04:00 level=ERROR msg="Failed to get links" error="api error CHAT_NOT_EXIST: user not exists" chatId=503492049
+time=2025-03-22T22:40:49.130+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-03-22T22:40:49.132+04:00 level=ERROR msg="Failed to get links" error="api error CHAT_NOT_EXIST: user not exists" chatId=503492049
+time=2025-03-22T22:40:51.789+04:00 level=INFO msg="server stopped"
+time=2025-03-22T22:56:17.773+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-22T22:56:20.397+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-22T22:56:24.388+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-03-22T22:56:27.569+04:00 level=INFO msg="server stopped"
+time=2025-03-22T22:59:48.530+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-22T22:59:50.920+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-22T22:59:52.180+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-03-22T22:59:55.475+04:00 level=INFO msg="server stopped"
+time=2025-03-23T21:20:38.686+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-23T21:20:40.872+04:00 level=INFO msg="server stopped"
+time=2025-03-23T21:25:20.603+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-23T21:25:31.055+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-03-23T21:25:34.021+04:00 level=INFO msg="server stopped"
+time=2025-03-23T21:26:34.875+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-23T21:26:37.341+04:00 level=INFO msg="server stopped"
+time=2025-03-23T21:26:39.736+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-23T21:26:49.817+04:00 level=INFO msg="server stopped"
+time=2025-03-23T21:26:52.892+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-23T21:26:57.073+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-23T21:26:58.671+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-03-23T21:27:00.789+04:00 level=INFO msg="server stopped"
+time=2025-03-23T21:29:02.744+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-23T21:29:09.157+04:00 level=INFO msg="server stopped"
+time=2025-03-23T21:30:08.883+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-23T21:30:18.935+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-23T21:30:20.596+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-03-23T21:30:37.182+04:00 level=INFO msg="server stopped"

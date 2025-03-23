@@ -1,27 +1,30 @@
 package links_test
 
 import (
+	"encoding/json"
+	"errors"
+	"net/http"
+	"net/http/httptest"
+	"strconv"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"LinkTracker/internal/domain"
 	scrapperdto "LinkTracker/internal/infrastructure/dto/dto_scrapper"
 	"LinkTracker/internal/infrastructure/httpapi"
 	"LinkTracker/internal/infrastructure/httpapi/links"
 	"LinkTracker/internal/infrastructure/httpapi/links/mocks"
-	"encoding/json"
-	"errors"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"net/http"
-	"net/http/httptest"
-	"strconv"
-	"testing"
 )
 
 func Test_GetLinksHandler_InvalidChatID(t *testing.T) {
 	mockGetter := &mocks.LinkGetter{}
 	handler := links.GetLinksHandler{LinkGetter: mockGetter}
 
-	req := httptest.NewRequest(http.MethodGet, "/links", nil)
+	req := httptest.NewRequest(http.MethodGet, "/links", http.NoBody)
 	req.Header.Set("Tg-Chat-Id", "invalid_chat_id")
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -43,8 +46,9 @@ func Test_GetLinksHandler_UserNotExist(t *testing.T) {
 
 	handler := links.GetLinksHandler{LinkGetter: mockGetter}
 
-	req := httptest.NewRequest(http.MethodGet, "/links", nil)
+	req := httptest.NewRequest(http.MethodGet, "/links", http.NoBody)
 	req.Header.Set("Tg-Chat-Id", strconv.FormatInt(tgChatID, 10))
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -69,8 +73,9 @@ func Test_GetLinksHandler_LinksNotReceived(t *testing.T) {
 
 	handler := links.GetLinksHandler{LinkGetter: mockGetter}
 
-	req := httptest.NewRequest(http.MethodGet, "/links", nil)
+	req := httptest.NewRequest(http.MethodGet, "/links", http.NoBody)
 	req.Header.Set("Tg-Chat-Id", strconv.FormatInt(tgChatID, 10))
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -103,8 +108,9 @@ func Test_GetLinksHandler_Success(t *testing.T) {
 
 	handler := links.GetLinksHandler{LinkGetter: mockGetter}
 
-	req := httptest.NewRequest(http.MethodGet, "/links", nil)
+	req := httptest.NewRequest(http.MethodGet, "/links", http.NoBody)
 	req.Header.Set("Tg-Chat-Id", strconv.FormatInt(tgChatID, 10))
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -120,6 +126,7 @@ func Test_GetLinksHandler_Success(t *testing.T) {
 
 	expectedResponse, err := json.Marshal(expectedDTO)
 	require.NoError(t, err)
+
 	var expectedResponseJSON interface{}
 	err = json.Unmarshal(expectedResponse, &expectedResponseJSON)
 	require.NoError(t, err)

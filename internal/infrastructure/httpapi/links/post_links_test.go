@@ -1,20 +1,22 @@
 package links_test
 
 import (
-	"LinkTracker/internal/domain"
-	scrapperdto "LinkTracker/internal/infrastructure/dto/dto_scrapper"
-	"LinkTracker/internal/infrastructure/httpapi/links"
-	"LinkTracker/internal/infrastructure/httpapi/links/mocks"
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
+	"LinkTracker/internal/domain"
+	scrapperdto "LinkTracker/internal/infrastructure/dto/dto_scrapper"
+	"LinkTracker/internal/infrastructure/httpapi/links"
+	"LinkTracker/internal/infrastructure/httpapi/links/mocks"
 )
 
 func ptr(s string) *string {
@@ -27,6 +29,7 @@ func Test_PostLinkHandler_InvalidChatID(t *testing.T) {
 
 	req := httptest.NewRequest(http.MethodPost, "/links", bytes.NewBufferString(`{}`))
 	req.Header.Set("Tg-Chat-Id", "invalid_chat_id")
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -47,6 +50,7 @@ func Test_PostLinkHandler_InvalidRequestBody_JSON(t *testing.T) {
 
 	req := httptest.NewRequest(http.MethodPost, "/links", strings.NewReader("invalid json"))
 	req.Header.Set("Tg-Chat-Id", "123")
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -75,6 +79,7 @@ func Test_PostLinkHandler_InvalidRequestBody_Dto(t *testing.T) {
 
 	req := httptest.NewRequest(http.MethodPost, "/links", bytes.NewReader(reqBody))
 	req.Header.Set("Tg-Chat-Id", "123")
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -112,6 +117,7 @@ func Test_PostLinkHandler_ChatNotExist(t *testing.T) {
 
 	req := httptest.NewRequest(http.MethodPost, "/links", bytes.NewReader(reqBody))
 	req.Header.Set("Tg-Chat-Id", strconv.FormatInt(tgChatID, 10))
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -152,6 +158,7 @@ func Test_PostLinkHandler_LinkAlreadyTracking(t *testing.T) {
 
 	req := httptest.NewRequest(http.MethodPost, "/links", bytes.NewReader(reqBody))
 	req.Header.Set("Tg-Chat-Id", strconv.FormatInt(tgChatID, 10))
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -192,6 +199,7 @@ func Test_PostLinkHandler_AddLinkFailed(t *testing.T) {
 
 	req := httptest.NewRequest(http.MethodPost, "/links", bytes.NewReader(reqBody))
 	req.Header.Set("Tg-Chat-Id", strconv.FormatInt(tgChatID, 10))
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)
@@ -237,6 +245,7 @@ func Test_PostLinkHandler_Success(t *testing.T) {
 
 	req := httptest.NewRequest(http.MethodPost, "/links", bytes.NewReader(reqBody))
 	req.Header.Set("Tg-Chat-Id", strconv.FormatInt(tgChatID, 10))
+
 	rr := httptest.NewRecorder()
 
 	handler.ServeHTTP(rr, req)

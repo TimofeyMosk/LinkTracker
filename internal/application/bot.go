@@ -34,17 +34,17 @@ type ScrapperClient interface {
 }
 
 type Bot struct {
-	scrapperHTTPClient ScrapperClient
-	userState          map[int64]LinkWithState
-	mu                 sync.RWMutex
+	scrapper  ScrapperClient
+	userState map[int64]LinkWithState
+	mu        sync.RWMutex
 }
 
 func NewBot(scrapperClient ScrapperClient) *Bot {
 	slog.Info("tgBOTApi create")
 
 	return &Bot{
-		scrapperHTTPClient: scrapperClient,
-		userState:          make(map[int64]LinkWithState),
+		scrapper:  scrapperClient,
+		userState: make(map[int64]LinkWithState),
 	}
 }
 
@@ -98,7 +98,7 @@ func (bot *Bot) changeState(id int64, text string) string {
 func (bot *Bot) commandStart(id int64) string {
 	slog.Info("Command /start execution", "chatId", id)
 
-	err := bot.scrapperHTTPClient.RegisterUser(id)
+	err := bot.scrapper.RegisterUser(id)
 	if err != nil {
 		return errorText
 	}
@@ -148,7 +148,7 @@ func (bot *Bot) commandUntrack(id int64) string {
 func (bot *Bot) commandList(id int64) string {
 	slog.Info("Command /list execution", "chatId", id)
 
-	list, err := bot.scrapperHTTPClient.GetLinks(id)
+	list, err := bot.scrapper.GetLinks(id)
 	if err != nil {
 		slog.Error("Failed to get links", "error", err.Error(), "chatId", id)
 
@@ -184,7 +184,7 @@ func (bot *Bot) stateWaitLink(id int64, text string) string {
 		state: WaitingTags}
 	bot.mu.Unlock()
 
-	responseText := "Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек "
+	responseText := "Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
 
 	return responseText
 }
@@ -206,7 +206,7 @@ func (bot *Bot) stateWaitTags(id int64, text string) string {
 	bot.userState[id] = curLinkWithState
 	bot.mu.Unlock()
 
-	responseText := "Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек "
+	responseText := "Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
 
 	return responseText
 }
@@ -224,7 +224,7 @@ func (bot *Bot) stateWaitFilters(id int64, text string) string {
 
 	curLinkWithState.state = NotState
 
-	err := bot.scrapperHTTPClient.AddLink(id, curLinkWithState.Link)
+	err := bot.scrapper.AddLink(id, curLinkWithState.Link)
 	if err != nil {
 		slog.Error(err.Error())
 
@@ -248,7 +248,7 @@ func (bot *Bot) stateWaitFilters(id int64, text string) string {
 func (bot *Bot) stateWaitDelete(id int64, text string) string {
 	link := text
 
-	err := bot.scrapperHTTPClient.RemoveLink(id, domain.Link{URL: link})
+	err := bot.scrapper.RemoveLink(id, domain.Link{URL: link})
 	if err != nil {
 		slog.Error(err.Error())
 

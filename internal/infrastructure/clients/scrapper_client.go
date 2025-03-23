@@ -11,7 +11,6 @@ import (
 
 	"LinkTracker/internal/domain"
 	scrapperdto "LinkTracker/internal/infrastructure/dto/dto_scrapper"
-	"LinkTracker/pkg"
 )
 
 type ScrapperHTTPClient struct {
@@ -38,11 +37,16 @@ func (c *ScrapperHTTPClient) RegisterUser(tgID int64) error {
 		return err
 	}
 
-	response, err := c.client.Do(request) //nolint:bodyclose // The body closes in a function pkg.SafeClose(response.Body)
+	response, err := c.client.Do(request)
 	if err != nil {
 		return err
 	}
-	defer pkg.SafeClose(response.Body)
+
+	defer func() {
+		if Cerr := response.Body.Close(); Cerr != nil {
+			slog.Error("could not close resource", "error", Cerr.Error())
+		}
+	}()
 
 	switch response.StatusCode {
 	case http.StatusOK:
@@ -62,12 +66,16 @@ func (c *ScrapperHTTPClient) DeleteUser(tgID int64) error {
 		return err
 	}
 
-	response, err := c.client.Do(request) //nolint:bodyclose // The body closes in a function pkg.SafeClose(response.Body)
+	response, err := c.client.Do(request)
 	if err != nil {
 		return err
 	}
 
-	defer pkg.SafeClose(response.Body)
+	defer func() {
+		if Cerr := response.Body.Close(); Cerr != nil {
+			slog.Error("could not close resource", "error", Cerr.Error())
+		}
+	}()
 
 	switch response.StatusCode {
 	case http.StatusOK:
@@ -91,12 +99,16 @@ func (c *ScrapperHTTPClient) GetLinks(tgID int64) ([]domain.Link, error) {
 
 	request.Header.Set("Tg-Chat-Id", fmt.Sprint(tgID))
 
-	response, err := c.client.Do(request) //nolint:bodyclose // The body closes in a function pkg.SafeClose(response.Body)
+	response, err := c.client.Do(request)
 	if err != nil {
 		return nil, err
 	}
 
-	defer pkg.SafeClose(response.Body)
+	defer func() {
+		if Cerr := response.Body.Close(); Cerr != nil {
+			slog.Error("could not close resource", "error", Cerr.Error())
+		}
+	}()
 
 	switch response.StatusCode {
 	case http.StatusOK:
@@ -142,12 +154,16 @@ func (c *ScrapperHTTPClient) AddLink(tgID int64, link domain.Link) error {
 
 	request.Header.Set("Tg-Chat-Id", fmt.Sprint(tgID))
 
-	response, err := c.client.Do(request) //nolint:bodyclose // The body closes in a function pkg.SafeClose(response.Body)
+	response, err := c.client.Do(request)
 	if err != nil {
 		return err
 	}
 
-	defer pkg.SafeClose(response.Body)
+	defer func() {
+		if Cerr := response.Body.Close(); Cerr != nil {
+			slog.Error("could not close resource", "error", Cerr.Error())
+		}
+	}()
 
 	switch response.StatusCode {
 	case http.StatusOK:
@@ -184,12 +200,16 @@ func (c *ScrapperHTTPClient) RemoveLink(tgID int64, link domain.Link) error {
 
 	request.Header.Set("Tg-Chat-Id", fmt.Sprint(tgID))
 
-	response, err := c.client.Do(request) //nolint:bodyclose // The body closes in a function pkg.SafeClose(response.Body)
+	response, err := c.client.Do(request)
 	if err != nil {
 		return err
 	}
 
-	defer pkg.SafeClose(response.Body)
+	defer func() {
+		if Cerr := response.Body.Close(); Cerr != nil {
+			slog.Error("could not close resource", "error", Cerr.Error())
+		}
+	}()
 
 	switch response.StatusCode {
 	case http.StatusOK:

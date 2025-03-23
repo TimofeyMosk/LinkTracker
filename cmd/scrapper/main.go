@@ -32,7 +32,10 @@ func main() {
 		return
 	}
 
-	scrapper := application.NewScrapper(rep, config.ScrapConfig.Interval, botHTTPClient)
+	githubClient := clients.NewGitHubHTTPClient()
+	stackOverflowClient := clients.NewStackOverflowHTTPClient()
+
+	scrapper := application.NewScrapper(rep, config.ScrapConfig.Interval, botHTTPClient, githubClient, stackOverflowClient)
 	serv := server.InitServer(
 		config.ScrapConfig.Address,
 		server.InitScrapperRouting(scrapper),
