@@ -50,5 +50,6 @@ func StopBotSignalReceiving(tgBotAPI *clients.TelegramHTTPClient, server *http.S
 	if err != nil {
 		slog.Error(err.Error())
 	}
+
 	slog.Info("soft shutdown was a success")
 }

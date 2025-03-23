@@ -303,3 +303,8 @@ time=2025-03-23T21:40:24.997+04:00 level=INFO msg="server stopped"
 time=2025-03-23T21:41:44.550+04:00 level=INFO msg="tgBOTApi create"
 time=2025-03-23T21:41:45.990+04:00 level=INFO msg="soft shutdown was a success"
 time=2025-03-23T21:41:45.990+04:00 level=INFO msg="server stopped"
+time=2025-03-23T21:51:13.723+04:00 level=INFO msg="tgBOTApi create"
+time=2025-03-23T21:51:17.536+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-03-23T21:51:31.715+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-03-23T21:51:34.758+04:00 level=INFO msg="Added link" url=https://github.com/central-university-dev/go-TimofeyMosk/actions/runs/14021375039/job/39253781288 ID=0
+time=2025-03-23T21:51:38.694+04:00 level=INFO msg="Command /list execution" chatId=503492049

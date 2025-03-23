@@ -176,3 +176,9 @@ time=2025-03-23T21:41:44.150+04:00 level=INFO msg="Starts scrapper"
 time=2025-03-23T21:41:45.997+04:00 level=INFO msg="Shutting down scrapper"
 time=2025-03-23T21:41:45.997+04:00 level=INFO msg="server stopped"
 time=2025-03-23T21:41:45.997+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-23T21:51:13.968+04:00 level=INFO msg="Creating new repository"
+time=2025-03-23T21:51:13.969+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-23T21:51:13.970+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-23T21:51:17.537+04:00 level=INFO msg="Adding user"
+time=2025-03-23T21:51:34.757+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk/actions/runs/14021375039/job/39253781288 Tags:[] Filters:[] ID:0}"
+time=2025-03-23T21:51:38.695+04:00 level=INFO msg="Getting links" tgID=503492049
