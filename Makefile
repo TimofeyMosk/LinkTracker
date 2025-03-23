@@ -1,25 +1,31 @@
 COVERAGE_FILE ?= coverage.out
+# Имена бинарных файлов
 BOT_BINARY=./bin/bot
 SCRAPPER_BINARY=./bin/scrapper
 
-# Сборка обоих приложений
+# PID-файлы для хранения идентификаторов процессов
+BOT_PIDFILE=./bin/bot.pid
+SCRAPPER_PIDFILE=./bin/scrapper.pid
+
+# Цель для сборки обоих приложений
 .PHONY: build
 build: build_bot build_scrapper
 
-# Запуск обоих приложений
+# Цель для запуска обоих приложений
 .PHONY: run
 run: build
 	@echo "Запуск bot и scrapper в фоновом режиме"
-	@$(BOT_BINARY) & \
-	$(SCRAPPER_BINARY) & \
-	echo "Приложения запущены. Используйте 'make stop' для остановки."
+	@$(BOT_BINARY) & echo $$! > $(BOT_PIDFILE)
+	@$(SCRAPPER_BINARY) & echo $$! > $(SCRAPPER_PIDFILE)
+	@echo "Приложения запущены. Используйте 'make stop' для остановки."
 
-# Остановка всех запущенных приложений
+# Цель для остановки всех запущенных приложений с передачей SIGINT
 .PHONY: stop
 stop:
-	@echo "Остановка всех запущенных приложений"
-	@pkill -f $(BOT_BINARY) || true
-	@pkill -f $(SCRAPPER_BINARY) || true
+	@echo "Остановка всех запущенных приложений с передачей SIGINT"
+	@-kill -INT $$(cat $(BOT_PIDFILE)) 2>/dev/null || true
+	@-kill -INT $$(cat $(SCRAPPER_PIDFILE)) 2>/dev/null || true
+	@rm -f $(BOT_PIDFILE) $(SCRAPPER_PIDFILE)
 	@echo "Приложения остановлены."
 
 # Сборка bot
@@ -36,13 +42,13 @@ build_scrapper:
 	@mkdir -p ./bin
 	@go build -o $(SCRAPPER_BINARY) ./cmd/scrapper
 
-# Запуск bot
+# Запуск bot (отдельно)
 .PHONY: run_bot
 run_bot:
 	@echo "Запуск bot..."
 	@$(BOT_BINARY)
 
-# Запуск scrapper
+# Запуск scrapper (отдельно)
 .PHONY: run_scrapper
 run_scrapper:
 	@echo "Запуск scrapper..."

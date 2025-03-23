@@ -33,10 +33,12 @@ func StopScrapperSignalReceiving(scrapper *Scrapper, server *http.Server) {
 		slog.Error(err.Error())
 	}
 
-	err = server.Shutdown(context.Background())
+	err = server.Shutdown(context.TODO())
 	if err != nil {
 		slog.Error(err.Error())
 	}
+
+	slog.Info("soft shutdown was a success")
 }
 
 func StopBotSignalReceiving(tgBotAPI *clients.TelegramHTTPClient, server *http.Server) {
@@ -48,4 +50,5 @@ func StopBotSignalReceiving(tgBotAPI *clients.TelegramHTTPClient, server *http.S
 	if err != nil {
 		slog.Error(err.Error())
 	}
+	slog.Info("soft shutdown was a success")
 }
