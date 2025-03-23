@@ -8,9 +8,9 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	botdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_bot"
-	"github.com/es-debug/backend-academy-2024-go-template/pkg"
+	"LinkTracker/internal/domain"
+	botdto "LinkTracker/internal/infrastructure/dto/dto_bot"
+	"LinkTracker/pkg"
 )
 
 type BotHTTPClient struct {

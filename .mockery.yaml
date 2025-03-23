@@ -3,17 +3,36 @@ filename: "{{.InterfaceName | snakecase}}.go"
 mockname: "{{.InterfaceName | firstUpper}}"
 outpkg: mocks
 packages:
-  github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers:
+  LinkTracker/internal/infrastructure/httpapi/links:
     config:
       dir: "{{.InterfaceDir}}/mocks"
     interfaces:
-      Scrapper:
-      Bot:
-  github.com/es-debug/backend-academy-2024-go-template/internal/application:
+      LinkDeleter:
+      LinkGetter:
+      LinkAdder:
+  LinkTracker/internal/infrastructure/httpapi/tgchat:
+    config:
+      dir: "{{.InterfaceDir}}/mocks"
+    interfaces:
+      UserDeleter:
+      UserAdder:
+  LinkTracker/internal/infrastructure/httpapi/updates:
+    config:
+      dir: "{{.InterfaceDir}}/mocks"
+    interfaces:
+      MessageSender:
+  LinkTracker/internal/application:
     config:
       dir: "{{.InterfaceDir}}/mocks"
     interfaces:
       Database:
       BotClient:
       ScrapperClient:
-      TelegramClient:
+  LinkTracker/internal/infrastructure/clients:
+    config:
+      dir: "{{.InterfaceDir}}/mocks"
+    interfaces:
+      Bot:
+
+
+

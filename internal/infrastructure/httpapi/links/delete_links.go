@@ -1,4 +1,4 @@
-package handlers
+package links
 
 import (
 	"encoding/json"
@@ -6,17 +6,23 @@ import (
 	"log/slog"
 	"net/http"
 
-	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_scrapper"
-
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
+	"LinkTracker/internal/domain"
+	scrapperdto "LinkTracker/internal/infrastructure/dto/dto_scrapper"
+	"LinkTracker/internal/infrastructure/httpapi"
 )
 
-type DeleteLinksHandler struct{ Scrapper Scrapper }
+type LinkDeleter interface {
+	DeleteLink(id int64, link domain.Link) (domain.Link, error)
+}
+
+type DeleteLinksHandler struct {
+	LinkDeleter LinkDeleter
+}
 
 func (h DeleteLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	tgChatID, err := getIDFromString(r.Header.Get("Tg-Chat-Id"))
+	tgChatID, err := httpapi.GetTgIDFromString(r.Header.Get("Tg-Chat-Id"))
 	if err != nil {
-		sendErrorResponse(w, http.StatusBadRequest, "INVALID_CHAT_ID",
+		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_CHAT_ID",
 			"Invalid or missing chat ID", err.Error(), "BadRequest")
 
 		return
@@ -24,22 +30,25 @@ func (h DeleteLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	var removeLinkRequest scrapperdto.RemoveLinkRequest
 	if err = json.NewDecoder(r.Body).Decode(&removeLinkRequest); err != nil {
-		sendErrorResponse(w, http.StatusBadRequest, "INVALID_REQUEST_BODY",
+		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_REQUEST_BODY",
 			"Invalid or missing request body", err.Error(), "BadRequest")
 
 		return
 	}
 
 	link := domain.Link{URL: *removeLinkRequest.Link, Tags: nil, Filters: nil, ID: 0}
-	deletedLink, err := h.Scrapper.DeleteLink(tgChatID, link)
-
+	deletedLink, err := h.LinkDeleter.DeleteLink(tgChatID, link)
 	if err != nil {
 		if errors.As(err, &domain.ErrUserNotExist{}) {
-			sendErrorResponse(w, http.StatusNotFound, "CHAT_NOT_EXIST",
+			httpapi.SendErrorResponse(w, http.StatusNotFound, "CHAT_NOT_EXIST",
 				"Chat not exist", err.Error(), "Not Found")
+
+			return
 		} else {
-			sendErrorResponse(w, http.StatusBadRequest, "DELETE_LINK_FAILED",
+			httpapi.SendErrorResponse(w, http.StatusBadRequest, "DELETE_LINK_FAILED",
 				"Failed to delete link", err.Error(), "BadRequest")
+
+			return
 		}
 	}
 

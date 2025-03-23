@@ -5,8 +5,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/clients"
+	"LinkTracker/internal/domain"
+	"LinkTracker/internal/infrastructure/clients"
 )
 
 func CheckUpdates(linkURL string, lastKnown time.Time) (bool, error) {

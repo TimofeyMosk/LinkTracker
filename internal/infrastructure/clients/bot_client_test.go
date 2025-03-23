@@ -9,11 +9,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/clients"
+	"LinkTracker/internal/domain"
+	"LinkTracker/internal/infrastructure/clients"
 )
 
-func TestBotHTTPClient_PostUpdates_Success(t *testing.T) {
+func Test_BotHTTPClient_PostUpdates_Success(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
 		assert.Equal(t, "/updates", r.URL.Path)
@@ -29,7 +29,7 @@ func TestBotHTTPClient_PostUpdates_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestBotHTTPClient_PostUpdates_BadRequest(t *testing.T) {
+func Test_BotHTTPClient_PostUpdates_BadRequest(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
 		w.WriteHeader(http.StatusBadRequest)
@@ -52,7 +52,7 @@ func TestBotHTTPClient_PostUpdates_BadRequest(t *testing.T) {
 	assert.Equal(t, "Invalid data", apiErr.Description)
 }
 
-func TestBotHTTPClient_PostUpdates_UnexpectedStatusCode(t *testing.T) {
+func Test_BotHTTPClient_PostUpdates_UnexpectedStatusCode(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))

@@ -1,4 +1,4 @@
-package handlers
+package links
 
 import (
 	"encoding/json"
@@ -6,17 +6,23 @@ import (
 	"log/slog"
 	"net/http"
 
-	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_scrapper"
-
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
+	"LinkTracker/internal/domain"
+	scrapperdto "LinkTracker/internal/infrastructure/dto/dto_scrapper"
+	"LinkTracker/internal/infrastructure/httpapi"
 )
 
-type PostLinkHandler struct{ Scrapper Scrapper }
+type LinkAdder interface {
+	AddLink(id int64, link domain.Link) (domain.Link, error)
+}
+
+type PostLinkHandler struct {
+	LinkAdder LinkAdder
+}
 
 func (h PostLinkHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	tgChatID, err := getIDFromString(r.Header.Get("Tg-Chat-Id"))
+	tgChatID, err := httpapi.GetTgIDFromString(r.Header.Get("Tg-Chat-Id"))
 	if err != nil {
-		sendErrorResponse(w, http.StatusBadRequest, "INVALID_CHAT_ID",
+		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_CHAT_ID",
 			"Invalid or missing chat ID", err.Error(), "BadRequest")
 
 		return
@@ -24,7 +30,7 @@ func (h PostLinkHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	var addLinkRequest scrapperdto.AddLinkRequest
 	if err = json.NewDecoder(r.Body).Decode(&addLinkRequest); err != nil {
-		sendErrorResponse(w, http.StatusBadRequest, "INVALID_REQUEST_BODY",
+		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_REQUEST_BODY",
 			"Invalid or missing request body", err.Error(), "BadRequest")
 
 		return
@@ -32,19 +38,23 @@ func (h PostLinkHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	link, err := AddLinkRequestDtoToLink(addLinkRequest)
 	if err != nil {
-		sendErrorResponse(w, http.StatusBadRequest, "INVALID_REQUEST_BODY",
+		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_REQUEST_BODY",
 			"Invalid or missing request body", err.Error(), "BadRequest")
 
 		return
 	}
 
-	link, err = h.Scrapper.AddLink(tgChatID, link)
+	link, err = h.LinkAdder.AddLink(tgChatID, link)
 	if err != nil {
-		if errors.As(err, &domain.ErrUserNotExist{}) {
-			sendErrorResponse(w, http.StatusBadRequest, "CHAT_NOT_EXIST",
+		switch {
+		case errors.As(err, &domain.ErrUserNotExist{}):
+			httpapi.SendErrorResponse(w, http.StatusBadRequest, "CHAT_NOT_EXIST",
 				"Chat not exist", err.Error(), "BadRequest")
-		} else {
-			sendErrorResponse(w, http.StatusBadRequest, "ADD_LINK_FAILED",
+		case errors.As(err, &domain.ErrLinkAlreadyTracking{}):
+			httpapi.SendErrorResponse(w, http.StatusBadRequest, "LINKS_ALREADY_EXIST",
+				"Links already tracking", err.Error(), "BadRequest")
+		default:
+			httpapi.SendErrorResponse(w, http.StatusBadRequest, "ADD_LINK_FAILED",
 				"Failed to added link", err.Error(), "Server Error")
 		}
 

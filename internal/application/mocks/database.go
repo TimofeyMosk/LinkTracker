@@ -3,7 +3,8 @@
 package mocks
 
 import (
-	domain "github.com/es-debug/backend-academy-2024-go-template/internal/domain"
+	domain "LinkTracker/internal/domain"
+
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -330,12 +331,12 @@ func (_c *Database_GetAllUsers_Call) RunAndReturn(run func() ([]int64, error)) *
 	return _c
 }
 
-// GetLinks provides a mock function with given fields: id
-func (_m *Database) GetLinks(id int64) ([]domain.Link, error) {
+// GetUserLinks provides a mock function with given fields: id
+func (_m *Database) GetUserLinks(id int64) ([]domain.Link, error) {
 	ret := _m.Called(id)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetLinks")
+		panic("no return value specified for GetUserLinks")
 	}
 
 	var r0 []domain.Link
@@ -360,30 +361,30 @@ func (_m *Database) GetLinks(id int64) ([]domain.Link, error) {
 	return r0, r1
 }
 
-// Database_GetLinks_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetLinks'
-type Database_GetLinks_Call struct {
+// Database_GetUserLinks_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetUserLinks'
+type Database_GetUserLinks_Call struct {
 	*mock.Call
 }
 
-// GetLinks is a helper method to define mock.On call
+// GetUserLinks is a helper method to define mock.On call
 //   - id int64
-func (_e *Database_Expecter) GetLinks(id interface{}) *Database_GetLinks_Call {
-	return &Database_GetLinks_Call{Call: _e.mock.On("GetLinks", id)}
+func (_e *Database_Expecter) GetUserLinks(id interface{}) *Database_GetUserLinks_Call {
+	return &Database_GetUserLinks_Call{Call: _e.mock.On("GetUserLinks", id)}
 }
 
-func (_c *Database_GetLinks_Call) Run(run func(id int64)) *Database_GetLinks_Call {
+func (_c *Database_GetUserLinks_Call) Run(run func(id int64)) *Database_GetUserLinks_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(int64))
 	})
 	return _c
 }
 
-func (_c *Database_GetLinks_Call) Return(_a0 []domain.Link, _a1 error) *Database_GetLinks_Call {
+func (_c *Database_GetUserLinks_Call) Return(_a0 []domain.Link, _a1 error) *Database_GetUserLinks_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *Database_GetLinks_Call) RunAndReturn(run func(int64) ([]domain.Link, error)) *Database_GetLinks_Call {
+func (_c *Database_GetUserLinks_Call) RunAndReturn(run func(int64) ([]domain.Link, error)) *Database_GetUserLinks_Call {
 	_c.Call.Return(run)
 	return _c
 }

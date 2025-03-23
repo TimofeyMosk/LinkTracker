@@ -1,19 +1,14 @@
 package application
 
 import (
-	"context"
-	"fmt"
+	"errors"
 	"log/slog"
 	"net/url"
 	"strings"
 	"sync"
-	"time"
+	"unicode/utf8"
 
-	"golang.org/x/time/rate"
-
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"LinkTracker/internal/domain"
 )
 
 const (
@@ -23,6 +18,7 @@ const (
 	WaitingFilters
 	WaitingDelete
 )
+const errorText = "Не удалось выполнить операцию"
 
 type LinkWithState struct {
 	Link  domain.Link
@@ -37,271 +33,235 @@ type ScrapperClient interface {
 	RemoveLink(tgID int64, link domain.Link) error
 }
 
-type TelegramClient interface {
-	GetUpdates() tgbotapi.UpdatesChannel
-	SendMessage(chatID int64, text string) (tgbotapi.Message, error)
-	StopReceivingUpdates()
-}
-
 type Bot struct {
-	tgAPI              TelegramClient
 	scrapperHTTPClient ScrapperClient
 	userState          map[int64]LinkWithState
 	mu                 sync.RWMutex
-	workerCount        int
-	globalLimiter      *rate.Limiter
 }
 
-func NewBot(scrapperClient ScrapperClient, tgClient TelegramClient, countWorkers int) *Bot {
-	slog.Info("Bot create")
+func NewBot(scrapperClient ScrapperClient) *Bot {
+	slog.Info("tgBOTApi create")
 
 	return &Bot{
-		tgAPI:              tgClient,
 		scrapperHTTPClient: scrapperClient,
 		userState:          make(map[int64]LinkWithState),
-		workerCount:        countWorkers,
-		globalLimiter:      rate.NewLimiter(rate.Every(time.Second/30), 30),
 	}
 }
 
-func (bot *Bot) SendMessage(chatID int64, text string) {
-	err := bot.globalLimiter.Wait(context.Background())
-	if err != nil {
-		slog.Error("Rate limit error", "error", err)
-		return
+func (bot *Bot) HandleMessage(id int64, text string) string {
+	if firstRune, _ := utf8.DecodeRuneInString(text); firstRune == '/' {
+		return bot.handleCommand(id, text)
 	}
 
-	message, err := bot.tgAPI.SendMessage(chatID, text)
-	if err != nil {
-		slog.Error("Failed to send message", "error", err.Error(), "chatId", chatID, "text", text)
-		return
-	}
-
-	slog.Info("Sent message", "chatId", chatID, "text", message.Text)
+	return bot.changeState(id, text)
 }
 
-func (bot *Bot) Start() {
-	jobs := make([]chan *tgbotapi.Message, bot.workerCount)
-	for i := range jobs {
-		jobs[i] = make(chan *tgbotapi.Message, 100)
-	}
-
-	wg := sync.WaitGroup{}
-
-	for i := 0; i < bot.workerCount; i++ {
-		wg.Add(1)
-
-		go func(workerID int) {
-			defer wg.Done()
-
-			for msg := range jobs[workerID] {
-				if msg.IsCommand() {
-					bot.handleCommand(msg)
-				} else {
-					bot.changeState(msg)
-				}
-			}
-		}(i)
-	}
-
-	updates := bot.tgAPI.GetUpdates()
-	for update := range updates {
-		if update.Message != nil {
-			chatID := update.Message.Chat.ID
-			index := chatID % int64(bot.workerCount)
-			jobs[index] <- update.Message
-		}
-	}
-
-	for i := range jobs {
-		close(jobs[i])
-	}
-
-	wg.Wait()
-	slog.Info("Bot has stopped")
-}
-
-func (bot *Bot) Stop() {
-	slog.Info("Bot stopping. Waiting for running functions to execute")
-	bot.tgAPI.StopReceivingUpdates()
-}
-
-func (bot *Bot) handleCommand(message *tgbotapi.Message) {
-	switch message.Command() {
-	case "start":
-		bot.commandStart(message)
-	case "help":
-		bot.commandHelp(message)
-	case "track":
-		bot.commandTrack(message)
-	case "untrack":
-		bot.commandUntrack(message)
-	case "list":
-		bot.commandList(message)
+func (bot *Bot) handleCommand(id int64, text string) string {
+	switch text {
+	case "/start":
+		return bot.commandStart(id)
+	case "/help":
+		return bot.commandHelp(id)
+	case "/track":
+		return bot.commandTrack(id)
+	case "/untrack":
+		return bot.commandUntrack(id)
+	case "/list":
+		return bot.commandList(id)
 	default:
-		bot.SendMessage(message.Chat.ID, "Команда не распознана. Введите /help , чтобы увидеть список доступных команд")
+		responseText := "Команда не распознана. Введите /help , чтобы увидеть список доступных команд"
+		return responseText
 	}
 }
-func (bot *Bot) changeState(message *tgbotapi.Message) {
-	if val, ok := bot.userState[message.Chat.ID]; ok {
+
+func (bot *Bot) changeState(id int64, text string) string {
+	if val, ok := bot.userState[id]; ok {
 		switch val.state {
 		case NotState:
-			return
+			return ""
 		case WaitingLink:
-			bot.stateWaitLink(message)
+			return bot.stateWaitLink(id, text)
 		case WaitingTags:
-			bot.stateWaitTags(message)
+			return bot.stateWaitTags(id, text)
 		case WaitingFilters:
-			bot.stateWaitFilters(message)
+			return bot.stateWaitFilters(id, text)
 		case WaitingDelete:
-			bot.stateWaitDelete(message)
+			return bot.stateWaitDelete(id, text)
 		default:
-			return
+			return ""
 		}
 	}
+
+	return ""
 }
 
-func (bot *Bot) commandStart(message *tgbotapi.Message) {
-	slog.Info("Command /start execution", "chatId", message.Chat.ID)
+func (bot *Bot) commandStart(id int64) string {
+	slog.Info("Command /start execution", "chatId", id)
 
-	err := bot.scrapperHTTPClient.RegisterUser(message.Chat.ID)
+	err := bot.scrapperHTTPClient.RegisterUser(id)
 	if err != nil {
-		bot.SendMessage(message.Chat.ID, "Не удалось выполнить операцию")
-		return
+		return errorText
 	}
 
-	bot.SendMessage(message.Chat.ID, "Добро пожаловать в LinkTracker, "+
-		"это приложение для отслеживание изменений на github и stackoverflow."+
-		"Для получения списка команд введите /help")
+	responseText := "Добро пожаловать в LinkTracker, " +
+		"это приложение для отслеживание изменений на github и stackoverflow." +
+		"Для получения списка команд введите /help"
+
+	return responseText
 }
 
-func (bot *Bot) commandHelp(message *tgbotapi.Message) {
-	slog.Info("Command /help execution", "chatId", message.Chat.ID)
+func (bot *Bot) commandHelp(id int64) string {
+	slog.Info("Command /help execution", "chatId", id)
 
-	var sb strings.Builder
+	responseText := "📝Доступные команды:\n\n" +
+		"/start - Начало работы с ботом\n" +
+		"/help - Помощь по командам\n" +
+		"/track - Начать отслеживание ссылки\n" +
+		"/untrack - Прекратить отслеживание\n" +
+		"/list - Список отслеживаемых ссылок"
 
-	sb.WriteString("📝Доступные команды:\n\n")
-
-	for _, cmd := range domain.BotCommands {
-		sb.WriteString(fmt.Sprintf("/%s - %s\n", cmd.Command, cmd.Description))
-	}
-
-	bot.SendMessage(message.Chat.ID, sb.String())
+	return responseText
 }
 
-func (bot *Bot) commandTrack(message *tgbotapi.Message) {
-	slog.Info("Command /track execution", "chatId", message.Chat.ID)
+func (bot *Bot) commandTrack(id int64) string {
+	slog.Info("Command /track execution", "chatId", id)
 	bot.mu.Lock()
-	bot.userState[message.Chat.ID] = LinkWithState{Link: domain.Link{}, state: WaitingLink}
+	bot.userState[id] = LinkWithState{Link: domain.Link{}, state: WaitingLink}
 	bot.mu.Unlock()
-	bot.SendMessage(message.Chat.ID, "Введите адрес ссылки (поддерживается только gitHub и stackOverFlow")
+
+	responseText := "Введите адрес ссылки (поддерживается только gitHub и stackOverFlow)"
+
+	return responseText
 }
 
-func (bot *Bot) commandUntrack(message *tgbotapi.Message) {
-	slog.Info("Command /untrack execution", "chatId", message.Chat.ID)
+func (bot *Bot) commandUntrack(id int64) string {
+	slog.Info("Command /untrack execution", "chatId", id)
 	bot.mu.Lock()
-	bot.userState[message.Chat.ID] = LinkWithState{Link: domain.Link{}, state: WaitingDelete}
+	bot.userState[id] = LinkWithState{Link: domain.Link{}, state: WaitingDelete}
 	bot.mu.Unlock()
-	bot.SendMessage(message.Chat.ID, "Введите адрес ссылки")
+
+	responseText := "Введите адрес ссылки для удаления"
+
+	return responseText
 }
 
-func (bot *Bot) commandList(message *tgbotapi.Message) {
-	slog.Info("Command /list execution", "chatId", message.Chat.ID)
+func (bot *Bot) commandList(id int64) string {
+	slog.Info("Command /list execution", "chatId", id)
 
-	list, err := bot.scrapperHTTPClient.GetLinks(message.Chat.ID)
+	list, err := bot.scrapperHTTPClient.GetLinks(id)
 	if err != nil {
-		slog.Error("Failed to get links", "error", err.Error(), "chatId", message.Chat.ID)
-		bot.SendMessage(message.Chat.ID, "Не удалось выполнить операцию")
+		slog.Error("Failed to get links", "error", err.Error(), "chatId", id)
 
-		return
+		return errorText
 	}
 
-	text := listLinksToString(list)
-
-	bot.SendMessage(message.Chat.ID, text)
-}
-
-func (bot *Bot) stateWaitLink(message *tgbotapi.Message) {
-	link := message.Text
-	if validateLink(link) {
-		bot.mu.Lock()
-		bot.userState[message.Chat.ID] = LinkWithState{
-			Link:  domain.Link{URL: link},
-			state: WaitingTags}
-		bot.mu.Unlock()
-		bot.SendMessage(message.Chat.ID, "Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек ")
-	} else {
-		bot.SendMessage(message.Chat.ID, "Поддерживается только gitHub(https://github.com/{owner}/{repo}) и "+
-			"stackOverflow(https://stackoverflow.com/questions/{id}). Повторите команду /track")
-		bot.mu.Lock()
-		delete(bot.userState, message.Chat.ID)
-		bot.mu.Unlock()
+	if len(list) == 0 {
+		responseText := "Список отслеживаемых ссылок пуст. Добавьте ссылки с помощью /track"
+		return responseText
 	}
+
+	responseText := listLinksToString(list)
+
+	return responseText
 }
 
-func (bot *Bot) stateWaitTags(message *tgbotapi.Message) {
+func (bot *Bot) stateWaitLink(id int64, text string) string {
+	link := text
+	if !validateLink(link) {
+		bot.mu.Lock()
+		delete(bot.userState, id)
+		bot.mu.Unlock()
+
+		responseText := "Поддерживается только gitHub(https://github.com/{owner}/{repo}) и " +
+			"stackOverflow(https://stackoverflow.com/questions/{id}). Повторите команду /track"
+
+		return responseText
+	}
+
+	bot.mu.Lock()
+	bot.userState[id] = LinkWithState{
+		Link:  domain.Link{URL: link},
+		state: WaitingTags}
+	bot.mu.Unlock()
+
+	responseText := "Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек "
+
+	return responseText
+}
+
+func (bot *Bot) stateWaitTags(id int64, text string) string {
 	bot.mu.RLock()
-	tempLinkWithState := bot.userState[message.Chat.ID]
+	curLinkWithState := bot.userState[id]
 	bot.mu.RUnlock()
 
-	if message.Text == "-" {
-		tempLinkWithState.Link.Tags = []string{}
+	if text == "-" {
+		curLinkWithState.Link.Tags = []string{}
 	} else {
-		tempLinkWithState.Link.Tags = strings.Split(message.Text, " ")
+		curLinkWithState.Link.Tags = strings.Split(text, " ")
 	}
 
-	tempLinkWithState.state = WaitingFilters
+	curLinkWithState.state = WaitingFilters
 
 	bot.mu.Lock()
-	bot.userState[message.Chat.ID] = tempLinkWithState
+	bot.userState[id] = curLinkWithState
 	bot.mu.Unlock()
-	bot.SendMessage(message.Chat.ID, "Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек ")
+
+	responseText := "Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек "
+
+	return responseText
 }
 
-func (bot *Bot) stateWaitFilters(message *tgbotapi.Message) {
+func (bot *Bot) stateWaitFilters(id int64, text string) string {
 	bot.mu.RLock()
-	tempLinkWithState := bot.userState[message.Chat.ID]
+	curLinkWithState := bot.userState[id]
 	bot.mu.RUnlock()
 
-	if message.Text == "-" {
-		tempLinkWithState.Link.Filters = []string{}
+	if text == "-" {
+		curLinkWithState.Link.Filters = []string{}
 	} else {
-		tempLinkWithState.Link.Filters = strings.Split(message.Text, " ")
+		curLinkWithState.Link.Filters = strings.Split(text, " ")
 	}
 
-	tempLinkWithState.state = NotState
+	curLinkWithState.state = NotState
 
-	err := bot.scrapperHTTPClient.AddLink(message.Chat.ID, tempLinkWithState.Link)
+	err := bot.scrapperHTTPClient.AddLink(id, curLinkWithState.Link)
 	if err != nil {
 		slog.Error(err.Error())
-		bot.SendMessage(message.Chat.ID, "Не удалось выполнить операцию")
 
-		return
-	}
-
-	bot.SendMessage(message.Chat.ID, "Ссылка отслеживается")
-	bot.mu.Lock()
-	delete(bot.userState, message.Chat.ID)
-	bot.mu.Unlock()
-}
-
-func (bot *Bot) stateWaitDelete(message *tgbotapi.Message) {
-	link := message.Text
-	if validateLink(link) {
-		err := bot.scrapperHTTPClient.RemoveLink(message.Chat.ID, domain.Link{URL: link})
-		if err != nil {
-			slog.Error(err.Error())
-			return
+		if errors.As(err, &domain.ErrAPI{}) && (err.(domain.ErrAPI).ExceptionMessage == domain.ErrLinkAlreadyTracking{}.Error()) {
+			responseText := "Данная ссылка уже отслеживается"
+			return responseText
 		}
 
-		bot.SendMessage(message.Chat.ID, "Ссылка успешно удалена")
-	} else {
-		bot.SendMessage(message.Chat.ID, "Поддерживается только gitHub и stackOverflow. Не удалось выполнить операцию")
+		return errorText
 	}
 
 	bot.mu.Lock()
-	delete(bot.userState, message.Chat.ID)
+	delete(bot.userState, id)
 	bot.mu.Unlock()
+
+	responseText := "Ссылка отслеживается"
+
+	return responseText
+}
+
+func (bot *Bot) stateWaitDelete(id int64, text string) string {
+	link := text
+
+	err := bot.scrapperHTTPClient.RemoveLink(id, domain.Link{URL: link})
+	if err != nil {
+		slog.Error(err.Error())
+
+		return errorText
+	}
+
+	bot.mu.Lock()
+	delete(bot.userState, id)
+	bot.mu.Unlock()
+
+	responseText := "Ссылка успешно удалена"
+
+	return responseText
 }
 
 func validateLink(link string) bool {
@@ -317,11 +277,11 @@ func validateLink(link string) bool {
 
 	parts := strings.Split(strings.Trim(parsedURL.Path, "/"), "/")
 
-	if parsedURL.Host == github && len(parts) == 2 {
+	if parsedURL.Host == github && len(parts) >= 2 {
 		return true
 	}
 
-	if parsedURL.Host == stackoverflow && len(parts) >= 2 && len(parts) <= 3 && parts[0] == "questions" {
+	if parsedURL.Host == stackoverflow && len(parts) >= 2 && parts[0] == "questions" {
 		return true
 	}
 

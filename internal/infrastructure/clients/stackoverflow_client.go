@@ -8,9 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/es-debug/backend-academy-2024-go-template/pkg"
-
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
+	"LinkTracker/internal/domain"
+	"LinkTracker/pkg"
 )
 
 const (

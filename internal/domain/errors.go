@@ -62,7 +62,7 @@ type ErrAPI struct {
 }
 
 func (e ErrAPI) Error() string { //nolint:gocritic // This is an error, it should not address by pointer
-	return fmt.Sprintf("api error %s: %s", e.Code, e.Description)
+	return fmt.Sprintf("api error %s: %s", e.Code, e.ExceptionMessage)
 }
 
 type ErrUnexpectedStatusCode struct {
@@ -79,4 +79,10 @@ type ErrNoRequiredAttribute struct {
 
 func (e ErrNoRequiredAttribute) Error() string {
 	return fmt.Sprintf("no required attribute [%s]", e.Attribute)
+}
+
+type ErrLinkAlreadyTracking struct{}
+
+func (e ErrLinkAlreadyTracking) Error() string {
+	return "link already tracking"
 }

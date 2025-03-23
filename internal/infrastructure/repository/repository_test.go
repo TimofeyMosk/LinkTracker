@@ -3,21 +3,20 @@ package repository_test
 import (
 	"testing"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/repository"
+	"LinkTracker/internal/domain"
+	"LinkTracker/internal/infrastructure/repository"
 
 	"github.com/stretchr/testify/assert"
-
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
 )
 
-func TestNewRepository(t *testing.T) {
+func Test_Repository_NewRepository(t *testing.T) {
 	repo := repository.NewRepository()
 
 	assert.NotNil(t, repo)
 	assert.Len(t, repo.Links, 0)
 }
 
-func TestCreateUser(t *testing.T) {
+func Test_Repository_CreateUser(t *testing.T) {
 	repo := repository.NewRepository()
 	userID := int64(1)
 
@@ -27,7 +26,7 @@ func TestCreateUser(t *testing.T) {
 	assert.True(t, repo.UserExist(userID))
 }
 
-func TestCreateUser_AlreadyExists(t *testing.T) {
+func Test_Repository_CreateUser_AlreadyExists(t *testing.T) {
 	repo := repository.NewRepository()
 	userID := int64(1)
 	_ = repo.CreateUser(userID)
@@ -38,7 +37,7 @@ func TestCreateUser_AlreadyExists(t *testing.T) {
 	assert.Contains(t, err.Error(), "already exists")
 }
 
-func TestDeleteUser(t *testing.T) {
+func Test_Repository_DeleteUser(t *testing.T) {
 	repo := repository.NewRepository()
 	userID := int64(1)
 	_ = repo.CreateUser(userID)
@@ -49,7 +48,7 @@ func TestDeleteUser(t *testing.T) {
 	assert.False(t, repo.UserExist(userID))
 }
 
-func TestDeleteUser_NotFound(t *testing.T) {
+func Test_Repository_DeleteUser_NotFound(t *testing.T) {
 	repo := repository.NewRepository()
 	userID := int64(1)
 
@@ -59,7 +58,7 @@ func TestDeleteUser_NotFound(t *testing.T) {
 	assert.ErrorAs(t, err, &domain.ErrUserNotExist{})
 }
 
-func TestGetAllUsers(t *testing.T) {
+func Test_Repository_GetAllUsers(t *testing.T) {
 	repo := repository.NewRepository()
 	userID1 := int64(1)
 	userID2 := int64(2)
@@ -74,7 +73,7 @@ func TestGetAllUsers(t *testing.T) {
 	assert.Contains(t, users, userID2)
 }
 
-func TestGetLinks(t *testing.T) {
+func Test_Repository_GetLinks(t *testing.T) {
 	repo := repository.NewRepository()
 	userID := int64(1)
 	link1 := domain.Link{URL: "https://example.com/1"}
@@ -83,7 +82,7 @@ func TestGetLinks(t *testing.T) {
 	_ = repo.AddLink(userID, link1)
 	_ = repo.AddLink(userID, link2)
 
-	links, err := repo.GetLinks(userID)
+	links, err := repo.GetUserLinks(userID)
 
 	assert.NoError(t, err)
 	assert.Len(t, links, 2)
@@ -91,17 +90,17 @@ func TestGetLinks(t *testing.T) {
 	assert.Contains(t, links, link2)
 }
 
-func TestGetLinks_UserNotFound(t *testing.T) {
+func Test_Repository_GetLinks_UserNotFound(t *testing.T) {
 	repo := repository.NewRepository()
 	userID := int64(1)
 
-	_, err := repo.GetLinks(userID)
+	_, err := repo.GetUserLinks(userID)
 
 	assert.Error(t, err)
 	assert.ErrorAs(t, err, &domain.ErrUserNotExist{})
 }
 
-func TestAddLink(t *testing.T) {
+func Test_Repository_AddLink(t *testing.T) {
 	repo := repository.NewRepository()
 	userID := int64(1)
 	link := domain.Link{URL: "https://example.com"}
@@ -111,12 +110,12 @@ func TestAddLink(t *testing.T) {
 
 	assert.NoError(t, err)
 
-	links, _ := repo.GetLinks(userID)
+	links, _ := repo.GetUserLinks(userID)
 	assert.Len(t, links, 1)
 	assert.Equal(t, links[0], link)
 }
 
-func TestAddLink_UserNotFound(t *testing.T) {
+func Test_Repository_AddLink_UserNotFound(t *testing.T) {
 	repo := repository.NewRepository()
 	userID := int64(1)
 	link := domain.Link{URL: "https://example.com/1"}
@@ -127,7 +126,7 @@ func TestAddLink_UserNotFound(t *testing.T) {
 	assert.ErrorAs(t, err, &domain.ErrUserNotExist{})
 }
 
-func TestDeleteLink(t *testing.T) {
+func Test_Repository_DeleteLink(t *testing.T) {
 	repo := repository.NewRepository()
 	userID := int64(1)
 	link := domain.Link{URL: "https://example.com/1"}
@@ -139,11 +138,11 @@ func TestDeleteLink(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, deletedLink, link)
 
-	links, _ := repo.GetLinks(userID)
+	links, _ := repo.GetUserLinks(userID)
 	assert.Len(t, links, 0)
 }
 
-func TestDeleteLink_UserNotFound(t *testing.T) {
+func Test_Repository_DeleteLink_UserNotFound(t *testing.T) {
 	repo := repository.NewRepository()
 	userID := int64(1)
 	link := domain.Link{URL: "https://example.com/1"}
@@ -154,7 +153,7 @@ func TestDeleteLink_UserNotFound(t *testing.T) {
 	assert.ErrorAs(t, err, &domain.ErrUserNotExist{})
 }
 
-func TestDeleteLink_LinkNotFound(t *testing.T) {
+func Test_Repository_DeleteLink_LinkNotFound(t *testing.T) {
 	repo := repository.NewRepository()
 	userID := int64(1)
 	link := domain.Link{URL: "https://example.com/1"}
@@ -167,7 +166,7 @@ func TestDeleteLink_LinkNotFound(t *testing.T) {
 	assert.Contains(t, err.Error(), "not found")
 }
 
-func TestGetAllLinks(t *testing.T) {
+func Test_Repository_GetAllLinks(t *testing.T) {
 	repo := repository.NewRepository()
 	userID1 := int64(1)
 	userID2 := int64(2)
@@ -186,7 +185,7 @@ func TestGetAllLinks(t *testing.T) {
 	assert.Contains(t, links, link2)
 }
 
-func TestGetAllLinks_Empty(t *testing.T) {
+func Test_Repository_GetAllLinks_Empty(t *testing.T) {
 	repo := repository.NewRepository()
 
 	links, err := repo.GetAllLinks()

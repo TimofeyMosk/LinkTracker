@@ -7,6 +7,8 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+
+	"LinkTracker/internal/infrastructure/clients"
 )
 
 func SignalWarden(signals ...os.Signal) chan struct{} {
@@ -37,12 +39,12 @@ func StopScrapperSignalReceiving(scrapper *Scrapper, server *http.Server) {
 	}
 }
 
-func StopBotSignalReceiving(bot *Bot, server *http.Server) {
+func StopBotSignalReceiving(tgBotAPI *clients.TelegramHTTPClient, server *http.Server) {
 	<-SignalWarden(syscall.SIGINT, syscall.SIGTERM)
 
-	bot.Stop()
+	tgBotAPI.Stop()
 
-	err := server.Shutdown(context.Background())
+	err := server.Shutdown(context.TODO())
 	if err != nil {
 		slog.Error(err.Error())
 	}

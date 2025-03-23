@@ -50,7 +50,7 @@ linters-settings:
     lines: 70
     statements: 50
   goimports:
-    local-prefixes: "github.com/es-debug/backend-academy-2024-go-template"
+    local-prefixes: "LinkTracker"
   gocritic:
     enabled-tags:
       - style

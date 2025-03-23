@@ -4,24 +4,27 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/handlers"
+	"LinkTracker/internal/application"
+	"LinkTracker/internal/infrastructure/clients"
+	"LinkTracker/internal/infrastructure/httpapi/links"
+	"LinkTracker/internal/infrastructure/httpapi/tgchat"
+	"LinkTracker/internal/infrastructure/httpapi/updates"
 )
 
 func InitScrapperRouting(scrapper *application.Scrapper) *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.Handle("GET "+"/links", handlers.GetLinksHandler{Scrapper: scrapper})
-	mux.Handle("POST "+"/links", handlers.PostLinkHandler{Scrapper: scrapper})
-	mux.Handle("DELETE "+"/links", handlers.DeleteLinksHandler{Scrapper: scrapper})
-	mux.Handle("POST "+"/tg-chat/{id}", handlers.PostUserHandler{Scrapper: scrapper})
-	mux.Handle("DELETE "+"/tg-chat/{id}", handlers.DeleteUserHandler{Scrapper: scrapper})
+	mux.Handle("GET /links", links.GetLinksHandler{LinkGetter: scrapper})
+	mux.Handle("POST /links", links.PostLinkHandler{LinkAdder: scrapper})
+	mux.Handle("DELETE /links", links.DeleteLinksHandler{LinkDeleter: scrapper})
+	mux.Handle("POST /tg-chat/{id}", tgchat.PostUserHandler{UserAdder: scrapper})
+	mux.Handle("DELETE /tg-chat/{id}", tgchat.DeleteUserHandler{UserDeleter: scrapper})
 
 	return mux
 }
 
-func InitBotRouting(bot *application.Bot) *http.ServeMux {
+func InitBotRouting(tgBotAPI *clients.TelegramHTTPClient) *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.Handle("POST "+"/updates", handlers.PostUpdatesHandler{Bot: bot})
+	mux.Handle("POST /updates", updates.PostUpdatesHandler{MessageSender: tgBotAPI})
 
 	return mux
 }

@@ -10,9 +10,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/clients"
-	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_scrapper"
+	"LinkTracker/internal/domain"
+	"LinkTracker/internal/infrastructure/clients"
+	scrapperdto "LinkTracker/internal/infrastructure/dto/dto_scrapper"
 )
 
 func ptrString(s string) *string {
@@ -23,7 +23,7 @@ func ptrInt64(i int64) *int64 {
 	return &i
 }
 
-func TestScrapperHTTPClient_RegisterUser_Success(t *testing.T) {
+func Test_ScrapperHTTPClient_RegisterUser_Success(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodPost, r.Method)
 		assert.Contains(t, r.URL.Path, "/tg-chat/")
@@ -39,7 +39,7 @@ func TestScrapperHTTPClient_RegisterUser_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestScrapperHTTPClient_RegisterUser_BadRequest(t *testing.T) {
+func Test_ScrapperHTTPClient_RegisterUser_BadRequest(t *testing.T) {
 	errorResp := scrapperdto.ApiErrorResponse{
 		Code:             ptrString("ERR_INVALID"),
 		Description:      ptrString("Invalid input"),
@@ -67,7 +67,7 @@ func TestScrapperHTTPClient_RegisterUser_BadRequest(t *testing.T) {
 	assert.Equal(t, "Invalid input", apiErr.Description)
 }
 
-func TestScrapperHTTPClient_RegisterUser_UnexpectedStatus(t *testing.T) {
+func Test_ScrapperHTTPClient_RegisterUser_UnexpectedStatus(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
@@ -85,7 +85,7 @@ func TestScrapperHTTPClient_RegisterUser_UnexpectedStatus(t *testing.T) {
 	assert.Equal(t, http.StatusInternalServerError, unexpected.StatusCode)
 }
 
-func TestScrapperHTTPClient_DeleteUser_Success(t *testing.T) {
+func Test_ScrapperHTTPClient_DeleteUser_Success(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, http.MethodDelete, r.Method)
 		assert.Contains(t, r.URL.Path, "/tg-chat/")
@@ -101,7 +101,7 @@ func TestScrapperHTTPClient_DeleteUser_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestScrapperHTTPClient_DeleteUser_NotFound(t *testing.T) {
+func Test_ScrapperHTTPClient_DeleteUser_NotFound(t *testing.T) {
 	errorResp := scrapperdto.ApiErrorResponse{
 		Code:        ptrString("ERR_NOT_FOUND"),
 		Description: ptrString("Chat not exist"),
@@ -126,7 +126,7 @@ func TestScrapperHTTPClient_DeleteUser_NotFound(t *testing.T) {
 	assert.Equal(t, "Chat not exist", apiErr.Description)
 }
 
-func TestScrapperHTTPClient_DeleteUser_UnexpectedStatus(t *testing.T) {
+func Test_ScrapperHTTPClient_DeleteUser_UnexpectedStatus(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
@@ -144,8 +144,7 @@ func TestScrapperHTTPClient_DeleteUser_UnexpectedStatus(t *testing.T) {
 	assert.Equal(t, http.StatusInternalServerError, unexpected.StatusCode)
 }
 
-func TestScrapperHTTPClient_GetLinks_Success(t *testing.T) {
-	// Arrange: сервер возвращает 200 OK с валидным JSON-ответом.
+func Test_ScrapperHTTPClient_GetLinks_Success(t *testing.T) {
 	linkResponse := scrapperdto.LinkResponse{
 		Url:     ptrString("https://example.com"),
 		Id:      ptrInt64(1),
@@ -170,10 +169,8 @@ func TestScrapperHTTPClient_GetLinks_Success(t *testing.T) {
 	client, err := clients.NewScrapperHTTPClient(server.URL, 2*time.Second)
 	require.NoError(t, err)
 
-	// Act
 	result, err := client.GetLinks(12345)
 
-	// Assert
 	require.NoError(t, err)
 
 	expected := []domain.Link{{
@@ -185,8 +182,7 @@ func TestScrapperHTTPClient_GetLinks_Success(t *testing.T) {
 	assert.Equal(t, expected, result)
 }
 
-func TestScrapperHTTPClient_GetLinks_BadRequest(t *testing.T) {
-	// Arrange: сервер возвращает 400 с ошибочным JSON-ответом.
+func Test_ScrapperHTTPClient_GetLinks_BadRequest(t *testing.T) {
 	errorResp := scrapperdto.ApiErrorResponse{
 		Code:        ptrString("ERR_BAD_REQUEST"),
 		Description: ptrString("Invalid input"),
@@ -201,10 +197,8 @@ func TestScrapperHTTPClient_GetLinks_BadRequest(t *testing.T) {
 	client, err := clients.NewScrapperHTTPClient(server.URL, 2*time.Second)
 	require.NoError(t, err)
 
-	// Act
 	result, err := client.GetLinks(12345)
 
-	// Assert
 	require.Error(t, err)
 	assert.Nil(t, result)
 
@@ -216,7 +210,7 @@ func TestScrapperHTTPClient_GetLinks_BadRequest(t *testing.T) {
 	assert.Equal(t, "Invalid input", apiErr.Description)
 }
 
-func TestScrapperHTTPClient_GetLinks_UnexpectedStatus(t *testing.T) {
+func Test_ScrapperHTTPClient_GetLinks_UnexpectedStatus(t *testing.T) {
 	// Arrange: сервер возвращает неожиданный статус (500)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -238,7 +232,7 @@ func TestScrapperHTTPClient_GetLinks_UnexpectedStatus(t *testing.T) {
 	assert.Equal(t, http.StatusInternalServerError, unexpected.StatusCode)
 }
 
-func TestScrapperHTTPClient_AddLink_Success(t *testing.T) {
+func Test_ScrapperHTTPClient_AddLink_Success(t *testing.T) {
 	linkResponse := scrapperdto.LinkResponse{
 		Url:     ptrString("https://example.com"),
 		Id:      ptrInt64(1),
@@ -269,7 +263,7 @@ func TestScrapperHTTPClient_AddLink_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestScrapperHTTPClient_AddLink_BadRequest(t *testing.T) {
+func Test_ScrapperHTTPClient_AddLink_BadRequest(t *testing.T) {
 	errorResp := scrapperdto.ApiErrorResponse{
 		Code:        ptrString("ERR_ADD_LINK"),
 		Description: ptrString("Failed to add link"),
@@ -301,7 +295,7 @@ func TestScrapperHTTPClient_AddLink_BadRequest(t *testing.T) {
 	assert.Equal(t, "Failed to add link", apiErr.Description)
 }
 
-func TestScrapperHTTPClient_AddLink_UnexpectedStatus(t *testing.T) {
+func Test_ScrapperHTTPClient_AddLink_UnexpectedStatus(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
@@ -326,7 +320,7 @@ func TestScrapperHTTPClient_AddLink_UnexpectedStatus(t *testing.T) {
 	assert.Equal(t, http.StatusInternalServerError, unexpected.StatusCode)
 }
 
-func TestScrapperHTTPClient_RemoveLink_Success(t *testing.T) {
+func Test_ScrapperHTTPClient_RemoveLink_Success(t *testing.T) {
 	linkResponse := scrapperdto.LinkResponse{
 		Url:     ptrString("https://example.com"),
 		Id:      ptrInt64(1),
@@ -357,7 +351,7 @@ func TestScrapperHTTPClient_RemoveLink_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestScrapperHTTPClient_RemoveLink_BadRequest(t *testing.T) {
+func Test_ScrapperHTTPClient_RemoveLink_BadRequest(t *testing.T) {
 	errorResp := scrapperdto.ApiErrorResponse{
 		Code:        ptrString("ERR_REMOVE_LINK"),
 		Description: ptrString("Failed to remove link"),
@@ -389,7 +383,7 @@ func TestScrapperHTTPClient_RemoveLink_BadRequest(t *testing.T) {
 	assert.Equal(t, "Failed to remove link", apiErr.Description)
 }
 
-func TestScrapperHTTPClient_RemoveLink_UnexpectedStatus(t *testing.T) {
+func Test_ScrapperHTTPClient_RemoveLink_UnexpectedStatus(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))

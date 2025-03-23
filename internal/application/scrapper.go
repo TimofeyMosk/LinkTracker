@@ -6,19 +6,27 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/go-co-op/gocron/v2"
+	"LinkTracker/internal/domain"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
+	"github.com/go-co-op/gocron/v2"
 )
 
-type Database interface {
-	CreateUser(id int64) error
-	DeleteUser(id int64) error
-	GetLinks(id int64) ([]domain.Link, error)
+type LinkRepo interface {
+	GetUserLinks(id int64) ([]domain.Link, error)
 	AddLink(id int64, link domain.Link) error
 	DeleteLink(id int64, link domain.Link) (domain.Link, error)
 	GetAllLinks() ([]domain.Link, error)
+}
+
+type UserRepo interface {
+	CreateUser(id int64) error
+	DeleteUser(id int64) error
 	GetAllUsers() ([]int64, error)
+}
+
+type Database interface {
+	LinkRepo
+	UserRepo
 }
 
 type BotClient interface {
@@ -93,7 +101,7 @@ func (s *Scrapper) Scrape() {
 	}
 
 	for _, tgID := range usersID {
-		links, err := s.db.GetLinks(tgID)
+		links, err := s.db.GetUserLinks(tgID)
 		if err != nil {
 			slog.Error("User links could not be retrieved", "error", err.Error(), "tgID", tgID)
 		}
@@ -145,10 +153,10 @@ func (s *Scrapper) DeleteUser(id int64) error {
 	return nil
 }
 
-func (s *Scrapper) GetLinks(id int64) ([]domain.Link, error) {
+func (s *Scrapper) GetUserLinks(id int64) ([]domain.Link, error) {
 	slog.Info("Getting links", "tgID", id)
 
-	links, err := s.db.GetLinks(id)
+	links, err := s.db.GetUserLinks(id)
 	if err != nil {
 		slog.Error("Failed to get links", "error", err.Error(), "tgID", id)
 		return nil, err
@@ -157,21 +165,33 @@ func (s *Scrapper) GetLinks(id int64) ([]domain.Link, error) {
 	return links, nil
 }
 
-func (s *Scrapper) AddLink(id int64, link domain.Link) (domain.Link, error) {
-	slog.Info("Adding link", "tgID", id, "link", link)
+func (s *Scrapper) AddLink(id int64, newLink domain.Link) (domain.Link, error) {
+	slog.Info("Adding link", "tgID", id, "link", newLink)
 
-	if !validLink(link.URL) {
-		slog.Error("Invalid link URL", "tgID", id, "link", link)
-		return link, domain.ErrWrongURL{}
+	if !validLink(newLink.URL) {
+		slog.Error("Invalid link URL", "tgID", id, "link", newLink)
+		return newLink, domain.ErrWrongURL{}
 	}
 
-	err := s.db.AddLink(id, link)
+	userLinks, err := s.db.GetUserLinks(id)
 	if err != nil {
-		slog.Error("Failed to add link", "error", err.Error(), "tgID", id, "link", link)
-		return link, err
+		slog.Error("Failed to get links", "error", err.Error(), "tgID", id)
+		return newLink, err
 	}
 
-	return link, nil
+	for _, userLink := range userLinks {
+		if userLink.URL == newLink.URL {
+			return newLink, domain.ErrLinkAlreadyTracking{}
+		}
+	}
+
+	err = s.db.AddLink(id, newLink)
+	if err != nil {
+		slog.Error("Failed to add link", "error", err.Error(), "tgID", id, "link", newLink)
+		return newLink, err
+	}
+
+	return newLink, nil
 }
 
 func (s *Scrapper) DeleteLink(id int64, link domain.Link) (domain.Link, error) {

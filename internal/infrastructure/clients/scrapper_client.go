@@ -9,9 +9,9 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_scrapper"
-	"github.com/es-debug/backend-academy-2024-go-template/pkg"
+	"LinkTracker/internal/domain"
+	scrapperdto "LinkTracker/internal/infrastructure/dto/dto_scrapper"
+	"LinkTracker/pkg"
 )
 
 type ScrapperHTTPClient struct {

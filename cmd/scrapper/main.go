@@ -7,10 +7,11 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/application"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/clients"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/repository"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/server"
+	"LinkTracker/internal/application"
+	"LinkTracker/internal/infrastructure/clients"
+	"LinkTracker/internal/infrastructure/repository"
+	"LinkTracker/internal/infrastructure/server"
+	"LinkTracker/pkg"
 )
 
 func main() {
@@ -20,7 +21,7 @@ func main() {
 		return
 	}
 
-	application.InitLogger(config.ScrapConfig.LogsPath)
+	pkg.InitLogger(config.ScrapConfig.LogsPath)
 
 	wg := sync.WaitGroup{}
 	rep := repository.NewRepository()

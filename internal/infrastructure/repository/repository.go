@@ -7,7 +7,7 @@ import (
 	"slices"
 	"sync"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
+	"LinkTracker/internal/domain"
 )
 
 type Repository struct {
@@ -74,7 +74,7 @@ func (r *Repository) DeleteUser(id int64) error {
 	return nil
 }
 
-func (r *Repository) GetLinks(id int64) ([]domain.Link, error) {
+func (r *Repository) GetUserLinks(id int64) ([]domain.Link, error) {
 	if !r.UserExist(id) {
 		return nil, domain.ErrUserNotExist{}
 	}

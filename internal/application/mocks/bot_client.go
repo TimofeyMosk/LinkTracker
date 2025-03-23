@@ -3,7 +3,8 @@
 package mocks
 
 import (
-	domain "github.com/es-debug/backend-academy-2024-go-template/internal/domain"
+	domain "LinkTracker/internal/domain"
+
 	mock "github.com/stretchr/testify/mock"
 )
 

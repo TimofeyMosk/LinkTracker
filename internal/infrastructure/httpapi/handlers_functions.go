@@ -1,4 +1,4 @@
-package handlers
+package httpapi
 
 import (
 	"encoding/json"
@@ -6,24 +6,11 @@ import (
 	"net/http"
 	"strconv"
 
-	scrapperdto "github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/dto/dto_scrapper"
-
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
+	"LinkTracker/internal/domain"
+	scrapperdto "LinkTracker/internal/infrastructure/dto/dto_scrapper"
 )
 
-type Bot interface {
-	SendMessage(chatID int64, message string)
-}
-
-type Scrapper interface {
-	AddUser(id int64) error
-	DeleteUser(id int64) error
-	GetLinks(id int64) ([]domain.Link, error)
-	AddLink(id int64, link domain.Link) (domain.Link, error)
-	DeleteLink(id int64, link domain.Link) (domain.Link, error)
-}
-
-func sendErrorResponse(w http.ResponseWriter, statusCode int, code, description, exceptionMessage, exceptionName string) {
+func SendErrorResponse(w http.ResponseWriter, statusCode int, code, description, exceptionMessage, exceptionName string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 
@@ -41,7 +28,7 @@ func sendErrorResponse(w http.ResponseWriter, statusCode int, code, description,
 	}
 }
 
-func domainLinksToDTO(links []domain.Link) scrapperdto.ListLinksResponse {
+func LinksToDTO(links []domain.Link) scrapperdto.ListLinksResponse {
 	linksResponse := make([]scrapperdto.LinkResponse, len(links))
 	for i := range links {
 		linksResponse[i] = scrapperdto.LinkResponse{
@@ -57,7 +44,7 @@ func domainLinksToDTO(links []domain.Link) scrapperdto.ListLinksResponse {
 	return scrapperdto.ListLinksResponse{Links: &linksResponse, Size: &length}
 }
 
-func getIDFromString(s string) (int64, error) {
+func GetTgIDFromString(s string) (int64, error) {
 	if s == "" {
 		return 0, domain.ErrEmptyString{}
 	}

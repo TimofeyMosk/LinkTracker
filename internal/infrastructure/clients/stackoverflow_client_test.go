@@ -11,8 +11,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/es-debug/backend-academy-2024-go-template/internal/domain"
-	"github.com/es-debug/backend-academy-2024-go-template/internal/infrastructure/clients"
+	"LinkTracker/internal/domain"
+	"LinkTracker/internal/infrastructure/clients"
 )
 
 const soQuestion = "https://stackoverflow.com/questions/12345/some-question-title"
@@ -47,7 +47,7 @@ func newTestClient(testServerURL string, _ time.Duration) *clients.StackOverflow
 	return client
 }
 
-func TestStackOverflowHTTPClient_GetLastActivityQuestion_Success(t *testing.T) {
+func Test_StackOverflowHTTPClient_GetLastActivityQuestion_Success(t *testing.T) {
 	expectedTimestamp := time.Now().Unix()
 	soResponse := map[string]interface{}{
 		"items": []map[string]interface{}{
@@ -74,7 +74,7 @@ func TestStackOverflowHTTPClient_GetLastActivityQuestion_Success(t *testing.T) {
 	assert.Equal(t, time.Unix(expectedTimestamp, 0), lastActivity)
 }
 
-func TestStackOverflowHTTPClient_GetLastActivityQuestion_NoItems(t *testing.T) {
+func Test_StackOverflowHTTPClient_GetLastActivityQuestion_NoItems(t *testing.T) {
 	soResponse := map[string]interface{}{
 		"items": []interface{}{},
 	}
@@ -94,7 +94,7 @@ func TestStackOverflowHTTPClient_GetLastActivityQuestion_NoItems(t *testing.T) {
 	assert.ErrorAs(t, err, &domain.ErrQuestionNotFound{})
 }
 
-func TestStackOverflowHTTPClient_GetLastActivityQuestion_InvalidJSON(t *testing.T) {
+func Test_StackOverflowHTTPClient_GetLastActivityQuestion_InvalidJSON(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("invalid json"))
@@ -109,7 +109,7 @@ func TestStackOverflowHTTPClient_GetLastActivityQuestion_InvalidJSON(t *testing.
 	require.Error(t, err)
 }
 
-func TestStackOverflowHTTPClient_GetLastActivityQuestion_InvalidLink(t *testing.T) {
+func Test_StackOverflowHTTPClient_GetLastActivityQuestion_InvalidLink(t *testing.T) {
 	client := clients.NewStackOverflowHTTPClient()
 	invalidLink := "https://stackoverflow.com/users/12345" // не questions
 
