@@ -1,13 +1,13 @@
 package server
 
 import (
+	"LinkTracker/internal/application/bot"
 	"net/http"
 	"time"
 
 	"LinkTracker/internal/application/scrapper"
-
-	"LinkTracker/internal/infrastructure/clients"
 	"LinkTracker/internal/infrastructure/httpapi/links"
+	"LinkTracker/internal/infrastructure/httpapi/states"
 	"LinkTracker/internal/infrastructure/httpapi/tgchat"
 	"LinkTracker/internal/infrastructure/httpapi/updates"
 )
@@ -15,18 +15,23 @@ import (
 func InitScrapperRouting(scrapper *scrapper.Scrapper) *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.Handle("GET /links", links.GetLinksHandler{LinkGetter: scrapper})
-	mux.Handle("POST /links", links.PostLinkHandler{LinkAdder: scrapper})
+	mux.Handle("POST /links", links.PostLinksHandler{LinkAdder: scrapper})
 	mux.Handle("DELETE /links", links.DeleteLinksHandler{LinkDeleter: scrapper})
 
 	mux.Handle("POST /tg-chat/{id}", tgchat.PostUserHandler{UserAdder: scrapper})
 	mux.Handle("DELETE /tg-chat/{id}", tgchat.DeleteUserHandler{UserDeleter: scrapper})
-	
+
+	mux.Handle("POST /states", states.PostStatesHandler{StateCreator: scrapper})
+	mux.Handle("DELETE /states", states.DeleteStatesHandler{StateDeleter: scrapper})
+	mux.Handle("PUT /states", states.PutStatesHandler{StateUpdater: scrapper})
+	mux.Handle("GET /states", states.GetStatesHandler{StateGetter: scrapper})
+
 	return mux
 }
 
-func InitBotRouting(tgBotAPI *clients.TelegramHTTPClient) *http.ServeMux {
+func InitBotRouting(bot *bot.Bot) *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.Handle("POST /updates", updates.PostUpdatesHandler{MessageSender: tgBotAPI})
+	mux.Handle("POST /updates", updates.PostUpdatesHandler{UpdateSender: bot})
 
 	return mux
 }

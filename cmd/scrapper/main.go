@@ -8,11 +8,10 @@ import (
 	"net/http"
 	"sync"
 
+	"LinkTracker/internal/application"
 	"LinkTracker/internal/application/scrapper"
 	"LinkTracker/internal/application/scrapper/linkchecker"
 	"LinkTracker/internal/application/scrapper/notifier"
-
-	"LinkTracker/internal/application"
 	"LinkTracker/internal/infrastructure/clients"
 	"LinkTracker/internal/infrastructure/server"
 	"LinkTracker/pkg"

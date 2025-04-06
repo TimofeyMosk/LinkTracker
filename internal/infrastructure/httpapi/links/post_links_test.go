@@ -25,7 +25,7 @@ func ptr(s string) *string {
 
 func Test_PostLinkHandler_InvalidChatID(t *testing.T) {
 	mockAdder := &mocks.LinkAdder{}
-	handler := links.PostLinkHandler{LinkAdder: mockAdder}
+	handler := links.PostLinksHandler{LinkAdder: mockAdder}
 
 	req := httptest.NewRequest(http.MethodPost, "/links", bytes.NewBufferString(`{}`))
 	req.Header.Set("Tg-Chat-Id", "invalid_chat_id")
@@ -46,7 +46,7 @@ func Test_PostLinkHandler_InvalidChatID(t *testing.T) {
 
 func Test_PostLinkHandler_InvalidRequestBody_JSON(t *testing.T) {
 	mockAdder := &mocks.LinkAdder{}
-	handler := links.PostLinkHandler{LinkAdder: mockAdder}
+	handler := links.PostLinksHandler{LinkAdder: mockAdder}
 
 	req := httptest.NewRequest(http.MethodPost, "/links", strings.NewReader("invalid json"))
 	req.Header.Set("Tg-Chat-Id", "123")
@@ -67,9 +67,9 @@ func Test_PostLinkHandler_InvalidRequestBody_JSON(t *testing.T) {
 
 func Test_PostLinkHandler_InvalidRequestBody_Dto(t *testing.T) {
 	mockAdder := &mocks.LinkAdder{}
-	handler := links.PostLinkHandler{LinkAdder: mockAdder}
+	handler := links.PostLinksHandler{LinkAdder: mockAdder}
 
-	reqBodyStruct := scrapperdto.AddLinkRequest{
+	reqBodyStruct := scrapperdto.LinkRequest{
 		Link:    nil,
 		Tags:    &[]string{"tag1"},
 		Filters: &[]string{"filter1"},
@@ -105,9 +105,9 @@ func Test_PostLinkHandler_ChatNotExist(t *testing.T) {
 	mockAdder.On("AddLink", tgChatID, linkInput).
 		Return(domain.Link{}, domain.ErrUserNotExist{}).Once()
 
-	handler := links.PostLinkHandler{LinkAdder: mockAdder}
+	handler := links.PostLinksHandler{LinkAdder: mockAdder}
 
-	reqBodyStruct := scrapperdto.AddLinkRequest{
+	reqBodyStruct := scrapperdto.LinkRequest{
 		Link:    ptr("https://example.com"),
 		Tags:    &[]string{"tag1"},
 		Filters: &[]string{"filter1"},
@@ -146,9 +146,9 @@ func Test_PostLinkHandler_LinkAlreadyTracking(t *testing.T) {
 	mockAdder.On("AddLink", tgChatID, linkInput).
 		Return(domain.Link{}, domain.ErrLinkAlreadyTracking{}).Once()
 
-	handler := links.PostLinkHandler{LinkAdder: mockAdder}
+	handler := links.PostLinksHandler{LinkAdder: mockAdder}
 
-	reqBodyStruct := scrapperdto.AddLinkRequest{
+	reqBodyStruct := scrapperdto.LinkRequest{
 		Link:    ptr("https://example.com"),
 		Tags:    &[]string{"tag1"},
 		Filters: &[]string{"filter1"},
@@ -187,9 +187,9 @@ func Test_PostLinkHandler_AddLinkFailed(t *testing.T) {
 	mockAdder.On("AddLink", tgChatID, linkInput).
 		Return(domain.Link{}, errors.New(errMsg)).Once()
 
-	handler := links.PostLinkHandler{LinkAdder: mockAdder}
+	handler := links.PostLinksHandler{LinkAdder: mockAdder}
 
-	reqBodyStruct := scrapperdto.AddLinkRequest{
+	reqBodyStruct := scrapperdto.LinkRequest{
 		Link:    ptr("https://example.com"),
 		Tags:    &[]string{"tag1"},
 		Filters: &[]string{"filter1"},
@@ -233,9 +233,9 @@ func Test_PostLinkHandler_Success(t *testing.T) {
 	mockAdder.On("AddLink", tgChatID, inputLink).
 		Return(returnedLink, nil).Once()
 
-	handler := links.PostLinkHandler{LinkAdder: mockAdder}
+	handler := links.PostLinksHandler{LinkAdder: mockAdder}
 
-	reqBodyStruct := scrapperdto.AddLinkRequest{
+	reqBodyStruct := scrapperdto.LinkRequest{
 		Link:    ptr("https://example.com"),
 		Tags:    &[]string{"tag1"},
 		Filters: &[]string{"filter1"},

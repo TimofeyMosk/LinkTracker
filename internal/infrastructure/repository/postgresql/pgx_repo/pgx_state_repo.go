@@ -1,8 +1,11 @@
 package pgxrepo
 
 import (
-	"LinkTracker/internal/domain"
 	"context"
+
+	"LinkTracker/internal/domain"
+
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -17,7 +20,7 @@ func NewStateRepoPgx(pool *pgxpool.Pool) *StateRepoPgx {
 }
 
 func (r *StateRepoPgx) CreateState(ctx context.Context, tgID int64, state int) error {
-	sql := "INSERT INTO states (tg_id, state) VALUES ($1, $2)"
+	sql := "INSERT INTO states (tg_id, state) VALUES ($1, $2) ON CONFLICT(tg_id) DO UPDATE SET state = $2"
 
 	_, err := r.pool.Exec(ctx, sql, tgID, state)
 	if err != nil {
@@ -38,65 +41,52 @@ func (r *StateRepoPgx) DeleteState(ctx context.Context, tgID int64) error {
 	return nil
 }
 
-func (r *StateRepoPgx) GetState(ctx context.Context, tgID int64) (int, error) {
-	sql := "SELECT state FROM states WHERE tg_id = $1"
-	row := r.pool.QueryRow(ctx, sql, tgID)
+func (r *StateRepoPgx) GetState(ctx context.Context, tgID int64) (int, domain.Link, error) {
+	sqlSelect := "SELECT state,url,tags,filters FROM states WHERE tg_id = $1"
+	row := r.pool.QueryRow(ctx, sqlSelect, tgID)
 
-	var state int
+	var (
+		state   int
+		url     pgtype.Text
+		tags    pgtype.Array[string]
+		filters pgtype.Array[string]
+	)
 
-	err := row.Scan(&state)
-	if err != nil {
-		return 0, err
+	if err := row.Scan(&state, &url, &tags, &filters); err != nil {
+		return -1, domain.Link{}, err
 	}
 
-	return state, nil
+	link := domain.Link{
+		URL:     "",         // значение по умолчанию
+		Tags:    []string{}, // значение по умолчанию
+		Filters: []string{}, // значение по умолчанию
+	}
+
+	// Если url не null, используем его
+	if url.Valid {
+		link.URL = url.String
+	}
+	// Если tags или filters равны nil, оставляем пустой срез (по умолчанию)
+	if tags.Valid {
+		link.Tags = tags.Elements
+	}
+	if filters.Valid {
+		link.Filters = filters.Elements
+	}
+
+	return state, link, nil
 }
 
-func (r *StateRepoPgx) UpdateState(ctx context.Context, tgID int64, state int) error {
-	sql := "UPDATE states SET state = $1 WHERE tg_id = $2"
-	_, err := r.pool.Exec(ctx, sql, state, tgID)
+func (r *StateRepoPgx) UpdateState(ctx context.Context, tgID int64, state int, link domain.Link) error {
+	url := link.URL
+	tags := link.Tags
+	filters := link.Filters
+
+	sql := "UPDATE states SET state = $1, url=$2,tags = $3, filters= $4 WHERE tg_id = $5"
+	_, err := r.pool.Exec(ctx, sql, state, url, tags, filters, tgID)
 	if err != nil {
 		return err
 	}
 
 	return nil
-}
-
-func (r *StateRepoPgx) UpdateURL(ctx context.Context, tgID int64, linkURL string) error {
-	sql := "UPDATE states SET url = $1 WHERE tg_id = $2"
-	_, err := r.pool.Exec(ctx, sql, linkURL, tgID)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (r *StateRepoPgx) UpdateTags(ctx context.Context, tgID int64, tags []string) error {
-	sql := "UPDATE states SET tags = $1 WHERE tg_id = $2"
-	_, err := r.pool.Exec(ctx, sql, tags, tgID)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (r *StateRepoPgx) UpdateFilters(ctx context.Context, tgID int64, filters []string) error {
-	sql := "UPDATE states SET filters = $1 WHERE tg_id = $2"
-	_, err := r.pool.Exec(ctx, sql, filters, tgID)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (r *StateRepoPgx) GetStateLink(ctx context.Context, tgID int64) (domain.Link, error) {
-	sql := "SELECT url,tags,filters FROM states WHERE tg_id = $1"
-	row := r.pool.QueryRow(ctx, sql, tgID)
-	var link domain.Link
-	err := row.Scan(&link.URL, &link.Tags, &link.Filters)
-	if err != nil {
-		return domain.Link{}, err
-	}
-
-	return link, nil
 }

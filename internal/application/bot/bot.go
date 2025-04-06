@@ -3,6 +3,7 @@ package bot
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
 	"net/url"
 	"strconv"
@@ -27,12 +28,8 @@ const errorText = "Не удалось выполнить операцию"
 type StateManager interface {
 	CreateState(ctx context.Context, tgID int64, state int) error
 	DeleteState(ctx context.Context, tgID int64) error
-	GetState(ctx context.Context, tgID int64) (state int, err error)
-	UpdateState(ctx context.Context, tgID int64, state int) error
-	UpdateURL(ctx context.Context, tgID int64, linkURL string) error
-	UpdateTags(ctx context.Context, tgID int64, tags []string) error
-	UpdateFilters(ctx context.Context, tgID int64, filters []string) error
-	GetStateLink(ctx context.Context, tgID int64) (link domain.Link, err error)
+	GetState(ctx context.Context, tgID int64) (state int, link domain.Link, err error)
+	UpdateState(ctx context.Context, tgID int64, state int, link domain.Link) error
 }
 
 type ScrapperClient interface {
@@ -61,6 +58,13 @@ func NewBot(scrapperClient ScrapperClient, tgAPI TelegramClient) *Bot {
 	return &Bot{
 		scrapper: scrapperClient,
 		tgAPI:    tgAPI,
+	}
+}
+
+func (bot *Bot) UpdateSend(ctx context.Context, tgIDs []int64, url string, description string) {
+	for _, tgID := range tgIDs {
+		message := fmt.Sprintf("Было обновление: %s\n%s", url, description)
+		bot.tgAPI.SendMessage(ctx, tgID, message)
 	}
 }
 
@@ -142,20 +146,20 @@ func (bot *Bot) handleCommand(ctx context.Context, tgID int64, text string) stri
 }
 
 func (bot *Bot) changeState(ctx context.Context, tgID int64, text string) string {
-	state, err := bot.scrapper.GetState(ctx, tgID)
+	state, link, err := bot.scrapper.GetState(ctx, tgID)
 	if err != nil {
-		return errorText
+		return ""
 	}
 
 	switch state {
 	case NotState:
 		return ""
 	case WaitingLink:
-		return bot.stateWaitLink(ctx, tgID, text)
+		return bot.stateWaitLink(ctx, tgID, text, link)
 	case WaitingTags:
-		return bot.stateWaitTags(ctx, tgID, text)
+		return bot.stateWaitTags(ctx, tgID, text, link)
 	case WaitingFilters:
-		return bot.stateWaitFilters(ctx, tgID, text)
+		return bot.stateWaitFilters(ctx, tgID, text, link)
 	case WaitingDelete:
 		return bot.stateWaitDelete(ctx, tgID, text)
 	default:
@@ -194,7 +198,7 @@ func (bot *Bot) commandHelp(id int64) string {
 func (bot *Bot) commandTrack(ctx context.Context, tgID int64) string {
 	slog.Info("Command /track execution", "chatId", tgID)
 
-	err := bot.scrapper.UpdateState(ctx, tgID, WaitingLink)
+	err := bot.scrapper.CreateState(ctx, tgID, WaitingLink)
 	if err != nil {
 		return errorText
 	}
@@ -207,7 +211,7 @@ func (bot *Bot) commandTrack(ctx context.Context, tgID int64) string {
 func (bot *Bot) commandUntrack(ctx context.Context, tgID int64) string {
 	slog.Info("Command /untrack execution", "chatId", tgID)
 
-	err := bot.scrapper.UpdateState(ctx, tgID, WaitingDelete)
+	err := bot.scrapper.CreateState(ctx, tgID, WaitingDelete)
 	if err != nil {
 		return errorText
 	}
@@ -237,9 +241,9 @@ func (bot *Bot) commandList(ctx context.Context, tgID int64) string {
 	return responseText
 }
 
-func (bot *Bot) stateWaitLink(ctx context.Context, tgID int64, messageURL string) string {
-	link := messageURL
-	if !validateLink(link) {
+func (bot *Bot) stateWaitLink(ctx context.Context, tgID int64, text string, link domain.Link) string {
+	linkURL := text
+	if !validateLink(linkURL) {
 
 		err := bot.scrapper.DeleteState(ctx, tgID)
 		if err != nil {
@@ -252,12 +256,9 @@ func (bot *Bot) stateWaitLink(ctx context.Context, tgID int64, messageURL string
 		return responseText
 	}
 
-	err := bot.scrapper.UpdateURL(ctx, tgID, link)
-	if err != nil {
-		return errorText
-	}
+	link.URL = linkURL
 
-	err = bot.scrapper.UpdateState(ctx, tgID, WaitingTags)
+	err := bot.scrapper.UpdateState(ctx, tgID, WaitingTags, link)
 	if err != nil {
 		return errorText
 	}
@@ -267,23 +268,19 @@ func (bot *Bot) stateWaitLink(ctx context.Context, tgID int64, messageURL string
 	return responseText
 }
 
-func (bot *Bot) stateWaitTags(ctx context.Context, tgID int64, text string) string {
+func (bot *Bot) stateWaitTags(ctx context.Context, tgID int64, text string, link domain.Link) string {
 	if text == "-" {
-		err := bot.scrapper.UpdateTags(ctx, tgID, []string{})
+		link.Tags = []string{}
+		err := bot.scrapper.UpdateState(ctx, tgID, WaitingFilters, link)
 		if err != nil {
 			return errorText
 		}
 	} else {
-		tags := strings.Split(text, " ")
-		err := bot.scrapper.UpdateTags(ctx, tgID, tags)
+		link.Tags = strings.Split(text, " ")
+		err := bot.scrapper.UpdateState(ctx, tgID, WaitingFilters, link)
 		if err != nil {
 			return errorText
 		}
-	}
-
-	err := bot.scrapper.UpdateState(ctx, tgID, WaitingFilters)
-	if err != nil {
-		return errorText
 	}
 
 	responseText := "Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
@@ -291,31 +288,23 @@ func (bot *Bot) stateWaitTags(ctx context.Context, tgID int64, text string) stri
 	return responseText
 }
 
-func (bot *Bot) stateWaitFilters(ctx context.Context, tgID int64, text string) string {
-
+func (bot *Bot) stateWaitFilters(ctx context.Context, tgID int64, text string, link domain.Link) string {
 	if text == "-" {
-		err := bot.scrapper.UpdateFilters(ctx, tgID, []string{})
-		if err != nil {
-			return errorText
-		}
+		link.Filters = []string{}
 	} else {
-		filters := strings.Split(text, " ")
-		err := bot.scrapper.UpdateFilters(ctx, tgID, filters)
-		if err != nil {
-			return errorText
-		}
+		link.Filters = strings.Split(text, " ")
 	}
 
-	link, err := bot.scrapper.GetStateLink(ctx, tgID)
-	if err != nil {
-		return errorText
-	}
-
-	err = bot.scrapper.AddLink(ctx, tgID, &link)
+	err := bot.scrapper.AddLink(ctx, tgID, &link)
 	if err != nil {
 		slog.Error(err.Error())
 
 		if errors.As(err, &domain.ErrAPI{}) && (err.(domain.ErrAPI).ExceptionMessage == domain.ErrLinkAlreadyTracking{}.Error()) {
+			err = bot.scrapper.DeleteState(ctx, tgID)
+			if err != nil {
+				return errorText
+			}
+
 			responseText := "Данная ссылка уже отслеживается"
 			return responseText
 		}

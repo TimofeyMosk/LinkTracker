@@ -3,22 +3,21 @@ package updates
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	botdto "LinkTracker/internal/infrastructure/dto/dto_bot"
 	"LinkTracker/internal/infrastructure/httpapi"
 )
 
-type MessageSender interface {
-	SendMessage(ctx context.Context, chatID int64, message string)
+type UpdateSender interface {
+	UpdateSend(ctx context.Context, tgIDs []int64, url string, description string)
 }
 
 type PostUpdatesHandler struct {
-	MessageSender MessageSender
+	UpdateSender UpdateSender
 }
 
-func (handler PostUpdatesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h PostUpdatesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var requestBody botdto.LinkUpdate
 	if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
 		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_REQUEST_BODY",
@@ -34,13 +33,14 @@ func (handler PostUpdatesHandler) ServeHTTP(w http.ResponseWriter, r *http.Reque
 	}
 
 	if requestBody.Description == nil {
-		*requestBody.Description = ""
+		requestBody.Description = strPtr("")
 	}
 
-	for i := range *requestBody.TgChatIds {
-		message := fmt.Sprintf("Было обновление : " + *requestBody.Url + "\n" + *requestBody.Description)
-		handler.MessageSender.SendMessage(r.Context(), (*requestBody.TgChatIds)[i], message)
-	}
+	h.UpdateSender.UpdateSend(r.Context(), *requestBody.TgChatIds, *requestBody.Url, *requestBody.Description)
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func strPtr(s string) *string {
+	return &s
 }

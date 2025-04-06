@@ -7,35 +7,54 @@ packages:
     config:
       dir: "{{.InterfaceDir}}/mocks"
     interfaces:
-  #      LinkDeleter:
-  #      LinkGetter:
-  #      LinkAdder:
+      LinkDeleter:
+      LinkGetter:
+      LinkAdder:
   LinkTracker/internal/infrastructure/httpapi/tgchat:
     config:
       dir: "{{.InterfaceDir}}/mocks"
     interfaces:
-  #      UserDeleter:
-  #      UserAdder:
+      UserDeleter:
+      UserAdder:
   LinkTracker/internal/infrastructure/httpapi/updates:
     config:
       dir: "{{.InterfaceDir}}/mocks"
     interfaces:
-  #      MessageSender:
-  LinkTracker/internal/application:
+      UpdateSender:
+  LinkTracker/internal/infrastructure/httpapi/states:
     config:
       dir: "{{.InterfaceDir}}/mocks"
     interfaces:
-  #      UserRepo:
-  #      LinkRepo:
-  #      BotClient:
-  #      ScrapperClient:
-  #      TelegramClient:
-  #      LinkSourceHandler:
-  LinkTracker/internal/infrastructure/clients:
+      StateCreator:
+      StateDeleter:
+      StateGetter:
+      StateUpdater:
+  LinkTracker/internal/application/scrapper:
     config:
       dir: "{{.InterfaceDir}}/mocks"
     interfaces:
-#      Bot:
+      UserRepo:
+      LinkRepo:
+      StateRepo:
+      Notifier:
+      LinkChecker:
+  LinkTracker/internal/application/scrapper/notifier:
+    config:
+      dir: "{{.InterfaceDir}}/mocks"
+    interfaces:
+      BotClient:
+  LinkTracker/internal/application/scrapper/linkchecker:
+    config:
+      dir: "{{.InterfaceDir}}/mocks"
+    interfaces:
+      LinkSourceHandler:
+  LinkTracker/internal/application/bot:
+    config:
+      dir: "{{.InterfaceDir}}/mocks"
+    interfaces:
+      StateManager:
+      ScrapperClient:
+      TelegramClient:
 
 
 

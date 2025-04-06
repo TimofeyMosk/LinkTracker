@@ -248,81 +248,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiErrorResponse"
-  /states/url:
-    post:
-      summary: Добавить ссылку к состоянию
-      parameters:
-        - name: Tg-Chat-Id
-          in: header
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/StateLinkResponse"
-        required: true
-      responses:
-        "200":
-          description: Состояние успешно изменено
-        "500":
-          description: Произошла ошибка
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiErrorResponse"
-  /states/tags:
-    post:
-      summary: Добавить теги к состоянию
-      parameters:
-        - name: Tg-Chat-Id
-          in: header
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/StateTagsResponse"
-        required: true
-      responses:
-        "200":
-          description: Состояние успешно изменено
-        "500":
-          description: Произошла ошибка
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiErrorResponse"
-  /states/filters:
-    post:
-      summary: Добавить теги к состоянию
-      parameters:
-        - name: Tg-Chat-Id
-          in: header
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/StateFiltersResponse"
-        required: true
-      responses:
-        "200":
-          description: Состояние успешно изменено
-        "500":
-          description: Произошла ошибка
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiErrorResponse"
+
 components:
   schemas:
     LinkResponse:
@@ -392,29 +318,31 @@ components:
       properties:
         state:
           type: integer
-          format: int64
+          format: int
+        link:
+          type: string
+          format: uri
+        tags:
+          type: array
+          items:
+            type: string
+        filters:
+          type: array
+          items:
+            type: string
     StateRequest:
       type: object
       properties:
         state:
           type: integer
-          format: int64
-    StateLinkResponse:
-      type: object
-      properties:
-        url:
+          format: int
+        link:
           type: string
           format: uri
-    StateTagsResponse:
-      type: object
-      properties:
         tags:
           type: array
           items:
             type: string
-    StateFiltersResponse:
-      type: object
-      properties:
         filters:
           type: array
           items:

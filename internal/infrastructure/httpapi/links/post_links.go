@@ -16,11 +16,11 @@ type LinkAdder interface {
 	AddLink(ctx context.Context, id int64, link *domain.Link) (domain.Link, error)
 }
 
-type PostLinkHandler struct {
+type PostLinksHandler struct {
 	LinkAdder LinkAdder
 }
 
-func (h PostLinkHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h PostLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	tgChatID, err := httpapi.GetTgIDFromString(r.Header.Get("Tg-Chat-Id"))
 	if err != nil {
 		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_CHAT_ID",
@@ -29,7 +29,7 @@ func (h PostLinkHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var addLinkRequest scrapperdto.AddLinkRequest
+	var addLinkRequest scrapperdto.LinkRequest
 	if err = json.NewDecoder(r.Body).Decode(&addLinkRequest); err != nil {
 		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_REQUEST_BODY",
 			"Invalid or missing request body", err.Error(), "BadRequest")
@@ -78,7 +78,7 @@ func (h PostLinkHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func AddLinkRequestDtoToLink(addLinkRequest scrapperdto.AddLinkRequest) (domain.Link, error) {
+func AddLinkRequestDtoToLink(addLinkRequest scrapperdto.LinkRequest) (domain.Link, error) {
 	var link domain.Link
 
 	if addLinkRequest.Link == nil {

@@ -25,7 +25,7 @@ func (_m *LinkRepo) EXPECT() *LinkRepo_Expecter {
 }
 
 // AddLink provides a mock function with given fields: ctx, tgID, link
-func (_m *LinkRepo) AddLink(ctx context.Context, tgID int64, link domain.Link) error {
+func (_m *LinkRepo) AddLink(ctx context.Context, tgID int64, link *domain.Link) error {
 	ret := _m.Called(ctx, tgID, link)
 
 	if len(ret) == 0 {
@@ -33,7 +33,7 @@ func (_m *LinkRepo) AddLink(ctx context.Context, tgID int64, link domain.Link) e
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, int64, domain.Link) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int64, *domain.Link) error); ok {
 		r0 = rf(ctx, tgID, link)
 	} else {
 		r0 = ret.Error(0)
@@ -50,14 +50,14 @@ type LinkRepo_AddLink_Call struct {
 // AddLink is a helper method to define mock.On call
 //   - ctx context.Context
 //   - tgID int64
-//   - link domain.Link
+//   - link *domain.Link
 func (_e *LinkRepo_Expecter) AddLink(ctx interface{}, tgID interface{}, link interface{}) *LinkRepo_AddLink_Call {
 	return &LinkRepo_AddLink_Call{Call: _e.mock.On("AddLink", ctx, tgID, link)}
 }
 
-func (_c *LinkRepo_AddLink_Call) Run(run func(ctx context.Context, tgID int64, link domain.Link)) *LinkRepo_AddLink_Call {
+func (_c *LinkRepo_AddLink_Call) Run(run func(ctx context.Context, tgID int64, link *domain.Link)) *LinkRepo_AddLink_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(int64), args[2].(domain.Link))
+		run(args[0].(context.Context), args[1].(int64), args[2].(*domain.Link))
 	})
 	return _c
 }
@@ -67,13 +67,13 @@ func (_c *LinkRepo_AddLink_Call) Return(_a0 error) *LinkRepo_AddLink_Call {
 	return _c
 }
 
-func (_c *LinkRepo_AddLink_Call) RunAndReturn(run func(context.Context, int64, domain.Link) error) *LinkRepo_AddLink_Call {
+func (_c *LinkRepo_AddLink_Call) RunAndReturn(run func(context.Context, int64, *domain.Link) error) *LinkRepo_AddLink_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // DeleteLink provides a mock function with given fields: ctx, tgID, link
-func (_m *LinkRepo) DeleteLink(ctx context.Context, tgID int64, link domain.Link) (domain.Link, error) {
+func (_m *LinkRepo) DeleteLink(ctx context.Context, tgID int64, link *domain.Link) (domain.Link, error) {
 	ret := _m.Called(ctx, tgID, link)
 
 	if len(ret) == 0 {
@@ -82,16 +82,16 @@ func (_m *LinkRepo) DeleteLink(ctx context.Context, tgID int64, link domain.Link
 
 	var r0 domain.Link
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, int64, domain.Link) (domain.Link, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int64, *domain.Link) (domain.Link, error)); ok {
 		return rf(ctx, tgID, link)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, int64, domain.Link) domain.Link); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int64, *domain.Link) domain.Link); ok {
 		r0 = rf(ctx, tgID, link)
 	} else {
 		r0 = ret.Get(0).(domain.Link)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, int64, domain.Link) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, int64, *domain.Link) error); ok {
 		r1 = rf(ctx, tgID, link)
 	} else {
 		r1 = ret.Error(1)
@@ -108,14 +108,14 @@ type LinkRepo_DeleteLink_Call struct {
 // DeleteLink is a helper method to define mock.On call
 //   - ctx context.Context
 //   - tgID int64
-//   - link domain.Link
+//   - link *domain.Link
 func (_e *LinkRepo_Expecter) DeleteLink(ctx interface{}, tgID interface{}, link interface{}) *LinkRepo_DeleteLink_Call {
 	return &LinkRepo_DeleteLink_Call{Call: _e.mock.On("DeleteLink", ctx, tgID, link)}
 }
 
-func (_c *LinkRepo_DeleteLink_Call) Run(run func(ctx context.Context, tgID int64, link domain.Link)) *LinkRepo_DeleteLink_Call {
+func (_c *LinkRepo_DeleteLink_Call) Run(run func(ctx context.Context, tgID int64, link *domain.Link)) *LinkRepo_DeleteLink_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(int64), args[2].(domain.Link))
+		run(args[0].(context.Context), args[1].(int64), args[2].(*domain.Link))
 	})
 	return _c
 }
@@ -125,7 +125,7 @@ func (_c *LinkRepo_DeleteLink_Call) Return(_a0 domain.Link, _a1 error) *LinkRepo
 	return _c
 }
 
-func (_c *LinkRepo_DeleteLink_Call) RunAndReturn(run func(context.Context, int64, domain.Link) (domain.Link, error)) *LinkRepo_DeleteLink_Call {
+func (_c *LinkRepo_DeleteLink_Call) RunAndReturn(run func(context.Context, int64, *domain.Link) (domain.Link, error)) *LinkRepo_DeleteLink_Call {
 	_c.Call.Return(run)
 	return _c
 }

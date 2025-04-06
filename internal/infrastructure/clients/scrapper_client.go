@@ -233,6 +233,128 @@ func (c *ScrapperHTTPClient) RemoveLink(ctx context.Context, tgID int64, link *d
 	}
 }
 
+func (c *ScrapperHTTPClient) CreateState(ctx context.Context, tgID int64, state int) error {
+	endpoint := c.scrapperBaseURL.JoinPath("/states")
+
+	payload, err := json.Marshal(scrapperdto.StateRequest{State: &state})
+	if err != nil {
+		return err
+	}
+
+	request, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint.String(), bytes.NewReader(payload))
+	if err != nil {
+		return err
+	}
+	request.Header.Set("Tg-Chat-Id", fmt.Sprint(tgID))
+
+	response, err := c.client.Do(request)
+	if err != nil {
+		return err
+	}
+
+	switch response.StatusCode {
+	case http.StatusOK:
+		return nil
+	case http.StatusInternalServerError:
+		return HandleAPIErrorResponseFromScrapper(response)
+	default:
+		return domain.ErrUnexpectedStatusCode{StatusCode: response.StatusCode}
+	}
+}
+
+func (c *ScrapperHTTPClient) DeleteState(ctx context.Context, tgID int64) error {
+	endpoint := c.scrapperBaseURL.JoinPath("/states")
+
+	request, err := http.NewRequestWithContext(ctx, http.MethodDelete, endpoint.String(), http.NoBody)
+	if err != nil {
+		return err
+	}
+	request.Header.Set("Tg-Chat-Id", fmt.Sprint(tgID))
+
+	response, err := c.client.Do(request)
+	if err != nil {
+		return err
+	}
+
+	switch response.StatusCode {
+	case http.StatusOK:
+		return nil
+	case http.StatusInternalServerError:
+		return HandleAPIErrorResponseFromScrapper(response)
+	default:
+		return domain.ErrUnexpectedStatusCode{StatusCode: response.StatusCode}
+	}
+}
+
+func (c *ScrapperHTTPClient) UpdateState(ctx context.Context, tgID int64, state int, link domain.Link) error {
+	endpoint := c.scrapperBaseURL.JoinPath("/states")
+
+	payload, err := json.Marshal(scrapperdto.StateRequest{State: &state, Link: &link.URL, Tags: &link.Tags, Filters: &link.Filters})
+	if err != nil {
+		return err
+	}
+
+	request, err := http.NewRequestWithContext(ctx, http.MethodPut, endpoint.String(), bytes.NewReader(payload))
+	if err != nil {
+		return err
+	}
+	request.Header.Set("Tg-Chat-Id", fmt.Sprint(tgID))
+
+	response, err := c.client.Do(request)
+	if err != nil {
+		return err
+	}
+
+	switch response.StatusCode {
+	case http.StatusOK:
+		return nil
+	case http.StatusInternalServerError:
+		return HandleAPIErrorResponseFromScrapper(response)
+	default:
+		return domain.ErrUnexpectedStatusCode{StatusCode: response.StatusCode}
+	}
+}
+
+func (c *ScrapperHTTPClient) GetState(ctx context.Context, tgID int64) (int, domain.Link, error) {
+	endpoint := c.scrapperBaseURL.JoinPath("/states")
+
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint.String(), http.NoBody)
+	if err != nil {
+		return -1, domain.Link{}, err
+	}
+	request.Header.Set("Tg-Chat-Id", fmt.Sprint(tgID))
+
+	response, err := c.client.Do(request)
+	if err != nil {
+		return -1, domain.Link{}, err
+	}
+
+	switch response.StatusCode {
+	case http.StatusOK:
+		var responseData scrapperdto.StateResponse
+		if err := json.NewDecoder(response.Body).Decode(&responseData); err != nil {
+			return -1, domain.Link{}, err
+		}
+
+		if responseData.Link == nil {
+			*responseData.Link = ""
+		}
+		if responseData.Tags == nil {
+			*responseData.Tags = []string{}
+		}
+		if responseData.Filters == nil {
+			*responseData.Filters = []string{}
+		}
+		responseLink := domain.Link{URL: *responseData.Link, Tags: *responseData.Tags, Filters: *responseData.Filters}
+
+		return *responseData.State, responseLink, nil
+	case http.StatusInternalServerError:
+		return -1, domain.Link{}, HandleAPIErrorResponseFromScrapper(response)
+	default:
+		return -1, domain.Link{}, domain.ErrUnexpectedStatusCode{StatusCode: response.StatusCode}
+	}
+}
+
 func HandleAPIErrorResponseFromScrapper(resp *http.Response) error {
 	var errorResponse scrapperdto.ApiErrorResponse
 	if err := json.NewDecoder(resp.Body).Decode(&errorResponse); err != nil {
@@ -263,8 +385,8 @@ func HandleAPIErrorResponseFromScrapper(resp *http.Response) error {
 	return apiError
 }
 
-func LinkToAddLinkRequestDTO(link *domain.Link) scrapperdto.AddLinkRequest {
-	return scrapperdto.AddLinkRequest{
+func LinkToAddLinkRequestDTO(link *domain.Link) scrapperdto.LinkRequest {
+	return scrapperdto.LinkRequest{
 		Link:    &link.URL,
 		Tags:    &link.Tags,
 		Filters: &link.Filters,

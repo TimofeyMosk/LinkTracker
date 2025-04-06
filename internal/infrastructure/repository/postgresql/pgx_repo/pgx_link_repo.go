@@ -89,7 +89,7 @@ func (r *LinkRepoPgx) AddLink(ctx context.Context, id int64, link *domain.Link) 
 
 	var urlID int
 
-	sqlInsertLink := "INSERT INTO urls(url, last_update) VALUES($1, $2)"
+	sqlInsertLink := "INSERT INTO urls(url, last_update) VALUES($1, $2) RETURNING id"
 
 	err = tx.QueryRow(ctx, sqlInsertLink, link.URL, time.Now()).Scan(&urlID)
 	if err != nil {

@@ -8,9 +8,8 @@ import (
 	"net/http"
 	"sync"
 
-	"LinkTracker/internal/application/bot"
-
 	"LinkTracker/internal/application"
+	"LinkTracker/internal/application/bot"
 	"LinkTracker/internal/infrastructure/clients"
 	"LinkTracker/internal/infrastructure/server"
 	"LinkTracker/pkg"
@@ -35,14 +34,14 @@ func main() {
 	}
 
 	tgClient, err := clients.NewTelegramHTTPClient(config.BotConfig.TgToken)
-	b := bot.NewBot(scrapperHTTPClient, tgClient)
+	Bot := bot.NewBot(scrapperHTTPClient, tgClient)
 	wg := sync.WaitGroup{}
 
 	wg.Add(1)
 
 	go func() {
 		defer wg.Done()
-		b.Run(ctx)
+		Bot.Run(ctx)
 	}()
 
 	if err != nil {
@@ -51,7 +50,7 @@ func main() {
 	}
 
 	serv := server.InitServer(config.BotConfig.Address,
-		server.InitBotRouting(tgClient),
+		server.InitBotRouting(Bot),
 		config.BotConfig.ReadTimeout,
 		config.BotConfig.WriteTimeout)
 
