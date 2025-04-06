@@ -21,17 +21,18 @@ func (_m *GitHubClient) EXPECT() *GitHubClient_Expecter {
 	return &GitHubClient_Expecter{mock: &_m.Mock}
 }
 
-// GetLastUpdateTimeRepo provides a mock function with given fields: link
-func (_m *GitHubClient) GetLastUpdateTimeRepo(link string) (time.Time, error) {
+// GetLatestPROrIssue provides a mock function with given fields: link
+func (_m *GitHubClient) GetLatestPROrIssue(link string) (time.Time, string, error) {
 	ret := _m.Called(link)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetLastUpdateTimeRepo")
+		panic("no return value specified for GetLatestPROrIssue")
 	}
 
 	var r0 time.Time
-	var r1 error
-	if rf, ok := ret.Get(0).(func(string) (time.Time, error)); ok {
+	var r1 string
+	var r2 error
+	if rf, ok := ret.Get(0).(func(string) (time.Time, string, error)); ok {
 		return rf(link)
 	}
 	if rf, ok := ret.Get(0).(func(string) time.Time); ok {
@@ -40,39 +41,45 @@ func (_m *GitHubClient) GetLastUpdateTimeRepo(link string) (time.Time, error) {
 		r0 = ret.Get(0).(time.Time)
 	}
 
-	if rf, ok := ret.Get(1).(func(string) error); ok {
+	if rf, ok := ret.Get(1).(func(string) string); ok {
 		r1 = rf(link)
 	} else {
-		r1 = ret.Error(1)
+		r1 = ret.Get(1).(string)
 	}
 
-	return r0, r1
+	if rf, ok := ret.Get(2).(func(string) error); ok {
+		r2 = rf(link)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
 }
 
-// GitHubClient_GetLastUpdateTimeRepo_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetLastUpdateTimeRepo'
-type GitHubClient_GetLastUpdateTimeRepo_Call struct {
+// GitHubClient_GetLatestPROrIssue_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetLatestPROrIssue'
+type GitHubClient_GetLatestPROrIssue_Call struct {
 	*mock.Call
 }
 
-// GetLastUpdateTimeRepo is a helper method to define mock.On call
+// GetLatestPROrIssue is a helper method to define mock.On call
 //   - link string
-func (_e *GitHubClient_Expecter) GetLastUpdateTimeRepo(link interface{}) *GitHubClient_GetLastUpdateTimeRepo_Call {
-	return &GitHubClient_GetLastUpdateTimeRepo_Call{Call: _e.mock.On("GetLastUpdateTimeRepo", link)}
+func (_e *GitHubClient_Expecter) GetLatestPROrIssue(link interface{}) *GitHubClient_GetLatestPROrIssue_Call {
+	return &GitHubClient_GetLatestPROrIssue_Call{Call: _e.mock.On("GetLatestPROrIssue", link)}
 }
 
-func (_c *GitHubClient_GetLastUpdateTimeRepo_Call) Run(run func(link string)) *GitHubClient_GetLastUpdateTimeRepo_Call {
+func (_c *GitHubClient_GetLatestPROrIssue_Call) Run(run func(link string)) *GitHubClient_GetLatestPROrIssue_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(string))
 	})
 	return _c
 }
 
-func (_c *GitHubClient_GetLastUpdateTimeRepo_Call) Return(_a0 time.Time, _a1 error) *GitHubClient_GetLastUpdateTimeRepo_Call {
-	_c.Call.Return(_a0, _a1)
+func (_c *GitHubClient_GetLatestPROrIssue_Call) Return(lastUpdate time.Time, description string, err error) *GitHubClient_GetLatestPROrIssue_Call {
+	_c.Call.Return(lastUpdate, description, err)
 	return _c
 }
 
-func (_c *GitHubClient_GetLastUpdateTimeRepo_Call) RunAndReturn(run func(string) (time.Time, error)) *GitHubClient_GetLastUpdateTimeRepo_Call {
+func (_c *GitHubClient_GetLatestPROrIssue_Call) RunAndReturn(run func(string) (time.Time, string, error)) *GitHubClient_GetLatestPROrIssue_Call {
 	_c.Call.Return(run)
 	return _c
 }

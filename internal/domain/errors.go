@@ -86,3 +86,9 @@ type ErrLinkAlreadyTracking struct{}
 func (e ErrLinkAlreadyTracking) Error() string {
 	return "link already tracking"
 }
+
+type ErrUpdatesNotFound struct{}
+
+func (e ErrUpdatesNotFound) Error() string {
+	return "updates not found"
+}

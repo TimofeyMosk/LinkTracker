@@ -182,3 +182,702 @@ time=2025-03-23T21:51:13.970+04:00 level=INFO msg="Starts scrapper"
 time=2025-03-23T21:51:17.537+04:00 level=INFO msg="Adding user"
 time=2025-03-23T21:51:34.757+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk/actions/runs/14021375039/job/39253781288 Tags:[] Filters:[] ID:0}"
 time=2025-03-23T21:51:38.695+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-23T21:56:13.964+04:00 level=INFO msg="Scrape start"
+time=2025-03-23T21:56:14.529+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk/actions/runs/14021375039/job/39253781288
+time=2025-03-23T21:56:14.530+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk/actions/runs/14021375039/job/39253781288
+time=2025-03-23T21:56:14.530+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=0
+time=2025-03-23T22:01:13.964+04:00 level=INFO msg="Scrape start"
+time=2025-03-23T22:01:14.287+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk/actions/runs/14021375039/job/39253781288
+time=2025-03-23T22:01:14.287+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk/actions/runs/14021375039/job/39253781288
+time=2025-03-23T22:01:14.287+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=0
+time=2025-03-23T22:06:13.964+04:00 level=INFO msg="Scrape start"
+time=2025-03-23T22:06:14.554+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk/actions/runs/14021375039/job/39253781288
+time=2025-03-23T22:06:14.555+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk/actions/runs/14021375039/job/39253781288
+time=2025-03-23T22:06:14.555+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=0
+time=2025-03-24T04:18:00.232+04:00 level=INFO msg="Scrape start"
+time=2025-03-24T04:18:01.041+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk/actions/runs/14021375039/job/39253781288
+time=2025-03-24T04:18:01.041+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk/actions/runs/14021375039/job/39253781288
+time=2025-03-24T04:18:01.041+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=0
+time=2025-03-24T11:41:06.755+04:00 level=INFO msg="Scrape start"
+time=2025-03-24T11:41:07.978+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk/actions/runs/14021375039/job/39253781288
+time=2025-03-24T11:41:07.978+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk/actions/runs/14021375039/job/39253781288
+time=2025-03-24T11:41:07.978+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=0
+time=2025-03-24T11:41:13.971+04:00 level=INFO msg="Scrape start"
+time=2025-03-24T11:41:14.037+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk/actions/runs/14021375039/job/39253781288
+time=2025-03-24T11:41:14.037+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk/actions/runs/14021375039/job/39253781288
+time=2025-03-24T11:41:14.037+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=0
+time=2025-03-24T11:45:23.638+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-24T11:45:23.638+04:00 level=INFO msg="server stopped"
+time=2025-03-24T11:45:23.638+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-24T11:45:33.093+04:00 level=INFO msg="Creating new repository"
+time=2025-03-24T11:45:33.094+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-24T11:45:33.095+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-24T11:45:33.513+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-24T11:45:33.513+04:00 level=ERROR msg="Failed to get links" error="user not exists" tgID=503492049
+time=2025-03-24T11:45:37.697+04:00 level=INFO msg="Adding user"
+time=2025-03-24T11:45:46.044+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-24T11:45:46.044+04:00 level=INFO msg="server stopped"
+time=2025-03-24T11:45:46.044+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-27T23:56:43.894+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-27T23:56:43.895+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-27T23:57:11.135+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-27T23:57:11.158+04:00 level=ERROR msg="Failed to get links" error="ERROR: relation \"links\" does not exist (SQLSTATE 42P01)" tgID=503492049
+time=2025-03-27T23:57:39.013+04:00 level=INFO msg="Adding user"
+time=2025-03-27T23:57:39.016+04:00 level=ERROR msg="Failed to add user" error="ERROR: column \"id\" of relation \"users\" does not exist (SQLSTATE 42703)" tgID=503492049
+time=2025-03-27T23:57:50.442+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-27T23:57:50.445+04:00 level=ERROR msg="Failed to get links" error="ERROR: relation \"links\" does not exist (SQLSTATE 42P01)" tgID=503492049
+time=2025-03-28T00:00:10.635+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-28T00:00:10.635+04:00 level=INFO msg="server stopped"
+time=2025-03-28T00:00:10.635+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-28T00:00:14.032+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-28T00:00:14.033+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-28T00:00:18.172+04:00 level=INFO msg="Adding user"
+time=2025-03-28T00:00:18.210+04:00 level=ERROR msg="Failed to add user" error="ERROR: column \"id\" of relation \"users\" does not exist (SQLSTATE 42703)" tgID=503492049
+time=2025-03-28T00:00:28.191+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-28T00:00:28.191+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-28T00:00:28.191+04:00 level=INFO msg="server stopped"
+time=2025-03-28T00:00:44.715+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-28T00:00:44.718+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-28T00:00:49.117+04:00 level=INFO msg="Adding user"
+time=2025-03-28T00:00:49.147+04:00 level=ERROR msg="Failed to add user" error="ERROR: column \"id\" of relation \"users\" does not exist (SQLSTATE 42703)" tgID=503492049
+time=2025-03-28T00:02:04.200+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-28T00:02:04.200+04:00 level=INFO msg="server stopped"
+time=2025-03-28T00:02:04.200+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-29T15:53:29.310+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T15:53:29.312+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T15:53:37.720+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T15:53:37.721+04:00 level=INFO msg="server stopped"
+time=2025-03-29T15:53:57.132+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T15:53:57.133+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T15:54:09.493+04:00 level=INFO msg="Adding user"
+time=2025-03-29T15:54:09.519+04:00 level=ERROR msg="Failed to add user" error="ERROR: column \"id\" of relation \"users\" does not exist (SQLSTATE 42703)" tgID=503492049
+time=2025-03-29T15:54:21.863+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T15:54:21.863+04:00 level=INFO msg="server stopped"
+time=2025-03-29T15:54:21.863+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-29T15:54:23.031+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T15:54:23.031+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T15:54:26.044+04:00 level=INFO msg="Adding user"
+time=2025-03-29T15:54:47.237+04:00 level=ERROR msg="Failed to add user" error="ERROR: column \"id\" of relation \"users\" does not exist (SQLSTATE 42703)" tgID=503492049
+time=2025-03-29T15:54:47.240+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T15:54:47.241+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-29T15:54:47.241+04:00 level=INFO msg="server stopped"
+time=2025-03-29T15:54:49.911+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T15:54:49.912+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T15:54:51.675+04:00 level=INFO msg="Adding user"
+time=2025-03-29T15:55:25.732+04:00 level=ERROR msg="Failed to add user" error="ERROR: syntax error at or near \"-\" (SQLSTATE 42601)" tgID=503492049
+time=2025-03-29T15:55:25.735+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T15:55:25.735+04:00 level=INFO msg="server stopped"
+time=2025-03-29T15:55:25.735+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-29T15:55:28.677+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T15:55:28.678+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T15:55:33.163+04:00 level=INFO msg="Adding user"
+time=2025-03-29T15:55:46.234+04:00 level=ERROR msg="Failed to add user" error="ERROR: syntax error at or near \"'tg-id'\" (SQLSTATE 42601)" tgID=503492049
+time=2025-03-29T15:55:46.238+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T15:55:46.238+04:00 level=INFO msg="server stopped"
+time=2025-03-29T15:55:46.238+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-29T15:59:02.102+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T15:59:02.103+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T15:59:11.597+04:00 level=INFO msg="Adding user"
+time=2025-03-29T15:59:23.880+04:00 level=ERROR msg="Failed to add user" error="ERROR: syntax error at or near \"tg_id\" (SQLSTATE 42601)" tgID=503492049
+time=2025-03-29T15:59:23.883+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T15:59:23.883+04:00 level=INFO msg="server stopped"
+time=2025-03-29T15:59:23.883+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-29T15:59:27.015+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T15:59:27.016+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T15:59:28.130+04:00 level=INFO msg="Adding user"
+time=2025-03-29T16:04:27.003+04:00 level=INFO msg="Scrape start"
+time=2025-03-29T16:04:27.006+04:00 level=ERROR msg="Failed to retrieve the list of users" error="failed to connect to `user=postgres database=scrapper`:\n\t[::1]:5432 (localhost): dial error: dial tcp [::1]:5432: connect: connection refused\n\t127.0.0.1:5432 (localhost): dial error: dial tcp 127.0.0.1:5432: connect: connection refused\n\t[::1]:5432 (localhost): dial error: dial tcp [::1]:5432: connect: connection refused\n\t127.0.0.1:5432 (localhost): dial error: dial tcp 127.0.0.1:5432: connect: connection refused"
+time=2025-03-29T16:06:56.581+04:00 level=INFO msg="Adding user"
+time=2025-03-29T16:08:37.178+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T16:08:37.178+04:00 level=INFO msg="server stopped"
+time=2025-03-29T16:08:37.178+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-29T16:08:40.302+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T16:08:40.303+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T16:08:43.192+04:00 level=INFO msg="Adding user"
+time=2025-03-29T16:08:45.262+04:00 level=ERROR msg="Failed to add user" error="ERROR: syntax error at or near \"tg_id\" (SQLSTATE 42601)" tgID=503492049
+time=2025-03-29T16:08:47.927+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T16:08:47.928+04:00 level=INFO msg="server stopped"
+time=2025-03-29T16:08:47.928+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-29T16:08:49.035+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T16:08:49.036+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T16:08:50.866+04:00 level=INFO msg="Adding user"
+time=2025-03-29T16:08:50.896+04:00 level=ERROR msg="Failed to add user" error="ERROR: syntax error at or near \"tg_id\" (SQLSTATE 42601)" tgID=503492049
+time=2025-03-29T16:08:56.823+04:00 level=INFO msg="Adding user"
+time=2025-03-29T16:09:09.247+04:00 level=ERROR msg="Failed to add user" error="ERROR: syntax error at or near \"tg_id\" (SQLSTATE 42601)" tgID=503492049
+time=2025-03-29T16:09:09.249+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T16:09:09.249+04:00 level=INFO msg="server stopped"
+time=2025-03-29T16:09:09.249+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-29T16:09:11.660+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T16:09:11.661+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T16:09:13.267+04:00 level=INFO msg="Adding user"
+time=2025-03-29T16:09:19.122+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-29T16:10:04.123+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[fil] Filters:[my] ID:0}"
+time=2025-03-29T16:10:04.125+04:00 level=ERROR msg="Failed to add link" error="ERROR: invalid input syntax for type integer: \"https://github.com/central-university-dev/go-TimofeyMosk\" (SQLSTATE 22P02)" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[fil] Filters:[my] ID:0}"
+time=2025-03-29T16:10:42.793+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[my] ID:0}"
+time=2025-03-29T16:10:57.082+04:00 level=ERROR msg="Failed to add link" error="ERROR: invalid input syntax for type integer: \"https://github.com/central-university-dev/go-TimofeyMosk\" (SQLSTATE 22P02)" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[my] ID:0}"
+time=2025-03-29T16:10:57.084+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T16:10:57.084+04:00 level=INFO msg="server stopped"
+time=2025-03-29T16:10:57.084+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-29T19:38:35.891+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T19:38:35.893+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T19:38:47.444+04:00 level=INFO msg="Adding user"
+time=2025-03-29T19:38:50.022+04:00 level=INFO msg="Adding user"
+time=2025-03-29T19:39:00.343+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T19:39:00.343+04:00 level=INFO msg="server stopped"
+time=2025-03-29T19:39:00.343+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-29T19:39:03.075+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T19:39:03.077+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T19:39:07.196+04:00 level=INFO msg="Adding user"
+time=2025-03-29T19:39:07.215+04:00 level=ERROR msg="Failed to add user" error="ERROR: duplicate key value violates unique constraint \"users_pkey\" (SQLSTATE 23505)" tgID=503492049
+time=2025-03-29T19:39:42.414+04:00 level=INFO msg="server stopped"
+time=2025-03-29T19:39:42.415+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T19:39:42.415+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-29T19:41:25.153+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T19:41:25.155+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T19:46:25.143+04:00 level=INFO msg="Scrape start"
+time=2025-03-29T19:46:25.194+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-03-29T19:48:20.962+04:00 level=INFO msg="Adding user"
+time=2025-03-29T19:48:20.967+04:00 level=ERROR msg="Failed to add user" error="ERROR: duplicate key value violates unique constraint \"users_pkey\" (SQLSTATE 23505)" tgID=503492049
+time=2025-03-29T19:48:34.181+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T19:48:34.181+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-29T19:48:34.181+04:00 level=INFO msg="server stopped"
+time=2025-03-29T19:50:22.997+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T19:50:22.999+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T19:50:28.276+04:00 level=INFO msg="Adding user"
+time=2025-03-29T19:50:28.313+04:00 level=ERROR msg="Failed to add user" error="ERROR: duplicate key value violates unique constraint \"users_pkey\" (SQLSTATE 23505)" tgID=503492049
+time=2025-03-29T19:50:49.661+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2024-fall Tags:[] Filters:[] ID:0}"
+time=2025-03-29T19:50:49.675+04:00 level=ERROR msg="Failed to add link" error="ERROR: invalid input syntax for type integer: \"https://github.com/central-university-dev/backend-academy-2024-fall\" (SQLSTATE 22P02)" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2024-fall Tags:[] Filters:[] ID:0}"
+time=2025-03-29T19:51:48.400+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T19:51:48.400+04:00 level=INFO msg="server stopped"
+time=2025-03-29T19:51:48.400+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-29T19:52:17.238+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T19:52:17.240+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T19:52:31.407+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2024-fall Tags:[] Filters:[] ID:0}"
+time=2025-03-29T19:53:32.632+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T19:53:32.632+04:00 level=INFO msg="server stopped"
+time=2025-03-29T19:53:32.633+04:00 level=ERROR msg="Failed to add link" error="ERROR: invalid input syntax for type integer: \"https://github.com/central-university-dev/backend-academy-2024-fall\" (SQLSTATE 22P02)" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2024-fall Tags:[] Filters:[] ID:0}"
+time=2025-03-29T19:53:35.675+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-29T19:53:35.675+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-29T19:53:54.150+04:00 level=INFO msg="Adding user"
+time=2025-03-29T19:54:07.793+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2024-fall Tags:[] Filters:[] ID:0}"
+time=2025-03-29T19:57:31.243+04:00 level=ERROR msg="Failed to add link" error="ERROR: invalid input syntax for type integer: \"https://github.com/central-university-dev/backend-academy-2024-fall\" (SQLSTATE 22P02)" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2024-fall Tags:[] Filters:[] ID:0}"
+time=2025-03-29T19:58:35.670+04:00 level=INFO msg="Scrape start"
+time=2025-03-29T19:58:35.676+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-03-29T20:02:39.707+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-29T20:02:39.707+04:00 level=INFO msg="server stopped"
+time=2025-03-29T20:02:39.707+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-30T11:21:40.680+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-30T11:21:40.681+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-30T11:21:40.932+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-30T11:21:49.771+04:00 level=INFO msg="Adding user"
+time=2025-03-30T11:21:53.471+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-30T11:22:08.988+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2025-spring Tags:[=] Filters:[] ID:0}"
+time=2025-03-30T11:22:11.858+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-30T11:22:54.448+04:00 level=INFO msg="Deleting link" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2025-spring Tags:[] Filters:[] ID:0}"
+time=2025-03-30T11:22:56.483+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-30T11:26:40.693+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T11:26:40.702+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-03-30T11:31:40.671+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T11:31:40.676+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-03-30T11:35:26.412+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-30T11:35:26.412+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-30T11:35:26.412+04:00 level=INFO msg="server stopped"
+time=2025-03-30T11:35:34.432+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-30T11:35:34.433+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-30T11:35:38.288+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-30T11:35:48.728+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2025-spring Tags:[] Filters:[] ID:0}"
+time=2025-03-30T11:35:50.536+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-30T11:36:14.680+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-30T11:36:23.418+04:00 level=INFO msg="Deleting link" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2025-spring Tags:[] Filters:[] ID:0}"
+time=2025-03-30T11:38:32.886+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-30T11:38:32.886+04:00 level=INFO msg="server stopped"
+time=2025-03-30T11:38:32.886+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-30T11:38:36.077+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-30T11:38:36.078+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-30T11:38:39.598+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-30T11:38:41.696+04:00 level=INFO msg="Adding user"
+time=2025-03-30T11:38:41.699+04:00 level=ERROR msg="Failed to add user" error="ERROR: duplicate key value violates unique constraint \"users_pkey\" (SQLSTATE 23505)" tgID=503492049
+time=2025-03-30T11:38:50.192+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2025-spring Tags:[=] Filters:[=] ID:0}"
+time=2025-03-30T11:38:52.827+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-30T11:39:25.520+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-30T11:39:25.520+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-30T11:39:25.520+04:00 level=INFO msg="server stopped"
+time=2025-03-30T11:39:28.803+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-30T11:39:28.804+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-30T11:39:30.379+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-30T11:39:47.755+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-30T11:39:47.755+04:00 level=INFO msg="server stopped"
+time=2025-03-30T11:39:47.755+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-30T11:39:50.643+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-30T11:39:50.645+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-30T11:39:53.745+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-30T11:44:50.631+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T11:44:51.029+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=1
+time=2025-03-30T11:48:39.993+04:00 level=INFO msg="Adding user"
+time=2025-03-30T11:48:39.998+04:00 level=ERROR msg="Failed to add user" error="ERROR: duplicate key value violates unique constraint \"users_pkey\" (SQLSTATE 23505)" tgID=503492049
+time=2025-03-30T11:49:00.066+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-30T11:49:00.066+04:00 level=INFO msg="server stopped"
+time=2025-03-30T11:49:00.066+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-30T12:26:49.984+04:00 level=INFO msg="Creating new Scrapper" interval=5m0s
+time=2025-03-30T12:26:49.985+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-30T12:26:53.475+04:00 level=INFO msg="Adding user"
+time=2025-03-30T12:26:53.495+04:00 level=ERROR msg="Failed to add user" error="ERROR: duplicate key value violates unique constraint \"users_pkey\" (SQLSTATE 23505)" tgID=503492049
+time=2025-03-30T12:27:07.626+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2025-spring Tags:[] Filters:[] ID:0}"
+time=2025-03-30T12:27:29.274+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2025-spring Tags:[] Filters:[https://github.com/central-university-dev/go-TimofeyMosk] ID:0}"
+time=2025-03-30T12:27:32.695+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-30T12:27:38.876+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2025-spring Tags:[] Filters:[https://github.com/central-university-dev/go-TimofeyMosk] ID:0}"
+time=2025-03-30T12:27:40.467+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2025-spring Tags:[] Filters:[] ID:0}"
+time=2025-03-30T12:27:50.613+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-30T12:27:50.619+04:00 level=ERROR msg="Failed to add link" error="ERROR: duplicate key value violates unique constraint \"tracks_tg_id_key\" (SQLSTATE 23505)" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-30T12:27:55.182+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-30T12:29:03.322+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[=] Filters:[=] ID:0}"
+time=2025-03-30T12:29:03.325+04:00 level=ERROR msg="Failed to add link" error="ERROR: duplicate key value violates unique constraint \"tracks_tg_id_key\" (SQLSTATE 23505)" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[=] Filters:[=] ID:0}"
+time=2025-03-30T12:29:55.078+04:00 level=INFO msg="Adding user"
+time=2025-03-30T12:30:03.612+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-30T12:30:09.578+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0}"
+time=2025-03-30T12:30:23.453+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/backend-academy-2025-spring Tags:[] Filters:[] ID:0}"
+time=2025-03-30T12:30:25.953+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-03-30T12:30:37.571+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-30T12:30:37.571+04:00 level=INFO msg="server stopped"
+time=2025-03-30T12:30:37.571+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-30T12:30:56.765+04:00 level=INFO msg="Creating new Scrapper" interval=5s
+time=2025-03-30T12:30:56.766+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-30T12:31:01.767+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:32:19.828+04:00 level=ERROR msg="User links could not be retrieved" error="can't scan into dest[0] (col: url): cannot scan text (OID 25) in text format into *int64"
+time=2025-03-30T12:32:22.626+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:32:26.354+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:32:26.357+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-30T12:32:26.357+04:00 level=INFO msg="server stopped"
+time=2025-03-30T12:32:26.357+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-30T12:32:26.360+04:00 level=ERROR msg="User links could not be retrieved" error="can't scan into dest[0] (col: url): cannot scan text (OID 25) in text format into *int64"
+time=2025-03-30T12:32:26.374+04:00 level=ERROR msg="User links could not be retrieved" error="can't scan into dest[0] (col: url): cannot scan text (OID 25) in text format into *int64"
+time=2025-03-30T12:32:27.228+04:00 level=INFO msg="Creating new Scrapper" interval=5s
+time=2025-03-30T12:32:27.228+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-30T12:32:32.230+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:32:47.315+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:32:54.513+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:32:57.260+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:33:10.381+04:00 level=ERROR msg="User links could not be retrieved" error="can't scan into dest[0] (col: url): cannot scan text (OID 25) in text format into *int64"
+time=2025-03-30T12:33:10.381+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:33:10.383+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-30T12:33:10.383+04:00 level=INFO msg="server stopped"
+time=2025-03-30T12:33:10.384+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-30T12:33:10.385+04:00 level=ERROR msg="User links could not be retrieved" error="can't scan into dest[0] (col: url): cannot scan text (OID 25) in text format into *int64"
+time=2025-03-30T12:33:10.407+04:00 level=ERROR msg="User links could not be retrieved" error="can't scan into dest[0] (col: url): cannot scan text (OID 25) in text format into *int64"
+time=2025-03-30T12:33:10.410+04:00 level=ERROR msg="User links could not be retrieved" error="can't scan into dest[0] (col: url): cannot scan text (OID 25) in text format into *int64"
+time=2025-03-30T12:33:10.410+04:00 level=ERROR msg="User links could not be retrieved" error="can't scan into dest[0] (col: url): cannot scan text (OID 25) in text format into *int64"
+time=2025-03-30T12:34:28.775+04:00 level=INFO msg="Creating new Scrapper" interval=5s
+time=2025-03-30T12:34:28.776+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-30T12:34:33.778+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:34:41.249+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:34:48.685+04:00 level=ERROR msg="User links could not be retrieved" error="number of field descriptions must equal number of destinations, got 3 and 2"
+time=2025-03-30T12:34:48.685+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:34:48.688+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-30T12:34:48.688+04:00 level=INFO msg="server stopped"
+time=2025-03-30T12:34:48.688+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-30T12:34:48.690+04:00 level=ERROR msg="User links could not be retrieved" error="number of field descriptions must equal number of destinations, got 3 and 2"
+time=2025-03-30T12:34:48.704+04:00 level=ERROR msg="User links could not be retrieved" error="number of field descriptions must equal number of destinations, got 3 and 2"
+time=2025-03-30T12:34:54.420+04:00 level=INFO msg="Creating new Scrapper" interval=5s
+time=2025-03-30T12:34:54.420+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-30T12:34:59.422+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:35:10.926+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:35:11.318+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:35:11.318+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:35:24.697+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:35:24.697+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:35:28.020+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:35:28.161+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:35:28.174+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:35:52.019+04:00 level=ERROR msg="Get \"https://api.github.com/repos/central-university-dev/backend-academy-2025-spring\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" linkURL=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:35:52.019+04:00 level=ERROR msg="Failed to check for updates on the link" error="Get \"https://api.github.com/repos/central-university-dev/backend-academy-2025-spring\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" link=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:35:52.019+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:35:52.019+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:35:52.019+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=0
+time=2025-03-30T12:35:52.019+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:35:56.038+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:35:56.231+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:35:57.028+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:35:58.794+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:35:58.810+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:04.194+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:36:04.194+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:36:06.977+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:36:07.159+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:36:07.450+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:07.450+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:07.455+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:07.455+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:07.512+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:36:07.518+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:36:09.421+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:36:11.783+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:12.409+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:18.233+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:36:18.233+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:36:18.235+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-30T12:36:18.236+04:00 level=INFO msg="server stopped"
+time=2025-03-30T12:36:18.236+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-30T12:36:18.305+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:18.305+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:18.366+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:36:20.375+04:00 level=INFO msg="Creating new Scrapper" interval=5s
+time=2025-03-30T12:36:20.375+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-30T12:36:25.377+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:36:27.697+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:28.704+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:36.816+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:36:36.816+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:36:52.936+04:00 level=ERROR msg="Failed to get users by link" error="ERROR: operator does not exist: integer == unknown (SQLSTATE 42883)" link=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:36:52.936+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:36:53.474+04:00 level=ERROR msg="Failed to send user updates" error="Post \"http://localhost:8081/updates\": dial tcp [::1]:8081: connect: connection refused" link=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:36:53.474+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:36:53.685+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:53.685+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:53.685+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:53.685+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:53.685+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:53.686+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:36:58.607+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:37:14.966+04:00 level=ERROR msg="Failed to get users by link" error="ERROR: operator does not exist: integer == unknown (SQLSTATE 42883)" link=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:37:14.966+04:00 level=ERROR msg="Failed to get users by link" error="ERROR: operator does not exist: integer == unknown (SQLSTATE 42883)" link=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:37:14.970+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-30T12:37:14.970+04:00 level=INFO msg="server stopped"
+time=2025-03-30T12:37:14.970+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-30T12:37:14.971+04:00 level=ERROR msg="Failed to send user updates" error="Post \"http://localhost:8081/updates\": dial tcp [::1]:8081: connect: connection refused" link=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:37:14.971+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:37:14.971+04:00 level=ERROR msg="Failed to send user updates" error="Post \"http://localhost:8081/updates\": dial tcp [::1]:8081: connect: connection refused" link=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:37:14.971+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:37:14.988+04:00 level=ERROR msg="Failed to get users by link" error="ERROR: operator does not exist: integer == unknown (SQLSTATE 42883)" link=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:37:14.989+04:00 level=ERROR msg="Failed to send user updates" error="Post \"http://localhost:8081/updates\": dial tcp [::1]:8081: connect: connection refused" link=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:37:14.989+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:37:15.160+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:37:15.160+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:37:15.366+04:00 level=ERROR msg="Failed to get users by link" error="ERROR: operator does not exist: integer == unknown (SQLSTATE 42883)" link=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:37:15.367+04:00 level=ERROR msg="Failed to send user updates" error="Post \"http://localhost:8081/updates\": dial tcp [::1]:8081: connect: connection refused" link=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:37:15.367+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:37:17.398+04:00 level=INFO msg="Creating new Scrapper" interval=5s
+time=2025-03-30T12:37:17.399+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-30T12:37:22.401+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:37:23.579+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:37:23.579+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:37:30.728+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:37:37.226+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:37:47.595+04:00 level=ERROR msg="Failed to send user updates" error="Post \"http://localhost:8081/updates\": dial tcp [::1]:8081: connect: connection refused" link=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:37:49.848+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:37:49.848+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:37:49.851+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-30T12:37:49.851+04:00 level=INFO msg="server stopped"
+time=2025-03-30T12:37:49.851+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-30T12:37:50.053+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:37:50.053+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:37:50.053+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:37:50.053+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:37:50.053+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:37:50.053+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:37:50.262+04:00 level=ERROR msg="Failed to send user updates" error="Post \"http://localhost:8081/updates\": dial tcp [::1]:8081: connect: connection refused" link=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:37:50.262+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:37:50.263+04:00 level=ERROR msg="Failed to send user updates" error="Post \"http://localhost:8081/updates\": dial tcp [::1]:8081: connect: connection refused" link=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:37:50.263+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:37:50.273+04:00 level=ERROR msg="Failed to send user updates" error="Post \"http://localhost:8081/updates\": dial tcp [::1]:8081: connect: connection refused" link=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-03-30T12:37:50.273+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:37:58.746+04:00 level=INFO msg="Creating new Scrapper" interval=5s
+time=2025-03-30T12:37:58.748+04:00 level=INFO msg="Starts scrapper"
+time=2025-03-30T12:38:03.749+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:38:03.990+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:38:03.990+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:38:04.162+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:38:08.749+04:00 level=INFO msg="Scrape start"
+time=2025-03-30T12:38:08.820+04:00 level=ERROR msg="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" linkURL=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:38:08.820+04:00 level=ERROR msg="Failed to check for updates on the link" error="parsing time \"\" as \"2006-01-02T15:04:05Z07:00\": cannot parse \"\" as \"2006\"" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-03-30T12:38:09.016+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-03-30T12:38:12.188+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-03-30T12:38:12.188+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-03-30T12:38:12.188+04:00 level=INFO msg="server stopped"
+time=2025-04-05T13:35:07.065+04:00 level=INFO msg="Creating new Scrapper" interval=5s
+time=2025-04-05T13:35:07.067+04:00 level=INFO msg="Starts scrapper"
+time=2025-04-05T13:35:12.068+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:35:12.087+04:00 level=ERROR msg="User links could not be retrieved" error="failed to connect to `user=postgres database=scrapper`:\n\t[::1]:5432 (localhost): tls error: server refused TLS connection\n\t127.0.0.1:5432 (localhost): tls error: server refused TLS connection\n\t[::1]:5432 (localhost): failed SASL auth: FATAL: password authentication failed for user \"postgres\" (SQLSTATE 28P01)"
+time=2025-04-05T13:35:17.068+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:35:17.083+04:00 level=ERROR msg="User links could not be retrieved" error="failed to connect to `user=postgres database=scrapper`:\n\t[::1]:5432 (localhost): tls error: server refused TLS connection\n\t127.0.0.1:5432 (localhost): tls error: server refused TLS connection\n\t[::1]:5432 (localhost): failed SASL auth: FATAL: password authentication failed for user \"postgres\" (SQLSTATE 28P01)"
+time=2025-04-05T13:35:22.068+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:35:22.078+04:00 level=ERROR msg="User links could not be retrieved" error="failed to connect to `user=postgres database=scrapper`:\n\t[::1]:5432 (localhost): tls error: server refused TLS connection\n\t127.0.0.1:5432 (localhost): tls error: server refused TLS connection\n\t[::1]:5432 (localhost): failed SASL auth: FATAL: password authentication failed for user \"postgres\" (SQLSTATE 28P01)"
+time=2025-04-05T13:35:27.068+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:35:27.084+04:00 level=ERROR msg="User links could not be retrieved" error="failed to connect to `user=postgres database=scrapper`:\n\t[::1]:5432 (localhost): tls error: server refused TLS connection\n\t127.0.0.1:5432 (localhost): tls error: server refused TLS connection\n\t[::1]:5432 (localhost): failed SASL auth: FATAL: password authentication failed for user \"postgres\" (SQLSTATE 28P01)"
+time=2025-04-05T13:35:32.067+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:35:32.074+04:00 level=ERROR msg="User links could not be retrieved" error="failed to connect to `user=postgres database=scrapper`:\n\t[::1]:5432 (localhost): tls error: server refused TLS connection\n\t127.0.0.1:5432 (localhost): tls error: server refused TLS connection\n\t[::1]:5432 (localhost): failed SASL auth: FATAL: password authentication failed for user \"postgres\" (SQLSTATE 28P01)"
+time=2025-04-05T13:35:37.068+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:35:37.084+04:00 level=ERROR msg="User links could not be retrieved" error="failed to connect to `user=postgres database=scrapper`:\n\t[::1]:5432 (localhost): tls error: server refused TLS connection\n\t127.0.0.1:5432 (localhost): tls error: server refused TLS connection\n\t[::1]:5432 (localhost): failed SASL auth: FATAL: password authentication failed for user \"postgres\" (SQLSTATE 28P01)"
+time=2025-04-05T13:35:42.068+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:35:42.076+04:00 level=ERROR msg="User links could not be retrieved" error="failed to connect to `user=postgres database=scrapper`:\n\t[::1]:5432 (localhost): tls error: server refused TLS connection\n\t127.0.0.1:5432 (localhost): tls error: server refused TLS connection\n\t[::1]:5432 (localhost): failed SASL auth: FATAL: password authentication failed for user \"postgres\" (SQLSTATE 28P01)"
+time=2025-04-05T13:35:44.587+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-05T13:35:44.587+04:00 level=INFO msg="server stopped"
+time=2025-04-05T13:35:44.587+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-04-05T13:35:52.651+04:00 level=INFO msg="Creating new Scrapper" interval=5s
+time=2025-04-05T13:35:52.651+04:00 level=INFO msg="Starts scrapper"
+time=2025-04-05T13:35:57.652+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:35:57.669+04:00 level=ERROR msg="User links could not be retrieved" error="failed to connect to `user=postgres database=scrapper`:\n\t[::1]:5432 (localhost): tls error: server refused TLS connection\n\t127.0.0.1:5432 (localhost): tls error: server refused TLS connection\n\t[::1]:5432 (localhost): failed SASL auth: FATAL: password authentication failed for user \"postgres\" (SQLSTATE 28P01)"
+time=2025-04-05T13:36:02.652+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:36:02.665+04:00 level=ERROR msg="User links could not be retrieved" error="failed to connect to `user=postgres database=scrapper`:\n\t[::1]:5432 (localhost): tls error: server refused TLS connection\n\t127.0.0.1:5432 (localhost): tls error: server refused TLS connection\n\t[::1]:5432 (localhost): failed SASL auth: FATAL: password authentication failed for user \"postgres\" (SQLSTATE 28P01)"
+time=2025-04-05T13:36:05.281+04:00 level=INFO msg="Adding user"
+time=2025-04-05T13:36:05.292+04:00 level=ERROR msg="Failed to add user" error="failed to connect to `user=postgres database=scrapper`:\n\t[::1]:5432 (localhost): tls error: server refused TLS connection\n\t127.0.0.1:5432 (localhost): tls error: server refused TLS connection\n\t[::1]:5432 (localhost): failed SASL auth: FATAL: password authentication failed for user \"postgres\" (SQLSTATE 28P01)" tgID=503492049
+time=2025-04-05T13:36:07.652+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:36:07.668+04:00 level=ERROR msg="User links could not be retrieved" error="failed to connect to `user=postgres database=scrapper`:\n\t[::1]:5432 (localhost): tls error: server refused TLS connection\n\t127.0.0.1:5432 (localhost): tls error: server refused TLS connection\n\t[::1]:5432 (localhost): failed SASL auth: FATAL: password authentication failed for user \"postgres\" (SQLSTATE 28P01)"
+time=2025-04-05T13:36:12.652+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:36:12.666+04:00 level=ERROR msg="User links could not be retrieved" error="failed to connect to `user=postgres database=scrapper`:\n\t[::1]:5432 (localhost): tls error: server refused TLS connection\n\t127.0.0.1:5432 (localhost): tls error: server refused TLS connection\n\t[::1]:5432 (localhost): failed SASL auth: FATAL: password authentication failed for user \"postgres\" (SQLSTATE 28P01)"
+time=2025-04-05T13:36:17.652+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:36:17.660+04:00 level=ERROR msg="User links could not be retrieved" error="failed to connect to `user=postgres database=scrapper`:\n\t[::1]:5432 (localhost): tls error: server refused TLS connection\n\t127.0.0.1:5432 (localhost): tls error: server refused TLS connection\n\t[::1]:5432 (localhost): failed SASL auth: FATAL: password authentication failed for user \"postgres\" (SQLSTATE 28P01)"
+time=2025-04-05T13:36:19.871+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-05T13:36:19.871+04:00 level=INFO msg="server stopped"
+time=2025-04-05T13:42:03.247+04:00 level=INFO msg="Creating new Scrapper" interval=5s
+time=2025-04-05T13:42:03.248+04:00 level=INFO msg="Starts scrapper"
+time=2025-04-05T13:42:08.250+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:42:08.267+04:00 level=ERROR msg="User links could not be retrieved" error="failed to connect to `user=your_user database=your_db_name`:\n\t[::1]:5432 (localhost): tls error: server refused TLS connection\n\t127.0.0.1:5432 (localhost): tls error: server refused TLS connection\n\t[::1]:5432 (localhost): failed SASL auth: FATAL: password authentication failed for user \"your_user\" (SQLSTATE 28P01)"
+time=2025-04-05T13:42:11.981+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-05T13:42:11.981+04:00 level=INFO msg="server stopped"
+time=2025-04-05T13:42:11.981+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-04-05T13:43:29.817+04:00 level=INFO msg="Creating new Scrapper" interval=5s
+time=2025-04-05T13:43:29.819+04:00 level=INFO msg="Starts scrapper"
+time=2025-04-05T13:43:34.821+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:43:34.845+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-04-05T13:43:39.821+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:43:39.824+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-04-05T13:43:44.821+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:43:44.823+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-04-05T13:43:47.036+04:00 level=INFO msg="Adding user"
+time=2025-04-05T13:43:49.824+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:43:49.827+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-04-05T13:43:50.318+04:00 level=INFO msg="Adding user"
+time=2025-04-05T13:43:50.320+04:00 level=ERROR msg="Failed to add user" error="ERROR: duplicate key value violates unique constraint \"users_pkey\" (SQLSTATE 23505)" tgID=503492049
+time=2025-04-05T13:43:54.824+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:43:54.826+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-04-05T13:43:59.823+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:43:59.827+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-04-05T13:44:04.823+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:44:04.824+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-04-05T13:44:09.822+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:44:09.824+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-04-05T13:44:14.821+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:44:14.824+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-04-05T13:44:17.822+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://stackoverflow.com/questions/78345880/ruby-milter-why-do-i-have-unexpected-smfir-chgheader-filter-response-after-smfic Tags:[] Filters:[] ID:0 LastUpdated:0001-01-01 00:00:00 +0000 UTC}"
+time=2025-04-05T13:44:19.821+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:44:20.235+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-04-05T13:44:20.677+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=1
+time=2025-04-05T13:44:24.821+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:44:25.269+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=1
+time=2025-04-05T13:44:28.624+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-05T13:44:28.624+04:00 level=INFO msg="server stopped"
+time=2025-04-05T13:44:28.624+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-04-05T13:44:42.415+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-05T13:44:42.416+04:00 level=INFO msg="Starts scrapper"
+time=2025-04-05T13:44:44.875+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-04-05T13:47:42.414+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T13:47:43.960+04:00 level=INFO msg="Scrape finished" countChecks=1 successfullyChecks=1
+time=2025-04-05T14:00:09.748+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-05T14:00:09.748+04:00 level=INFO msg="server stopped"
+time=2025-04-05T14:00:09.748+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-04-05T14:00:13.105+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-05T14:00:13.105+04:00 level=INFO msg="Starts scrapper"
+time=2025-04-05T14:00:13.683+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-04-05T14:01:41.012+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://stackoverflow.com/questions/79556799/swiftui-navigation-issue-unable-to-reset-to-welcome-screen-on-logout-with-neste Tags:[test] Filters:[] ID:0 LastUpdated:0001-01-01 00:00:00 +0000 UTC}"
+time=2025-04-05T14:01:44.325+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-04-05T14:03:13.104+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T14:03:14.836+04:00 level=ERROR msg="no answers or comments found" linkURL=https://stackoverflow.com/questions/79556799/swiftui-navigation-issue-unable-to-reset-to-welcome-screen-on-logout-with-neste
+time=2025-04-05T14:03:14.836+04:00 level=ERROR msg="Failed to check for updates on the link" error="no answers or comments found" link=https://stackoverflow.com/questions/79556799/swiftui-navigation-issue-unable-to-reset-to-welcome-screen-on-logout-with-neste
+time=2025-04-05T14:03:14.836+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T14:06:13.102+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T14:06:14.759+04:00 level=ERROR msg="no answers or comments found" linkURL=https://stackoverflow.com/questions/79556799/swiftui-navigation-issue-unable-to-reset-to-welcome-screen-on-logout-with-neste
+time=2025-04-05T14:06:14.759+04:00 level=ERROR msg="Failed to check for updates on the link" error="no answers or comments found" link=https://stackoverflow.com/questions/79556799/swiftui-navigation-issue-unable-to-reset-to-welcome-screen-on-logout-with-neste
+time=2025-04-05T14:06:14.759+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T14:07:43.442+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://stackoverflow.com/questions/77311315/observable-is-being-re-init-every-time-view-is-modified-in-swiftui Tags:[] Filters:[--] ID:0 LastUpdated:0001-01-01 00:00:00 +0000 UTC}"
+time=2025-04-05T14:09:13.103+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T14:09:14.649+04:00 level=ERROR msg="no answers or comments found" linkURL=https://stackoverflow.com/questions/79556799/swiftui-navigation-issue-unable-to-reset-to-welcome-screen-on-logout-with-neste
+time=2025-04-05T14:09:14.649+04:00 level=ERROR msg="Failed to check for updates on the link" error="no answers or comments found" link=https://stackoverflow.com/questions/79556799/swiftui-navigation-issue-unable-to-reset-to-welcome-screen-on-logout-with-neste
+time=2025-04-05T14:09:15.158+04:00 level=INFO msg="Scrape finished" countChecks=3 successfullyChecks=2
+time=2025-04-05T14:12:13.103+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T14:12:14.613+04:00 level=ERROR msg="no answers or comments found" linkURL=https://stackoverflow.com/questions/79556799/swiftui-navigation-issue-unable-to-reset-to-welcome-screen-on-logout-with-neste
+time=2025-04-05T14:12:14.613+04:00 level=ERROR msg="Failed to check for updates on the link" error="no answers or comments found" link=https://stackoverflow.com/questions/79556799/swiftui-navigation-issue-unable-to-reset-to-welcome-screen-on-logout-with-neste
+time=2025-04-05T14:12:15.291+04:00 level=INFO msg="Scrape finished" countChecks=3 successfullyChecks=2
+time=2025-04-05T14:15:13.103+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T14:15:14.586+04:00 level=ERROR msg="no answers or comments found" linkURL=https://stackoverflow.com/questions/79556799/swiftui-navigation-issue-unable-to-reset-to-welcome-screen-on-logout-with-neste
+time=2025-04-05T14:15:14.586+04:00 level=ERROR msg="Failed to check for updates on the link" error="no answers or comments found" link=https://stackoverflow.com/questions/79556799/swiftui-navigation-issue-unable-to-reset-to-welcome-screen-on-logout-with-neste
+time=2025-04-05T14:15:15.049+04:00 level=INFO msg="Scrape finished" countChecks=3 successfullyChecks=2
+time=2025-04-05T14:16:07.858+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-05T14:16:07.858+04:00 level=INFO msg="server stopped"
+time=2025-04-05T14:16:07.858+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-04-05T14:16:36.061+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-05T14:16:36.062+04:00 level=INFO msg="Starts scrapper"
+time=2025-04-05T14:19:40.267+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T14:24:13.241+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T14:25:04.535+04:00 level=ERROR msg="Get \"https://api.stackexchange.com/2.3/questions/78345880?site=stackoverflow\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" linkURL=https://stackoverflow.com/questions/78345880/ruby-milter-why-do-i-have-unexpected-smfir-chgheader-filter-response-after-smfic
+time=2025-04-05T14:25:04.549+04:00 level=ERROR msg="Failed to check for updates on the link" error="Get \"https://api.stackexchange.com/2.3/questions/78345880?site=stackoverflow\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" link=https://stackoverflow.com/questions/78345880/ruby-milter-why-do-i-have-unexpected-smfir-chgheader-filter-response-after-smfic
+time=2025-04-05T14:25:05.535+04:00 level=ERROR msg="no answers or comments found" linkURL=https://stackoverflow.com/questions/79556799/swiftui-navigation-issue-unable-to-reset-to-welcome-screen-on-logout-with-neste
+time=2025-04-05T14:25:05.536+04:00 level=ERROR msg="no answers or comments found" linkURL=https://stackoverflow.com/questions/79556799/swiftui-navigation-issue-unable-to-reset-to-welcome-screen-on-logout-with-neste
+time=2025-04-05T14:25:10.247+04:00 level=ERROR msg="Failed to check for updates on the link" error="no answers or comments found" link=https://stackoverflow.com/questions/79556799/swiftui-navigation-issue-unable-to-reset-to-welcome-screen-on-logout-with-neste
+time=2025-04-05T14:25:10.247+04:00 level=ERROR msg="Failed to check for updates on the link" error="no answers or comments found" link=https://stackoverflow.com/questions/79556799/swiftui-navigation-issue-unable-to-reset-to-welcome-screen-on-logout-with-neste
+time=2025-04-05T14:25:13.635+04:00 level=INFO msg="Scrape finished" countChecks=3 successfullyChecks=2
+time=2025-04-05T14:25:15.842+04:00 level=INFO msg="Scrape finished" countChecks=3 successfullyChecks=1
+time=2025-04-05T14:25:19.816+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-05T14:25:19.816+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-04-05T14:25:19.816+04:00 level=INFO msg="server stopped"
+time=2025-04-05T15:24:23.441+04:00 level=INFO msg="Creating new Scrapper" interval=3s
+time=2025-04-05T15:24:23.443+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T15:24:30.678+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:24:32.316+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:24:51.923+04:00 level=ERROR msg="links could not be retrieved" error="failed to connect to `user=timofey database=scrapper-db`:\n\t[::1]:5432 (localhost): dial error: dial tcp [::1]:5432: connect: connection refused\n\t127.0.0.1:5432 (localhost): dial error: dial tcp 127.0.0.1:5432: connect: connection refused\n\t[::1]:5432 (localhost): dial error: dial tcp [::1]:5432: connect: connection refused\n\t127.0.0.1:5432 (localhost): dial error: dial tcp 127.0.0.1:5432: connect: connection refused"
+time=2025-04-05T15:24:51.923+04:00 level=ERROR msg="links could not be retrieved" error="failed to connect to `user=timofey database=scrapper-db`:\n\t[::1]:5432 (localhost): dial error: dial tcp [::1]:5432: connect: connection refused\n\t127.0.0.1:5432 (localhost): dial error: dial tcp 127.0.0.1:5432: connect: connection refused\n\t[::1]:5432 (localhost): dial error: dial tcp [::1]:5432: connect: connection refused\n\t127.0.0.1:5432 (localhost): dial error: dial tcp 127.0.0.1:5432: connect: connection refused"
+time=2025-04-05T15:24:51.923+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:24:51.925+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-05T15:24:51.925+04:00 level=INFO msg="server stopped"
+time=2025-04-05T15:24:51.925+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-04-05T15:24:51.927+04:00 level=ERROR msg="links could not be retrieved" error="failed to connect to `user=timofey database=scrapper-db`:\n\t[::1]:5432 (localhost): dial error: dial tcp [::1]:5432: connect: connection refused\n\t127.0.0.1:5432 (localhost): dial error: dial tcp 127.0.0.1:5432: connect: connection refused\n\t[::1]:5432 (localhost): dial error: dial tcp [::1]:5432: connect: connection refused\n\t127.0.0.1:5432 (localhost): dial error: dial tcp 127.0.0.1:5432: connect: connection refused"
+time=2025-04-05T15:25:10.441+04:00 level=INFO msg="Creating new Scrapper" interval=3s
+time=2025-04-05T15:25:10.443+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T15:25:15.562+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:25:17.208+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:25:35.813+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-04-05T15:25:37.480+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:25:40.578+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:25:40.578+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:25:40.581+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-04-05T15:25:40.581+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-04-05T15:25:40.581+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-05T15:25:40.581+04:00 level=INFO msg="server stopped"
+time=2025-04-05T15:25:40.581+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-04-05T15:25:40.599+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-04-05T15:25:40.599+04:00 level=INFO msg="Scrape finished" countChecks=0 successfullyChecks=0
+time=2025-04-05T15:27:07.696+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-05T15:27:07.697+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T15:27:07.885+04:00 level=INFO msg="Adding user"
+time=2025-04-05T15:27:08.784+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://github.com/central-university-dev/go-TimofeyMosk Tags:[] Filters:[] ID:0 LastUpdated:0001-01-01 00:00:00 +0000 UTC}"
+time=2025-04-05T15:27:36.805+04:00 level=INFO msg="Adding link" tgID=503492049 link="{URL:https://stackoverflow.com/questions/39556649/in-x86-whats-difference-between-test-eax-eax-and-cmp-eax-0 Tags:[] Filters:[] ID:0 LastUpdated:0001-01-01 00:00:00 +0000 UTC}"
+time=2025-04-05T15:27:47.012+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-05T15:27:47.012+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-04-05T15:27:47.012+04:00 level=INFO msg="server stopped"
+time=2025-04-05T15:28:12.327+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-05T15:28:12.330+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T15:28:17.552+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-05T15:28:17.552+04:00 level=INFO msg="server stopped"
+time=2025-04-05T15:28:20.192+04:00 level=INFO msg="Creating new Scrapper" interval=3s
+time=2025-04-05T15:28:20.193+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T15:28:24.641+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:28:58.741+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:29:22.892+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:29:24.590+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:29:26.989+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:29:28.693+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:29:29.264+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:29:44.690+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:29:44.777+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:29:44.788+04:00 level=ERROR msg="Failed to check for updates on the link" error="Get \"https://api.github.com/repos/central-university-dev/go-TimofeyMosk/issues?sort=created&direction=desc&per_page=1\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:29:44.716+04:00 level=ERROR msg="Failed to check for updates on the link" error="Get \"https://api.github.com/repos/central-university-dev/go-TimofeyMosk/issues?sort=created&direction=desc&per_page=1\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:30:00.605+04:00 level=ERROR msg="Failed to check for updates on the link" error="json: cannot unmarshal object into Go value of type []clients.GitHubIssue" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:30:00.771+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:29:57.990+04:00 level=ERROR msg="Failed to check for updates on the link" error="Get \"https://api.github.com/repos/central-university-dev/go-TimofeyMosk/issues?sort=created&direction=desc&per_page=1\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:29:44.716+04:00 level=ERROR msg="Failed to check for updates on the link" error="Get \"https://api.github.com/repos/central-university-dev/go-TimofeyMosk/issues?sort=created&direction=desc&per_page=1\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:29:44.809+04:00 level=ERROR msg="Failed to check for updates on the link" error="Get \"https://api.github.com/repos/central-university-dev/go-TimofeyMosk/issues?sort=created&direction=desc&per_page=1\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:29:44.814+04:00 level=ERROR msg="Failed to check for updates on the link" error="json: cannot unmarshal object into Go value of type []clients.GitHubIssue" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:30:12.572+04:00 level=ERROR msg="Failed to check for updates on the link" error="Get \"https://api.github.com/repos/central-university-dev/go-TimofeyMosk/issues?sort=created&direction=desc&per_page=1\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:30:12.572+04:00 level=ERROR msg="Failed to check for updates on the link" error="Get \"https://api.stackexchange.com/2.3/questions/39556649?site=stackoverflow\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" link=https://stackoverflow.com/questions/39556649/in-x86-whats-difference-between-test-eax-eax-and-cmp-eax-0
+time=2025-04-05T15:30:13.271+04:00 level=ERROR msg="Failed to check for updates on the link" error="Get \"https://api.github.com/repos/central-university-dev/go-TimofeyMosk/issues?sort=created&direction=desc&per_page=1\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:30:14.082+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=0
+time=2025-04-05T15:30:14.227+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:30:14.242+04:00 level=ERROR msg="Failed to check for updates on the link" error="Get \"https://api.stackexchange.com/2.3/questions/39556649?site=stackoverflow\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" link=https://stackoverflow.com/questions/39556649/in-x86-whats-difference-between-test-eax-eax-and-cmp-eax-0
+time=2025-04-05T15:30:14.242+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=0
+time=2025-04-05T15:30:14.294+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:30:14.654+04:00 level=ERROR msg="Failed to check for updates on the link" error="json: cannot unmarshal object into Go value of type []clients.GitHubIssue" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:30:14.654+04:00 level=ERROR msg="Failed to check for updates on the link" error="json: cannot unmarshal object into Go value of type []clients.GitHubIssue" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:30:14.654+04:00 level=ERROR msg="Failed to check for updates on the link" error="json: cannot unmarshal object into Go value of type []clients.GitHubIssue" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:30:19.142+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:30:19.159+04:00 level=ERROR msg="Failed to check for updates on the link" error="Get \"https://api.stackexchange.com/2.3/questions/39556649?site=stackoverflow\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" link=https://stackoverflow.com/questions/39556649/in-x86-whats-difference-between-test-eax-eax-and-cmp-eax-0
+time=2025-04-05T15:30:19.159+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=0
+time=2025-04-05T15:30:19.264+04:00 level=ERROR msg="Failed to check for updates on the link" error="json: cannot unmarshal object into Go value of type []clients.GitHubIssue" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:30:19.372+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:30:19.430+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:30:19.488+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:30:19.658+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:30:21.455+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:30:19.643+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:32:00.113+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:32:00.127+04:00 level=ERROR msg="Failed to check for updates on the link" error="Get \"https://api.stackexchange.com/2.3/questions/39556649/answers?order=desc&sort=creation&site=stackoverflow&filter=withbody\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" link=https://stackoverflow.com/questions/39556649/in-x86-whats-difference-between-test-eax-eax-and-cmp-eax-0
+time=2025-04-05T15:32:03.175+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:32:03.175+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:32:03.175+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=0
+time=2025-04-05T15:32:03.175+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:32:03.175+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:32:03.177+04:00 level=INFO msg="server stopped"
+time=2025-04-05T15:32:03.177+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-04-05T15:32:03.177+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-05T15:32:03.675+04:00 level=ERROR msg="Failed to check for updates on the link" error="json: cannot unmarshal object into Go value of type []clients.GitHubIssue" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:32:03.675+04:00 level=ERROR msg="Failed to check for updates on the link" error="json: cannot unmarshal object into Go value of type []clients.GitHubIssue" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:32:04.403+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:32:04.628+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:34:44.570+04:00 level=INFO msg="Creating new Scrapper" interval=3s
+time=2025-04-05T15:34:44.572+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T15:34:46.238+04:00 level=INFO msg="server stopped"
+time=2025-04-05T15:35:08.597+04:00 level=INFO msg="Creating new Scrapper" interval=3s
+time=2025-04-05T15:35:08.600+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T15:35:15.686+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:35:34.235+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:35:34.798+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:35:35.335+04:00 level=ERROR msg="Failed to check for updates on the link" error="json: cannot unmarshal object into Go value of type []clients.GitHubIssue" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:35:35.335+04:00 level=ERROR msg="Failed to check for updates on the link" error="json: cannot unmarshal object into Go value of type []clients.GitHubIssue" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:35:35.335+04:00 level=ERROR msg="Failed to check for updates on the link" error="json: cannot unmarshal object into Go value of type []clients.GitHubIssue" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:35:36.601+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:35:36.694+04:00 level=ERROR msg="Failed to check for updates on the link" error="json: cannot unmarshal object into Go value of type []clients.GitHubIssue" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:35:37.081+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:35:37.081+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:35:37.141+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:35:37.332+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:35:39.370+04:00 level=INFO msg="Scrape start"
+time=2025-04-05T15:35:39.469+04:00 level=ERROR msg="Failed to check for updates on the link" error="json: cannot unmarshal object into Go value of type []clients.GitHubIssue" link=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-05T15:35:39.913+04:00 level=INFO msg="Scrape finished" countChecks=2 successfullyChecks=1
+time=2025-04-05T15:36:08.964+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-05T15:36:08.965+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T15:40:20.420+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-05T15:40:20.421+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T15:40:55.082+04:00 level=INFO msg="server stopped"
+time=2025-04-05T15:41:40.320+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-05T15:41:40.322+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T15:41:45.575+04:00 level=INFO msg="server stopped"
+time=2025-04-05T15:42:43.803+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-05T15:42:43.804+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T15:42:46.836+04:00 level=INFO msg="server stopped"
+time=2025-04-05T15:42:46.836+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-04-05T15:43:21.819+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-05T15:43:21.821+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T15:43:29.708+04:00 level=INFO msg="server stopped"
+time=2025-04-05T15:43:29.708+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-04-05T15:57:06.483+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-05T15:57:06.485+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T15:57:09.163+04:00 level=INFO msg="server stopped"
+time=2025-04-05T15:57:09.163+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-04-05T21:16:43.163+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-05T21:16:43.164+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T21:16:44.611+04:00 level=INFO msg="server stopped"
+time=2025-04-05T21:16:44.611+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-04-05T22:07:35.326+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-05T22:07:35.328+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T22:07:39.207+04:00 level=INFO msg="server stopped"
+time=2025-04-05T22:07:39.207+04:00 level=INFO msg="soft shutdown was a success"
+time=2025-04-05T22:07:39.332+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-05T22:20:08.645+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-05T22:20:08.646+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-05T22:20:25.810+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-05T22:20:25.810+04:00 level=INFO msg="server stopped"
+time=2025-04-06T11:13:36.131+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-06T11:13:36.132+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-06T11:13:37.565+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-06T11:13:37.565+04:00 level=INFO msg="server stopped"
+time=2025-04-06T12:24:38.350+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-06T12:24:38.351+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-06T12:24:51.148+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-04-06T12:25:16.594+04:00 level=INFO msg="Shutting down scrapper"
+time=2025-04-06T12:25:16.595+04:00 level=INFO msg="server stopped"
+time=2025-04-06T12:25:17.201+04:00 level=INFO msg="Creating new Scrapper" interval=3m0s
+time=2025-04-06T12:25:17.201+04:00 level=INFO msg="Starts scrapper scheduler"
+time=2025-04-06T12:25:26.232+04:00 level=INFO msg="Adding user"
+time=2025-04-06T12:25:26.260+04:00 level=ERROR msg="Failed to add user" error="ERROR: duplicate key value violates unique constraint \"users_pkey\" (SQLSTATE 23505)" tgID=503492049
+time=2025-04-06T12:25:34.483+04:00 level=INFO msg="Deleting link" tgID=503492049 link="&{URL:https://stackoverflow.com/questions/39556649/in-x86-whats-difference-between-test-eax-eax-and-cmp-eax-0 Tags:[] Filters:[] ID:0 LastUpdated:0001-01-01 00:00:00 +0000 UTC}"
+time=2025-04-06T12:25:36.769+04:00 level=INFO msg="Getting links" tgID=503492049
+time=2025-04-06T12:25:41.969+04:00 level=INFO msg="server stopped"
+time=2025-04-06T12:25:41.969+04:00 level=INFO msg="Shutting down scrapper"

@@ -7,8 +7,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-
-	"LinkTracker/internal/infrastructure/clients"
 )
 
 func SignalWarden(signals ...os.Signal) chan struct{} {
@@ -25,31 +23,23 @@ func SignalWarden(signals ...os.Signal) chan struct{} {
 	return result
 }
 
-func StopScrapperSignalReceiving(scrapper *Scrapper, server *http.Server) {
+func StopScrapperSignalReceiving(cancel context.CancelFunc, server *http.Server) {
 	<-SignalWarden(syscall.SIGINT, syscall.SIGTERM)
-
-	err := scrapper.Stop()
-	if err != nil {
-		slog.Error(err.Error())
-	}
-
-	err = server.Shutdown(context.TODO())
-	if err != nil {
-		slog.Error(err.Error())
-	}
-
-	slog.Info("soft shutdown was a success")
-}
-
-func StopBotSignalReceiving(tgBotAPI *clients.TelegramHTTPClient, server *http.Server) {
-	<-SignalWarden(syscall.SIGINT, syscall.SIGTERM)
-
-	tgBotAPI.Stop()
+	cancel()
 
 	err := server.Shutdown(context.TODO())
 	if err != nil {
 		slog.Error(err.Error())
 	}
+}
 
-	slog.Info("soft shutdown was a success")
+func StopBotSignalReceiving(cancel context.CancelFunc, server *http.Server) {
+	<-SignalWarden(syscall.SIGINT, syscall.SIGTERM)
+
+	cancel()
+
+	err := server.Shutdown(context.TODO())
+	if err != nil {
+		slog.Error(err.Error())
+	}
 }

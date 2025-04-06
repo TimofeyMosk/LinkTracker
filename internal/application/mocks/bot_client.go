@@ -21,17 +21,17 @@ func (_m *BotClient) EXPECT() *BotClient_Expecter {
 	return &BotClient_Expecter{mock: &_m.Mock}
 }
 
-// PostUpdates provides a mock function with given fields: link, tgID
-func (_m *BotClient) PostUpdates(link domain.Link, tgID int64) error {
-	ret := _m.Called(link, tgID)
+// PostUpdates provides a mock function with given fields: link, tgID, description
+func (_m *BotClient) PostUpdates(link domain.Link, tgID []int64, description string) error {
+	ret := _m.Called(link, tgID, description)
 
 	if len(ret) == 0 {
 		panic("no return value specified for PostUpdates")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(domain.Link, int64) error); ok {
-		r0 = rf(link, tgID)
+	if rf, ok := ret.Get(0).(func(domain.Link, []int64, string) error); ok {
+		r0 = rf(link, tgID, description)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -46,14 +46,15 @@ type BotClient_PostUpdates_Call struct {
 
 // PostUpdates is a helper method to define mock.On call
 //   - link domain.Link
-//   - tgID int64
-func (_e *BotClient_Expecter) PostUpdates(link interface{}, tgID interface{}) *BotClient_PostUpdates_Call {
-	return &BotClient_PostUpdates_Call{Call: _e.mock.On("PostUpdates", link, tgID)}
+//   - tgID []int64
+//   - description string
+func (_e *BotClient_Expecter) PostUpdates(link interface{}, tgID interface{}, description interface{}) *BotClient_PostUpdates_Call {
+	return &BotClient_PostUpdates_Call{Call: _e.mock.On("PostUpdates", link, tgID, description)}
 }
 
-func (_c *BotClient_PostUpdates_Call) Run(run func(link domain.Link, tgID int64)) *BotClient_PostUpdates_Call {
+func (_c *BotClient_PostUpdates_Call) Run(run func(link domain.Link, tgID []int64, description string)) *BotClient_PostUpdates_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(domain.Link), args[1].(int64))
+		run(args[0].(domain.Link), args[1].([]int64), args[2].(string))
 	})
 	return _c
 }
@@ -63,7 +64,7 @@ func (_c *BotClient_PostUpdates_Call) Return(_a0 error) *BotClient_PostUpdates_C
 	return _c
 }
 
-func (_c *BotClient_PostUpdates_Call) RunAndReturn(run func(domain.Link, int64) error) *BotClient_PostUpdates_Call {
+func (_c *BotClient_PostUpdates_Call) RunAndReturn(run func(domain.Link, []int64, string) error) *BotClient_PostUpdates_Call {
 	_c.Call.Return(run)
 	return _c
 }

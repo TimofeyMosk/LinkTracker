@@ -2,6 +2,7 @@ package clients
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"log/slog"
@@ -29,13 +30,13 @@ func NewBotHTTPClient(botBaseURL string, timeout time.Duration) (*BotHTTPClient,
 		botBaseURL: parsedURL}, nil
 }
 
-func (c *BotHTTPClient) PostUpdates(link domain.Link, tgID int64) error {
+func (c *BotHTTPClient) PostUpdates(ctx context.Context, link *domain.Link, tgID []int64, description string) error {
 	endpoint := c.botBaseURL.JoinPath("/updates")
 
 	linkUpdate := botdto.LinkUpdate{
-		Description: nil,
+		Description: &description,
 		Id:          &link.ID,
-		TgChatIds:   &[]int64{tgID},
+		TgChatIds:   &tgID,
 		Url:         &link.URL,
 	}
 
@@ -44,7 +45,7 @@ func (c *BotHTTPClient) PostUpdates(link domain.Link, tgID int64) error {
 		return err
 	}
 
-	request, err := http.NewRequest(http.MethodPost, endpoint.String(), bytes.NewReader(payload))
+	request, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint.String(), bytes.NewReader(payload))
 	if err != nil {
 		return err
 	}

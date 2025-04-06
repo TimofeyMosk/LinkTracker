@@ -4,25 +4,21 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"sync"
 	"time"
+
+	"LinkTracker/internal/domain"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"golang.org/x/time/rate"
 )
 
-type Bot interface {
-	HandleMessage(id int64, text string) string
-}
-
 type TelegramHTTPClient struct {
 	tgBotAPI      *tgbotapi.BotAPI
-	bot           Bot
 	updates       tgbotapi.UpdatesChannel
 	globalLimiter *rate.Limiter
 }
 
-func NewTelegramHTTPClient(token string, bot Bot) (*TelegramHTTPClient, error) {
+func NewTelegramHTTPClient(token string) (*TelegramHTTPClient, error) {
 	tgBotAPI, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create bot: %w", err)
@@ -62,68 +58,25 @@ func NewTelegramHTTPClient(token string, bot Bot) (*TelegramHTTPClient, error) {
 
 	return &TelegramHTTPClient{
 		tgBotAPI:      tgBotAPI,
-		bot:           bot,
 		updates:       updates,
 		globalLimiter: rate.NewLimiter(rate.Every(time.Second/30), 30),
 	}, nil
 }
 
-func (t *TelegramHTTPClient) Run() {
-	workerCount := 17
-
-	jobs := make([]chan *tgbotapi.Message, workerCount)
-	for i := range jobs {
-		jobs[i] = make(chan *tgbotapi.Message, 100)
-	}
-
-	wg := sync.WaitGroup{}
-	for i := 0; i < workerCount; i++ {
-		wg.Add(1)
-
-		go func(workerID int) {
-			defer wg.Done()
-
-			for msg := range jobs[workerID] {
-				chatID := msg.Chat.ID
-				messageText := msg.Text
-
-				responseText := t.bot.HandleMessage(chatID, messageText)
-				if responseText != "" {
-					t.SendMessage(chatID, responseText)
-				}
-			}
-		}(i)
-	}
-
+func (t *TelegramHTTPClient) ReceiveMessage(messageCh chan domain.Message) {
 	for update := range t.updates {
 		if update.Message != nil {
-			chatID := update.Message.Chat.ID
-			numWorker := chatID % int64(workerCount)
-			jobs[numWorker] <- update.Message
+			messageCh <- domain.Message{TgID: update.Message.From.ID, Text: update.Message.Text}
 		}
 	}
-
-	for i := range jobs {
-		close(jobs[i])
-	}
-
-	wg.Wait()
-	slog.Info("Telegram client has finished")
 }
 
-func (t *TelegramHTTPClient) Stop() {
+func (t *TelegramHTTPClient) StopReceiveMessage() {
 	t.tgBotAPI.StopReceivingUpdates()
 }
 
-func setBotCommands(bot *tgbotapi.BotAPI, botCommands []tgbotapi.BotCommand) error {
-	cfg := tgbotapi.NewSetMyCommands(botCommands...)
-	_, err := bot.Request(cfg)
-
-	return err
-}
-
-func (t *TelegramHTTPClient) SendMessage(chatID int64, text string) {
-	err := t.globalLimiter.Wait(context.TODO())
+func (t *TelegramHTTPClient) SendMessage(ctx context.Context, chatID int64, text string) {
+	err := t.globalLimiter.Wait(ctx)
 	if err != nil {
 		slog.Error("Rate limit error", "chatID", chatID, "text", text, "error", err.Error())
 	}
@@ -134,4 +87,11 @@ func (t *TelegramHTTPClient) SendMessage(chatID int64, text string) {
 	if err != nil {
 		slog.Error(err.Error())
 	}
+}
+
+func setBotCommands(bot *tgbotapi.BotAPI, botCommands []tgbotapi.BotCommand) error {
+	cfg := tgbotapi.NewSetMyCommands(botCommands...)
+	_, err := bot.Request(cfg)
+
+	return err
 }

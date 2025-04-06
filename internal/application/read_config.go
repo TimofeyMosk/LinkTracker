@@ -28,9 +28,16 @@ type BotConfig struct {
 	LogsPath              string        `yaml:"logger_path" `
 }
 
+type DBConfig struct {
+	PostgresUser     string `yaml:"postgres_user"`
+	PostgresPassword string `yaml:"postgres_password"`
+	PostgresDB       string `yaml:"postgres_db"`
+}
+
 type Config struct {
 	ScrapConfig ScrapperConfig `yaml:"scrapper" `
 	BotConfig   BotConfig      `yaml:"bot" `
+	DBConfig    DBConfig       `yaml:"db"`
 }
 
 func ReadYAMLConfig(filePath string) (*Config, error) {
@@ -66,11 +73,28 @@ func ReadYAMLConfig(filePath string) (*Config, error) {
 			ScrapperClientTimeout: viper.GetDuration("bot.scrapper_client_timeout"),
 			LogsPath:              viper.GetString("bot.logger_path"),
 		},
+		DBConfig: DBConfig{
+			PostgresUser:     viper.GetString("db.postgres_user"),
+			PostgresPassword: viper.GetString("db.postgres_password"),
+			PostgresDB:       viper.GetString("db.postgres_db"),
+		},
 	}
 
 	// Replace with a token from an environment variable if one exists
 	if viper.GetString("tg_token") != "" {
 		config.BotConfig.TgToken = viper.GetString("tg_token")
+	}
+
+	if viper.GetString("postgres_user") != "" {
+		config.DBConfig.PostgresUser = viper.GetString("postgres_user")
+	}
+
+	if viper.GetString("postgres_password") != "" {
+		config.DBConfig.PostgresPassword = viper.GetString("postgres_password")
+	}
+
+	if viper.GetString("postgres_db") != "" {
+		config.DBConfig.PostgresDB = viper.GetString("postgres_db")
 	}
 
 	return &config, nil

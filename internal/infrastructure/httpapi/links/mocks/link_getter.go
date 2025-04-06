@@ -4,6 +4,7 @@ package mocks
 
 import (
 	domain "LinkTracker/internal/domain"
+	context "context"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -21,9 +22,9 @@ func (_m *LinkGetter) EXPECT() *LinkGetter_Expecter {
 	return &LinkGetter_Expecter{mock: &_m.Mock}
 }
 
-// GetUserLinks provides a mock function with given fields: tgID
-func (_m *LinkGetter) GetUserLinks(tgID int64) ([]domain.Link, error) {
-	ret := _m.Called(tgID)
+// GetUserLinks provides a mock function with given fields: ctx, tgID
+func (_m *LinkGetter) GetUserLinks(ctx context.Context, tgID int64) ([]domain.Link, error) {
+	ret := _m.Called(ctx, tgID)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetUserLinks")
@@ -31,19 +32,19 @@ func (_m *LinkGetter) GetUserLinks(tgID int64) ([]domain.Link, error) {
 
 	var r0 []domain.Link
 	var r1 error
-	if rf, ok := ret.Get(0).(func(int64) ([]domain.Link, error)); ok {
-		return rf(tgID)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) ([]domain.Link, error)); ok {
+		return rf(ctx, tgID)
 	}
-	if rf, ok := ret.Get(0).(func(int64) []domain.Link); ok {
-		r0 = rf(tgID)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) []domain.Link); ok {
+		r0 = rf(ctx, tgID)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]domain.Link)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(int64) error); ok {
-		r1 = rf(tgID)
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, tgID)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -57,14 +58,15 @@ type LinkGetter_GetUserLinks_Call struct {
 }
 
 // GetUserLinks is a helper method to define mock.On call
+//   - ctx context.Context
 //   - tgID int64
-func (_e *LinkGetter_Expecter) GetUserLinks(tgID interface{}) *LinkGetter_GetUserLinks_Call {
-	return &LinkGetter_GetUserLinks_Call{Call: _e.mock.On("GetUserLinks", tgID)}
+func (_e *LinkGetter_Expecter) GetUserLinks(ctx interface{}, tgID interface{}) *LinkGetter_GetUserLinks_Call {
+	return &LinkGetter_GetUserLinks_Call{Call: _e.mock.On("GetUserLinks", ctx, tgID)}
 }
 
-func (_c *LinkGetter_GetUserLinks_Call) Run(run func(tgID int64)) *LinkGetter_GetUserLinks_Call {
+func (_c *LinkGetter_GetUserLinks_Call) Run(run func(ctx context.Context, tgID int64)) *LinkGetter_GetUserLinks_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(int64))
+		run(args[0].(context.Context), args[1].(int64))
 	})
 	return _c
 }
@@ -74,7 +76,7 @@ func (_c *LinkGetter_GetUserLinks_Call) Return(_a0 []domain.Link, _a1 error) *Li
 	return _c
 }
 
-func (_c *LinkGetter_GetUserLinks_Call) RunAndReturn(run func(int64) ([]domain.Link, error)) *LinkGetter_GetUserLinks_Call {
+func (_c *LinkGetter_GetUserLinks_Call) RunAndReturn(run func(context.Context, int64) ([]domain.Link, error)) *LinkGetter_GetUserLinks_Call {
 	_c.Call.Return(run)
 	return _c
 }

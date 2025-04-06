@@ -1,13 +1,14 @@
 package tgchat
 
 import (
+	"context"
 	"net/http"
 
 	"LinkTracker/internal/infrastructure/httpapi"
 )
 
 type UserAdder interface {
-	AddUser(int64) error
+	AddUser(ctx context.Context, tgID int64) error
 }
 
 type PostUserHandler struct {
@@ -23,7 +24,7 @@ func (h PostUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.UserAdder.AddUser(chatID)
+	err = h.UserAdder.AddUser(r.Context(), chatID)
 	if err != nil {
 		httpapi.SendErrorResponse(w, http.StatusBadRequest, "CREATE_CHAT_FAILED",
 			"Failed to create chat", err.Error(), "BadRequest")

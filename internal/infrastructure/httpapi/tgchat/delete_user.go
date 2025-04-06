@@ -1,6 +1,7 @@
 package tgchat
 
 import (
+	"context"
 	"errors"
 	"net/http"
 
@@ -9,7 +10,7 @@ import (
 )
 
 type UserDeleter interface {
-	DeleteUser(int64) error
+	DeleteUser(ctx context.Context, tgID int64) error
 }
 
 type DeleteUserHandler struct {
@@ -25,7 +26,7 @@ func (h DeleteUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.UserDeleter.DeleteUser(chatID)
+	err = h.UserDeleter.DeleteUser(r.Context(), chatID)
 	if err != nil {
 		if errors.As(err, &domain.ErrUserNotExist{}) {
 			httpapi.SendErrorResponse(w, http.StatusNotFound, "CHAT_NOT_EXIST",

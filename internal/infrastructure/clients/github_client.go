@@ -1,6 +1,7 @@
 package clients
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log/slog"
@@ -8,6 +9,8 @@ import (
 	"net/url"
 	"strings"
 	"time"
+
+	"LinkTracker/internal/domain"
 )
 
 const (
@@ -15,55 +18,25 @@ const (
 	githubHTTPTimeout = 5 * time.Second
 )
 
+// GitHubHTTPClient используется для работы с API GitHub.
 type GitHubHTTPClient struct {
 	Client *http.Client
 }
 
+// NewGitHubHTTPClient создаёт нового клиента с заданным timeout.
 func NewGitHubHTTPClient() *GitHubHTTPClient {
 	return &GitHubHTTPClient{Client: &http.Client{Timeout: githubHTTPTimeout}}
 }
 
-type GitHubRepoResponse struct {
-	UpdatedAt string `json:"updated_at"`
+func (c *GitHubHTTPClient) Supports(link *url.URL) bool {
+	return link.Host == "github.com"
 }
 
-// "https://github.com/TimofeyMosk/fractalFlame-image-creator"
-
-func (c *GitHubHTTPClient) GetLastUpdateTimeRepo(link string) (time.Time, error) {
-	apiURL, err := apiGitURLGeneration(link)
-	if err != nil {
-		return time.Time{}, err
-	}
-
-	request, err := http.NewRequest("GET", apiURL, http.NoBody)
-	if err != nil {
-		return time.Time{}, err
-	}
-
-	response, err := c.Client.Do(request)
-	if err != nil {
-		return time.Time{}, err
-	}
-
-	defer func() {
-		if Cerr := response.Body.Close(); Cerr != nil {
-			slog.Error("could not close resource", "error", Cerr.Error())
-		}
-	}()
-
-	var repoData GitHubRepoResponse
-	if err := json.NewDecoder(response.Body).Decode(&repoData); err != nil {
-		return time.Time{}, err
-	}
-
-	updatedAt, err := time.Parse(time.RFC3339, repoData.UpdatedAt)
-	if err != nil {
-		return time.Time{}, err
-	}
-
-	return updatedAt, nil
+func (c *GitHubHTTPClient) Check(ctx context.Context, link *domain.Link) (lastUpdate time.Time, description string, err error) {
+	return c.GetLatestPROrIssue(ctx, link.URL)
 }
 
+// Ожидается формат: github.com/{owner}/{repo}.
 func apiGitURLGeneration(link string) (string, error) {
 	parsedURL, err := url.Parse(link)
 	if err != nil {
@@ -72,11 +45,86 @@ func apiGitURLGeneration(link string) (string, error) {
 
 	parts := strings.Split(strings.Trim(parsedURL.Path, "/"), "/")
 	if len(parts) < 2 {
-		return "", fmt.Errorf("wrong url format, expected  github.com/{owner}/{repo}")
+		return "", fmt.Errorf("wrong url format, expected github.com/{owner}/{repo}")
 	}
 
 	owner, repo := parts[0], parts[1]
 	apiURL := fmt.Sprintf("%s/repos/%s/%s", githubAPIBaseURL, owner, repo)
 
-	return apiURL, err
+	return apiURL, nil
+}
+
+// GitHubIssue представляет Issue или Pull Request из GitHub API.
+type GitHubIssue struct {
+	Title string `json:"title"`
+	User  struct {
+		Login string `json:"login"`
+	} `json:"user"`
+	Body      string `json:"body"`
+	CreatedAt string `json:"created_at"`
+}
+
+// GetLatestPROrIssue возвращает сообщение с данными о последнем PR или Issue:
+// название, имя пользователя, время создания и превью описания (200 символов).
+// Пример ссылки: "https://github.com/TimofeyMosk/fractalFlame-image-creator"
+func (c *GitHubHTTPClient) GetLatestPROrIssue(ctx context.Context, link string) (lastUpdate time.Time, description string, err error) {
+	apiURL, err := apiGitURLGeneration(link)
+	if err != nil {
+		return time.Time{}, "", err
+	}
+
+	// Формируем URL для получения списка issues, сортируем по дате создания (от новых к старым), выбираем только один элемент.
+	issuesURL := fmt.Sprintf("%s/issues?sort=created&direction=desc&per_page=1", apiURL)
+
+	request, err := http.NewRequestWithContext(ctx, "GET", issuesURL, http.NoBody)
+	if err != nil {
+		return time.Time{}, "", err
+	}
+
+	response, err := c.Client.Do(request)
+	if err != nil {
+		return time.Time{}, "", err
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			slog.Error("could not close resource", "error", cerr.Error())
+		}
+	}()
+
+	var issues []GitHubIssue
+	if err := json.NewDecoder(response.Body).Decode(&issues); err != nil {
+		return time.Time{}, "", err
+	}
+
+	if len(issues) == 0 {
+		return time.Time{}, "", fmt.Errorf("no issues or pull requests found")
+	}
+
+	issue := issues[0]
+
+	lastUpdate, err = time.Parse(time.RFC3339, issue.CreatedAt)
+	if err != nil {
+		return time.Time{}, "", err
+	}
+
+	description = createDescription(issue)
+
+	return lastUpdate, description, nil
+}
+
+func createDescription(issue GitHubIssue) string {
+	preview := issue.Body
+	if len(preview) > 200 {
+		preview = preview[:200]
+	}
+
+	description := fmt.Sprintf("Title: %s\nUser: %s\nCreated At: %s\nPreview: %s",
+		issue.Title,
+		issue.User.Login,
+		issue.CreatedAt,
+		preview,
+	)
+
+	return description
 }

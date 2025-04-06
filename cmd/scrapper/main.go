@@ -1,15 +1,19 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
 	"sync"
 
+	"LinkTracker/internal/application/scrapper"
+	"LinkTracker/internal/application/scrapper/linkchecker"
+	"LinkTracker/internal/application/scrapper/notifier"
+
 	"LinkTracker/internal/application"
 	"LinkTracker/internal/infrastructure/clients"
-	"LinkTracker/internal/infrastructure/repository"
 	"LinkTracker/internal/infrastructure/server"
 	"LinkTracker/pkg"
 )
@@ -23,8 +27,14 @@ func main() {
 
 	pkg.InitLogger(config.ScrapConfig.LogsPath)
 
-	wg := sync.WaitGroup{}
-	rep := repository.NewRepository()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	userRepo, linkRepo, stateManager, err := InitRepositories(ctx, config.DBConfig)
+	if err != nil {
+		fmt.Printf("Error initializing repository: %v\n", err)
+		return
+	}
 
 	botHTTPClient, err := clients.NewBotHTTPClient(config.ScrapConfig.BotBaseURL, config.ScrapConfig.BotClientTimeout)
 	if err != nil {
@@ -32,22 +42,25 @@ func main() {
 		return
 	}
 
-	githubClient := clients.NewGitHubHTTPClient()
-	stackOverflowClient := clients.NewStackOverflowHTTPClient()
+	messageNotifier := notifier.NewHTTPNotifier(botHTTPClient)
 
-	scrapper := application.NewScrapper(rep, config.ScrapConfig.Interval, botHTTPClient, githubClient, stackOverflowClient)
+	linkSourceHandlers := InitLinksSourceHandlers()
+	linkChecker := linkchecker.NewLinkChecker(linkRepo, linkSourceHandlers)
+
+	scrap := scrapper.NewScrapper(userRepo, linkRepo, stateManager, config.ScrapConfig.Interval, messageNotifier, linkChecker)
 	serv := server.InitServer(
 		config.ScrapConfig.Address,
-		server.InitScrapperRouting(scrapper),
+		server.InitScrapperRouting(scrap),
 		config.ScrapConfig.ReadTimeout,
 		config.ScrapConfig.WriteTimeout)
 
-	go application.StopScrapperSignalReceiving(scrapper, serv)
+	go application.StopScrapperSignalReceiving(cancel, serv)
 
+	wg := sync.WaitGroup{}
 	wg.Add(1)
 
 	go func() {
-		if err := scrapper.Run(); err != nil {
+		if err := scrap.Run(ctx); err != nil {
 			slog.Error(err.Error())
 		}
 
@@ -55,10 +68,8 @@ func main() {
 	}()
 
 	if err := serv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		fmt.Println("server failed to start or finished with error", err)
 		slog.Error("server failed to start or finished with error", "error", err)
 	} else {
-		fmt.Println("server stopped")
 		slog.Info("server stopped")
 	}
 

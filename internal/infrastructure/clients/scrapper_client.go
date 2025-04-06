@@ -2,6 +2,7 @@ package clients
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"log/slog"
@@ -29,10 +30,10 @@ func NewScrapperHTTPClient(scrapperBaseURL string, timeout time.Duration) (*Scra
 		scrapperBaseURL: parsedURL}, nil
 }
 
-func (c *ScrapperHTTPClient) RegisterUser(tgID int64) error {
+func (c *ScrapperHTTPClient) RegisterUser(ctx context.Context, tgID int64) error {
 	endpoint := c.scrapperBaseURL.JoinPath(fmt.Sprintf("/tg-chat/%d", tgID))
 
-	request, err := http.NewRequest(http.MethodPost, endpoint.String(), http.NoBody)
+	request, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint.String(), http.NoBody)
 	if err != nil {
 		return err
 	}
@@ -58,10 +59,10 @@ func (c *ScrapperHTTPClient) RegisterUser(tgID int64) error {
 	}
 }
 
-func (c *ScrapperHTTPClient) DeleteUser(tgID int64) error {
+func (c *ScrapperHTTPClient) DeleteUser(ctx context.Context, tgID int64) error {
 	endpoint := c.scrapperBaseURL.JoinPath(fmt.Sprintf("/tg-chat/%d", tgID))
 
-	request, err := http.NewRequest(http.MethodDelete, endpoint.String(), http.NoBody)
+	request, err := http.NewRequestWithContext(ctx, http.MethodDelete, endpoint.String(), http.NoBody)
 	if err != nil {
 		return err
 	}
@@ -89,10 +90,10 @@ func (c *ScrapperHTTPClient) DeleteUser(tgID int64) error {
 	}
 }
 
-func (c *ScrapperHTTPClient) GetLinks(tgID int64) ([]domain.Link, error) {
+func (c *ScrapperHTTPClient) GetLinks(ctx context.Context, tgID int64) ([]domain.Link, error) {
 	endpoint := c.scrapperBaseURL.JoinPath("/links")
 
-	request, err := http.NewRequest(http.MethodGet, endpoint.String(), http.NoBody)
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint.String(), http.NoBody)
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +140,7 @@ func (c *ScrapperHTTPClient) GetLinks(tgID int64) ([]domain.Link, error) {
 	}
 }
 
-func (c *ScrapperHTTPClient) AddLink(tgID int64, link domain.Link) error {
+func (c *ScrapperHTTPClient) AddLink(ctx context.Context, tgID int64, link *domain.Link) error {
 	endpoint := c.scrapperBaseURL.JoinPath("/links")
 
 	payload, err := json.Marshal(LinkToAddLinkRequestDTO(link))
@@ -147,7 +148,7 @@ func (c *ScrapperHTTPClient) AddLink(tgID int64, link domain.Link) error {
 		return err
 	}
 
-	request, err := http.NewRequest(http.MethodPost, endpoint.String(), bytes.NewReader(payload))
+	request, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint.String(), bytes.NewReader(payload))
 	if err != nil {
 		return err
 	}
@@ -185,7 +186,7 @@ func (c *ScrapperHTTPClient) AddLink(tgID int64, link domain.Link) error {
 	}
 }
 
-func (c *ScrapperHTTPClient) RemoveLink(tgID int64, link domain.Link) error {
+func (c *ScrapperHTTPClient) RemoveLink(ctx context.Context, tgID int64, link *domain.Link) error {
 	endpoint := c.scrapperBaseURL.JoinPath("/links")
 
 	payload, err := json.Marshal(LinkToRemoveListRequestDTO(link))
@@ -193,7 +194,7 @@ func (c *ScrapperHTTPClient) RemoveLink(tgID int64, link domain.Link) error {
 		return err
 	}
 
-	request, err := http.NewRequest(http.MethodDelete, endpoint.String(), bytes.NewReader(payload))
+	request, err := http.NewRequestWithContext(ctx, http.MethodDelete, endpoint.String(), bytes.NewReader(payload))
 	if err != nil {
 		return err
 	}
@@ -262,7 +263,7 @@ func HandleAPIErrorResponseFromScrapper(resp *http.Response) error {
 	return apiError
 }
 
-func LinkToAddLinkRequestDTO(link domain.Link) scrapperdto.AddLinkRequest {
+func LinkToAddLinkRequestDTO(link *domain.Link) scrapperdto.AddLinkRequest {
 	return scrapperdto.AddLinkRequest{
 		Link:    &link.URL,
 		Tags:    &link.Tags,
@@ -270,7 +271,7 @@ func LinkToAddLinkRequestDTO(link domain.Link) scrapperdto.AddLinkRequest {
 	}
 }
 
-func LinkToRemoveListRequestDTO(link domain.Link) scrapperdto.RemoveLinkRequest {
+func LinkToRemoveListRequestDTO(link *domain.Link) scrapperdto.RemoveLinkRequest {
 	return scrapperdto.RemoveLinkRequest{
 		Link: &link.URL,
 	}

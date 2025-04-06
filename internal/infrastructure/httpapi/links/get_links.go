@@ -1,6 +1,7 @@
 package links
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"log/slog"
@@ -11,7 +12,7 @@ import (
 )
 
 type LinkGetter interface {
-	GetUserLinks(tgID int64) ([]domain.Link, error)
+	GetUserLinks(ctx context.Context, tgID int64) ([]domain.Link, error)
 }
 
 type GetLinksHandler struct {
@@ -27,7 +28,7 @@ func (h GetLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	links, err := h.LinkGetter.GetUserLinks(tgChatID)
+	links, err := h.LinkGetter.GetUserLinks(r.Context(), tgChatID)
 	if err != nil {
 		if errors.As(err, &domain.ErrUserNotExist{}) {
 			httpapi.SendErrorResponse(w, http.StatusBadRequest, "CHAT_NOT_EXIST",

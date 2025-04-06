@@ -1,6 +1,7 @@
 package links
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"log/slog"
@@ -12,7 +13,7 @@ import (
 )
 
 type LinkAdder interface {
-	AddLink(id int64, link domain.Link) (domain.Link, error)
+	AddLink(ctx context.Context, id int64, link *domain.Link) (domain.Link, error)
 }
 
 type PostLinkHandler struct {
@@ -44,7 +45,7 @@ func (h PostLinkHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	link, err = h.LinkAdder.AddLink(tgChatID, link)
+	link, err = h.LinkAdder.AddLink(r.Context(), tgChatID, &link)
 	if err != nil {
 		switch {
 		case errors.As(err, &domain.ErrUserNotExist{}):

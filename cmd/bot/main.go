@@ -1,10 +1,14 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
+	"sync"
+
+	"LinkTracker/internal/application/bot"
 
 	"LinkTracker/internal/application"
 	"LinkTracker/internal/infrastructure/clients"
@@ -21,34 +25,48 @@ func main() {
 
 	pkg.InitLogger(config.BotConfig.LogsPath)
 
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	scrapperHTTPClient, err := clients.NewScrapperHTTPClient(config.BotConfig.ScrapperBaseURL, config.BotConfig.ScrapperClientTimeout)
 	if err != nil {
 		fmt.Printf("Error creating scrapper client: %v\n", err)
 		return
 	}
 
-	bot := application.NewBot(scrapperHTTPClient)
+	tgClient, err := clients.NewTelegramHTTPClient(config.BotConfig.TgToken)
+	b := bot.NewBot(scrapperHTTPClient, tgClient)
+	wg := sync.WaitGroup{}
 
-	tgClient, err := clients.NewTelegramHTTPClient(config.BotConfig.TgToken, bot)
+	wg.Add(1)
+
+	go func() {
+		defer wg.Done()
+		b.Run(ctx)
+	}()
+
 	if err != nil {
 		fmt.Printf("Error creating tgClient: %v\n", err)
 		return
 	}
-
-	go tgClient.Run()
 
 	serv := server.InitServer(config.BotConfig.Address,
 		server.InitBotRouting(tgClient),
 		config.BotConfig.ReadTimeout,
 		config.BotConfig.WriteTimeout)
 
-	go application.StopBotSignalReceiving(tgClient, serv)
+	wg.Add(1)
+
+	go func() {
+		defer wg.Done()
+		application.StopBotSignalReceiving(cancel, serv)
+	}()
 
 	if err := serv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		fmt.Println("server failed to start or finished with error", err)
 		slog.Error("server failed to start or finished with error", "error", err)
 	} else {
-		fmt.Println("server stopped")
 		slog.Info("server stopped")
 	}
+
+	wg.Wait()
 }

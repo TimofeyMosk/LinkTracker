@@ -1,7 +1,9 @@
 package updates
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	botdto "LinkTracker/internal/infrastructure/dto/dto_bot"
@@ -9,7 +11,7 @@ import (
 )
 
 type MessageSender interface {
-	SendMessage(chatID int64, message string)
+	SendMessage(ctx context.Context, chatID int64, message string)
 }
 
 type PostUpdatesHandler struct {
@@ -31,8 +33,13 @@ func (handler PostUpdatesHandler) ServeHTTP(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	if requestBody.Description == nil {
+		*requestBody.Description = ""
+	}
+
 	for i := range *requestBody.TgChatIds {
-		handler.MessageSender.SendMessage((*requestBody.TgChatIds)[i], "Было обновление : "+*requestBody.Url)
+		message := fmt.Sprintf("Было обновление : " + *requestBody.Url + "\n" + *requestBody.Description)
+		handler.MessageSender.SendMessage(r.Context(), (*requestBody.TgChatIds)[i], message)
 	}
 
 	w.WriteHeader(http.StatusOK)

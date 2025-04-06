@@ -1,6 +1,7 @@
 package clients_test
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -34,7 +35,7 @@ func Test_ScrapperHTTPClient_RegisterUser_Success(t *testing.T) {
 	client, err := clients.NewScrapperHTTPClient(server.URL, 2*time.Second)
 	require.NoError(t, err)
 
-	err = client.RegisterUser(12345)
+	err = client.RegisterUser(context.Background(), 12345)
 
 	assert.NoError(t, err)
 }
@@ -57,7 +58,7 @@ func Test_ScrapperHTTPClient_RegisterUser_BadRequest(t *testing.T) {
 	client, err := clients.NewScrapperHTTPClient(server.URL, 2*time.Second)
 	require.NoError(t, err)
 
-	err = client.RegisterUser(12345)
+	err = client.RegisterUser(context.Background(), 12345)
 
 	var apiErr domain.ErrAPI
 
@@ -76,7 +77,7 @@ func Test_ScrapperHTTPClient_RegisterUser_UnexpectedStatus(t *testing.T) {
 	client, err := clients.NewScrapperHTTPClient(server.URL, 2*time.Second)
 	require.NoError(t, err)
 
-	err = client.RegisterUser(12345)
+	err = client.RegisterUser(context.Background(), 12345)
 
 	var unexpected domain.ErrUnexpectedStatusCode
 
@@ -96,7 +97,7 @@ func Test_ScrapperHTTPClient_DeleteUser_Success(t *testing.T) {
 	client, err := clients.NewScrapperHTTPClient(server.URL, 2*time.Second)
 	require.NoError(t, err)
 
-	err = client.DeleteUser(12345)
+	err = client.DeleteUser(context.Background(), 12345)
 
 	assert.NoError(t, err)
 }
@@ -116,7 +117,7 @@ func Test_ScrapperHTTPClient_DeleteUser_NotFound(t *testing.T) {
 	client, err := clients.NewScrapperHTTPClient(server.URL, 2*time.Second)
 	require.NoError(t, err)
 
-	err = client.DeleteUser(12345)
+	err = client.DeleteUser(context.Background(), 12345)
 
 	var apiErr domain.ErrAPI
 
@@ -135,7 +136,7 @@ func Test_ScrapperHTTPClient_DeleteUser_UnexpectedStatus(t *testing.T) {
 	client, err := clients.NewScrapperHTTPClient(server.URL, 2*time.Second)
 	require.NoError(t, err)
 
-	err = client.DeleteUser(12345)
+	err = client.DeleteUser(context.Background(), 12345)
 
 	var unexpected domain.ErrUnexpectedStatusCode
 
@@ -169,7 +170,7 @@ func Test_ScrapperHTTPClient_GetLinks_Success(t *testing.T) {
 	client, err := clients.NewScrapperHTTPClient(server.URL, 2*time.Second)
 	require.NoError(t, err)
 
-	result, err := client.GetLinks(12345)
+	result, err := client.GetLinks(context.Background(), 12345)
 
 	require.NoError(t, err)
 
@@ -197,7 +198,7 @@ func Test_ScrapperHTTPClient_GetLinks_BadRequest(t *testing.T) {
 	client, err := clients.NewScrapperHTTPClient(server.URL, 2*time.Second)
 	require.NoError(t, err)
 
-	result, err := client.GetLinks(12345)
+	result, err := client.GetLinks(context.Background(), 12345)
 
 	require.Error(t, err)
 	assert.Nil(t, result)
@@ -211,7 +212,6 @@ func Test_ScrapperHTTPClient_GetLinks_BadRequest(t *testing.T) {
 }
 
 func Test_ScrapperHTTPClient_GetLinks_UnexpectedStatus(t *testing.T) {
-	// Arrange: сервер возвращает неожиданный статус (500)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
@@ -220,7 +220,7 @@ func Test_ScrapperHTTPClient_GetLinks_UnexpectedStatus(t *testing.T) {
 	client, err := clients.NewScrapperHTTPClient(server.URL, 2*time.Second)
 	require.NoError(t, err)
 
-	result, err := client.GetLinks(12345)
+	result, err := client.GetLinks(context.Background(), 12345)
 
 	require.Error(t, err)
 	assert.Nil(t, result)
@@ -258,7 +258,7 @@ func Test_ScrapperHTTPClient_AddLink_Success(t *testing.T) {
 		ID:      1,
 	}
 
-	err = client.AddLink(12345, testLink)
+	err = client.AddLink(context.Background(), 12345, &testLink)
 
 	assert.NoError(t, err)
 }
@@ -285,7 +285,7 @@ func Test_ScrapperHTTPClient_AddLink_BadRequest(t *testing.T) {
 		ID:      1,
 	}
 
-	err = client.AddLink(12345, testLink)
+	err = client.AddLink(context.Background(), 12345, &testLink)
 
 	var apiErr domain.ErrAPI
 
@@ -311,7 +311,7 @@ func Test_ScrapperHTTPClient_AddLink_UnexpectedStatus(t *testing.T) {
 		ID:      1,
 	}
 
-	err = client.AddLink(12345, testLink)
+	err = client.AddLink(context.Background(), 12345, &testLink)
 
 	var unexpected domain.ErrUnexpectedStatusCode
 
@@ -346,7 +346,7 @@ func Test_ScrapperHTTPClient_RemoveLink_Success(t *testing.T) {
 		ID:      1,
 	}
 
-	err = client.RemoveLink(12345, testLink)
+	err = client.RemoveLink(context.Background(), 12345, &testLink)
 
 	assert.NoError(t, err)
 }
@@ -373,7 +373,7 @@ func Test_ScrapperHTTPClient_RemoveLink_BadRequest(t *testing.T) {
 		ID:      1,
 	}
 
-	err = client.RemoveLink(12345, testLink)
+	err = client.RemoveLink(context.Background(), 12345, &testLink)
 
 	var apiErr domain.ErrAPI
 
@@ -399,7 +399,7 @@ func Test_ScrapperHTTPClient_RemoveLink_UnexpectedStatus(t *testing.T) {
 		ID:      1,
 	}
 
-	err = client.RemoveLink(12345, testLink)
+	err = client.RemoveLink(context.Background(), 12345, &testLink)
 
 	var unexpected domain.ErrUnexpectedStatusCode
 

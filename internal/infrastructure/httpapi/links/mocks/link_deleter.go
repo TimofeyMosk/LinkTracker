@@ -4,6 +4,7 @@ package mocks
 
 import (
 	domain "LinkTracker/internal/domain"
+	context "context"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -21,9 +22,9 @@ func (_m *LinkDeleter) EXPECT() *LinkDeleter_Expecter {
 	return &LinkDeleter_Expecter{mock: &_m.Mock}
 }
 
-// DeleteLink provides a mock function with given fields: id, link
-func (_m *LinkDeleter) DeleteLink(id int64, link domain.Link) (domain.Link, error) {
-	ret := _m.Called(id, link)
+// DeleteLink provides a mock function with given fields: ctx, id, link
+func (_m *LinkDeleter) DeleteLink(ctx context.Context, id int64, link *domain.Link) (domain.Link, error) {
+	ret := _m.Called(ctx, id, link)
 
 	if len(ret) == 0 {
 		panic("no return value specified for DeleteLink")
@@ -31,17 +32,17 @@ func (_m *LinkDeleter) DeleteLink(id int64, link domain.Link) (domain.Link, erro
 
 	var r0 domain.Link
 	var r1 error
-	if rf, ok := ret.Get(0).(func(int64, domain.Link) (domain.Link, error)); ok {
-		return rf(id, link)
+	if rf, ok := ret.Get(0).(func(context.Context, int64, *domain.Link) (domain.Link, error)); ok {
+		return rf(ctx, id, link)
 	}
-	if rf, ok := ret.Get(0).(func(int64, domain.Link) domain.Link); ok {
-		r0 = rf(id, link)
+	if rf, ok := ret.Get(0).(func(context.Context, int64, *domain.Link) domain.Link); ok {
+		r0 = rf(ctx, id, link)
 	} else {
 		r0 = ret.Get(0).(domain.Link)
 	}
 
-	if rf, ok := ret.Get(1).(func(int64, domain.Link) error); ok {
-		r1 = rf(id, link)
+	if rf, ok := ret.Get(1).(func(context.Context, int64, *domain.Link) error); ok {
+		r1 = rf(ctx, id, link)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -55,15 +56,16 @@ type LinkDeleter_DeleteLink_Call struct {
 }
 
 // DeleteLink is a helper method to define mock.On call
+//   - ctx context.Context
 //   - id int64
-//   - link domain.Link
-func (_e *LinkDeleter_Expecter) DeleteLink(id interface{}, link interface{}) *LinkDeleter_DeleteLink_Call {
-	return &LinkDeleter_DeleteLink_Call{Call: _e.mock.On("DeleteLink", id, link)}
+//   - link *domain.Link
+func (_e *LinkDeleter_Expecter) DeleteLink(ctx interface{}, id interface{}, link interface{}) *LinkDeleter_DeleteLink_Call {
+	return &LinkDeleter_DeleteLink_Call{Call: _e.mock.On("DeleteLink", ctx, id, link)}
 }
 
-func (_c *LinkDeleter_DeleteLink_Call) Run(run func(id int64, link domain.Link)) *LinkDeleter_DeleteLink_Call {
+func (_c *LinkDeleter_DeleteLink_Call) Run(run func(ctx context.Context, id int64, link *domain.Link)) *LinkDeleter_DeleteLink_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(int64), args[1].(domain.Link))
+		run(args[0].(context.Context), args[1].(int64), args[2].(*domain.Link))
 	})
 	return _c
 }
@@ -73,7 +75,7 @@ func (_c *LinkDeleter_DeleteLink_Call) Return(_a0 domain.Link, _a1 error) *LinkD
 	return _c
 }
 
-func (_c *LinkDeleter_DeleteLink_Call) RunAndReturn(run func(int64, domain.Link) (domain.Link, error)) *LinkDeleter_DeleteLink_Call {
+func (_c *LinkDeleter_DeleteLink_Call) RunAndReturn(run func(context.Context, int64, *domain.Link) (domain.Link, error)) *LinkDeleter_DeleteLink_Call {
 	_c.Call.Return(run)
 	return _c
 }

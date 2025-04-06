@@ -1,6 +1,7 @@
 package clients_test
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"net/http/httptest"
@@ -25,7 +26,7 @@ func Test_BotHTTPClient_PostUpdates_Success(t *testing.T) {
 	assert.NoError(t, err)
 
 	link := domain.Link{ID: 1, URL: "https://example.com"}
-	err = client.PostUpdates(link, 123456)
+	err = client.PostUpdates(context.Background(), &link, []int64{123456}, "description")
 	assert.NoError(t, err)
 }
 
@@ -41,7 +42,7 @@ func Test_BotHTTPClient_PostUpdates_BadRequest(t *testing.T) {
 	assert.NoError(t, err)
 
 	link := domain.Link{ID: 1, URL: "https://example.com"}
-	err = client.PostUpdates(link, 123456)
+	err = client.PostUpdates(context.Background(), &link, []int64{123456}, "description")
 	assert.Error(t, err)
 
 	var apiErr domain.ErrAPI
@@ -62,7 +63,7 @@ func Test_BotHTTPClient_PostUpdates_UnexpectedStatusCode(t *testing.T) {
 	assert.NoError(t, err)
 
 	link := domain.Link{ID: 1, URL: "https://example.com"}
-	err = client.PostUpdates(link, 123456)
+	err = client.PostUpdates(context.Background(), &link, []int64{123456}, "description")
 	assert.Error(t, err)
 
 	var errUnexpectedStatusCode domain.ErrUnexpectedStatusCode

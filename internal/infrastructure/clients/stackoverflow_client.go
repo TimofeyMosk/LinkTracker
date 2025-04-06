@@ -1,6 +1,7 @@
 package clients
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log/slog"
@@ -13,7 +14,7 @@ import (
 )
 
 const (
-	stackOverflowAPIBaseURL  = "https://api.stackexchange.com/2.2"
+	stackOverflowAPIBaseURL  = "https://api.stackexchange.com/2.3"
 	stackOverflowHTTPTimeout = 5 * time.Second
 )
 
@@ -22,56 +23,39 @@ type StackOverflowHTTPClient struct {
 }
 
 func NewStackOverflowHTTPClient() *StackOverflowHTTPClient {
-	return &StackOverflowHTTPClient{
-		Client: &http.Client{Timeout: stackOverflowHTTPTimeout},
-	}
+	return &StackOverflowHTTPClient{Client: &http.Client{Timeout: stackOverflowHTTPTimeout}}
 }
 
-type SOResponse struct {
-	Items []struct {
-		LastActivityDate int64 `json:"last_activity_date"`
-	} `json:"items"`
+func (c *StackOverflowHTTPClient) Supports(link *url.URL) bool {
+	return link.Host == "stackoverflow.com"
 }
 
-//https://stackoverflow.com/questions/79467368/horizontal-scroll-component-does-not-work-as-expected-with-overflow
-
-func (c *StackOverflowHTTPClient) GetLastActivityQuestion(link string) (time.Time, error) {
-	apiURL, err := apiSOUrlGeneration(link)
-	if err != nil {
-		return time.Time{}, err
-	}
-
-	request, err := http.NewRequest("GET", apiURL, http.NoBody)
-	if err != nil {
-		return time.Time{}, err
-	}
-
-	response, err := c.Client.Do(request)
-	if err != nil {
-		return time.Time{}, err
-	}
-
-	defer func() {
-		if Cerr := response.Body.Close(); Cerr != nil {
-			slog.Error("could not close resource", "error", Cerr.Error())
-		}
-	}()
-
-	var soResponse SOResponse
-	if err := json.NewDecoder(response.Body).Decode(&soResponse); err != nil {
-		return time.Time{}, err
-	}
-
-	if len(soResponse.Items) == 0 {
-		return time.Time{}, domain.ErrQuestionNotFound{}
-	}
-
-	lastActivity := time.Unix(soResponse.Items[0].LastActivityDate, 0)
-
-	return lastActivity, nil
+func (c *StackOverflowHTTPClient) Check(ctx context.Context, link *domain.Link) (lastUpdate time.Time, description string, err error) {
+	return c.GetLatestAnswerOrComment(ctx, link.URL)
 }
 
-func apiSOUrlGeneration(link string) (string, error) {
+// SOQuestion представляет данные вопроса из StackOverflow API.
+type SOQuestion struct {
+	Title string `json:"title"`
+}
+
+// SOPost представляет общий тип для ответа или комментария.
+type SOPost struct {
+	Owner struct {
+		DisplayName string `json:"display_name"`
+	} `json:"owner"`
+	CreationDate int64  `json:"creation_date"`
+	Body         string `json:"body"`
+}
+
+// SOListResponse используется для декодирования списков ответов или комментариев.
+type SOListResponse struct {
+	Items []SOPost `json:"items"`
+}
+
+// extractQuestionID извлекает ID вопроса из ссылки.
+// Ожидаемый формат: stackoverflow.com/questions/{id}/...
+func extractQuestionID(link string) (string, error) {
 	parsedURL, err := url.Parse(link)
 	if err != nil {
 		return "", err
@@ -79,11 +63,169 @@ func apiSOUrlGeneration(link string) (string, error) {
 
 	parts := strings.Split(strings.Trim(parsedURL.Path, "/"), "/")
 	if len(parts) < 2 || parts[0] != "questions" {
-		return "", fmt.Errorf("wrong url format, expected   stackoverflow.com/questions/{id}")
+		return "", fmt.Errorf("wrong url format, expected stackoverflow.com/questions/{id}")
 	}
 
-	questionID := parts[1]
-	apiURL := fmt.Sprintf("%s/questions/%s?order=desc&sort=activity&site=stackoverflow", stackOverflowAPIBaseURL, questionID)
+	return parts[1], nil
+}
 
-	return apiURL, err
+// getQuestionDetails получает данные вопроса для получения заголовка.
+func (c *StackOverflowHTTPClient) getQuestionDetails(ctx context.Context, questionID string) (SOQuestion, error) {
+	apiURL := fmt.Sprintf("%s/questions/%s?site=stackoverflow", stackOverflowAPIBaseURL, questionID)
+
+	request, err := http.NewRequestWithContext(ctx, "GET", apiURL, http.NoBody)
+	if err != nil {
+		return SOQuestion{}, err
+	}
+
+	response, err := c.Client.Do(request)
+	if err != nil {
+		return SOQuestion{}, err
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			slog.Error("could not close resource", "error", cerr.Error())
+		}
+	}()
+
+	var result struct {
+		Items []SOQuestion `json:"items"`
+	}
+
+	if err := json.NewDecoder(response.Body).Decode(&result); err != nil {
+		return SOQuestion{}, err
+	}
+
+	if len(result.Items) == 0 {
+		return SOQuestion{}, fmt.Errorf("question not found")
+	}
+
+	return result.Items[0], nil
+}
+
+// getLatestAnswer получает последний ответ с использованием встроенного фильтра withbody.
+func (c *StackOverflowHTTPClient) getLatestAnswer(ctx context.Context, questionID string) (*SOPost, error) {
+	apiURL := fmt.Sprintf("%s/questions/%s/answers?order=desc&sort=creation&site=stackoverflow&filter=withbody",
+		stackOverflowAPIBaseURL, questionID)
+
+	request, err := http.NewRequestWithContext(ctx, "GET", apiURL, http.NoBody)
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := c.Client.Do(request)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			slog.Error("could not close resource", "error", cerr.Error())
+		}
+	}()
+
+	var answerResp SOListResponse
+	if err := json.NewDecoder(response.Body).Decode(&answerResp); err != nil {
+		return nil, err
+	}
+
+	if len(answerResp.Items) == 0 {
+		return nil, nil // ответов нет
+	}
+
+	return &answerResp.Items[0], nil
+}
+
+// getLatestComment получает последний комментарий с использованием встроенного фильтра withbody.
+func (c *StackOverflowHTTPClient) getLatestComment(ctx context.Context, questionID string) (*SOPost, error) {
+	apiURL := fmt.Sprintf("%s/questions/%s/comments?order=desc&sort=creation&site=stackoverflow&filter=withbody",
+		stackOverflowAPIBaseURL, questionID)
+
+	request, err := http.NewRequestWithContext(ctx, "GET", apiURL, http.NoBody)
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := c.Client.Do(request)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if cerr := response.Body.Close(); cerr != nil {
+			slog.Error("could not close resource", "error", cerr.Error())
+		}
+	}()
+
+	var commentResp SOListResponse
+	if err := json.NewDecoder(response.Body).Decode(&commentResp); err != nil {
+		return nil, err
+	}
+
+	if len(commentResp.Items) == 0 {
+		return nil, nil // комментариев нет
+	}
+
+	return &commentResp.Items[0], nil
+}
+
+// GetLatestAnswerOrComment возвращает сообщение с данными о последнем ответе или комментарии к вопросу:
+// заголовок вопроса, имя автора, время создания и превью текста (200 символов).
+// Пример ссылки: "https://stackoverflow.com/questions/79467368/horizontal-scroll-component-does-not-work-as-expected-with-overflow"
+func (c *StackOverflowHTTPClient) GetLatestAnswerOrComment(ctx context.Context, link string) (
+	lastUpdate time.Time, description string, err error) {
+	questionID, err := extractQuestionID(link)
+	if err != nil {
+		return time.Time{}, "", err
+	}
+
+	// Получаем заголовок вопроса.
+	question, err := c.getQuestionDetails(ctx, questionID)
+	if err != nil {
+		return time.Time{}, "", err
+	}
+
+	// Пытаемся получить последний ответ.
+	latestAnswer, err := c.getLatestAnswer(ctx, questionID)
+	if err != nil {
+		return time.Time{}, "", err
+	}
+
+	// Если ответов нет, пробуем получить последний комментарий.
+	var latestPost *SOPost
+	if latestAnswer != nil {
+		latestPost = latestAnswer
+	} else {
+		latestComment, err := c.getLatestComment(ctx, questionID)
+		if err != nil {
+			return time.Time{}, "", err
+		}
+
+		if latestComment == nil {
+			return time.Time{}, "", fmt.Errorf("no answers or comments found")
+		}
+
+		latestPost = latestComment
+	}
+
+	lastUpdate = time.Unix(latestPost.CreationDate, 0)
+	description = createSODescription(question.Title, *latestPost)
+
+	return lastUpdate, description, nil
+}
+
+// createSODescription формирует строку с информацией о последнем ответе или комментарии.
+func createSODescription(questionTitle string, post SOPost) string {
+	preview := post.Body
+	if len(preview) > 200 {
+		preview = preview[:200]
+	}
+
+	return fmt.Sprintf("Question: %s\nUser: %s\nCreated At: %s\nPreview: %s",
+		questionTitle,
+		post.Owner.DisplayName,
+		time.Unix(post.CreationDate, 0).Format(time.RFC1123),
+		preview,
+	)
 }

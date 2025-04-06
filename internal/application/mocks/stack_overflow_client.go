@@ -21,17 +21,18 @@ func (_m *StackOverflowClient) EXPECT() *StackOverflowClient_Expecter {
 	return &StackOverflowClient_Expecter{mock: &_m.Mock}
 }
 
-// GetLastActivityQuestion provides a mock function with given fields: link
-func (_m *StackOverflowClient) GetLastActivityQuestion(link string) (time.Time, error) {
+// GetLatestAnswerOrComment provides a mock function with given fields: link
+func (_m *StackOverflowClient) GetLatestAnswerOrComment(link string) (time.Time, string, error) {
 	ret := _m.Called(link)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetLastActivityQuestion")
+		panic("no return value specified for GetLatestAnswerOrComment")
 	}
 
 	var r0 time.Time
-	var r1 error
-	if rf, ok := ret.Get(0).(func(string) (time.Time, error)); ok {
+	var r1 string
+	var r2 error
+	if rf, ok := ret.Get(0).(func(string) (time.Time, string, error)); ok {
 		return rf(link)
 	}
 	if rf, ok := ret.Get(0).(func(string) time.Time); ok {
@@ -40,39 +41,45 @@ func (_m *StackOverflowClient) GetLastActivityQuestion(link string) (time.Time, 
 		r0 = ret.Get(0).(time.Time)
 	}
 
-	if rf, ok := ret.Get(1).(func(string) error); ok {
+	if rf, ok := ret.Get(1).(func(string) string); ok {
 		r1 = rf(link)
 	} else {
-		r1 = ret.Error(1)
+		r1 = ret.Get(1).(string)
 	}
 
-	return r0, r1
+	if rf, ok := ret.Get(2).(func(string) error); ok {
+		r2 = rf(link)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
 }
 
-// StackOverflowClient_GetLastActivityQuestion_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetLastActivityQuestion'
-type StackOverflowClient_GetLastActivityQuestion_Call struct {
+// StackOverflowClient_GetLatestAnswerOrComment_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetLatestAnswerOrComment'
+type StackOverflowClient_GetLatestAnswerOrComment_Call struct {
 	*mock.Call
 }
 
-// GetLastActivityQuestion is a helper method to define mock.On call
+// GetLatestAnswerOrComment is a helper method to define mock.On call
 //   - link string
-func (_e *StackOverflowClient_Expecter) GetLastActivityQuestion(link interface{}) *StackOverflowClient_GetLastActivityQuestion_Call {
-	return &StackOverflowClient_GetLastActivityQuestion_Call{Call: _e.mock.On("GetLastActivityQuestion", link)}
+func (_e *StackOverflowClient_Expecter) GetLatestAnswerOrComment(link interface{}) *StackOverflowClient_GetLatestAnswerOrComment_Call {
+	return &StackOverflowClient_GetLatestAnswerOrComment_Call{Call: _e.mock.On("GetLatestAnswerOrComment", link)}
 }
 
-func (_c *StackOverflowClient_GetLastActivityQuestion_Call) Run(run func(link string)) *StackOverflowClient_GetLastActivityQuestion_Call {
+func (_c *StackOverflowClient_GetLatestAnswerOrComment_Call) Run(run func(link string)) *StackOverflowClient_GetLatestAnswerOrComment_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(string))
 	})
 	return _c
 }
 
-func (_c *StackOverflowClient_GetLastActivityQuestion_Call) Return(_a0 time.Time, _a1 error) *StackOverflowClient_GetLastActivityQuestion_Call {
-	_c.Call.Return(_a0, _a1)
+func (_c *StackOverflowClient_GetLatestAnswerOrComment_Call) Return(lastActivity time.Time, description string, err error) *StackOverflowClient_GetLatestAnswerOrComment_Call {
+	_c.Call.Return(lastActivity, description, err)
 	return _c
 }
 
-func (_c *StackOverflowClient_GetLastActivityQuestion_Call) RunAndReturn(run func(string) (time.Time, error)) *StackOverflowClient_GetLastActivityQuestion_Call {
+func (_c *StackOverflowClient_GetLatestAnswerOrComment_Call) RunAndReturn(run func(string) (time.Time, string, error)) *StackOverflowClient_GetLatestAnswerOrComment_Call {
 	_c.Call.Return(run)
 	return _c
 }

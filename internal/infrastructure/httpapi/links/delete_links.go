@@ -1,6 +1,7 @@
 package links
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"log/slog"
@@ -12,7 +13,7 @@ import (
 )
 
 type LinkDeleter interface {
-	DeleteLink(id int64, link domain.Link) (domain.Link, error)
+	DeleteLink(ctx context.Context, id int64, link *domain.Link) (domain.Link, error)
 }
 
 type DeleteLinksHandler struct {
@@ -38,7 +39,7 @@ func (h DeleteLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	link := domain.Link{URL: *removeLinkRequest.Link, Tags: nil, Filters: nil, ID: 0}
 
-	deletedLink, err := h.LinkDeleter.DeleteLink(tgChatID, link)
+	deletedLink, err := h.LinkDeleter.DeleteLink(r.Context(), tgChatID, &link)
 	if err != nil {
 		if errors.As(err, &domain.ErrUserNotExist{}) {
 			httpapi.SendErrorResponse(w, http.StatusNotFound, "CHAT_NOT_EXIST",

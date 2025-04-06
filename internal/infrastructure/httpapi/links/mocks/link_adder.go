@@ -4,6 +4,7 @@ package mocks
 
 import (
 	domain "LinkTracker/internal/domain"
+	context "context"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -21,9 +22,9 @@ func (_m *LinkAdder) EXPECT() *LinkAdder_Expecter {
 	return &LinkAdder_Expecter{mock: &_m.Mock}
 }
 
-// AddLink provides a mock function with given fields: id, link
-func (_m *LinkAdder) AddLink(id int64, link domain.Link) (domain.Link, error) {
-	ret := _m.Called(id, link)
+// AddLink provides a mock function with given fields: ctx, id, link
+func (_m *LinkAdder) AddLink(ctx context.Context, id int64, link *domain.Link) (domain.Link, error) {
+	ret := _m.Called(ctx, id, link)
 
 	if len(ret) == 0 {
 		panic("no return value specified for AddLink")
@@ -31,17 +32,17 @@ func (_m *LinkAdder) AddLink(id int64, link domain.Link) (domain.Link, error) {
 
 	var r0 domain.Link
 	var r1 error
-	if rf, ok := ret.Get(0).(func(int64, domain.Link) (domain.Link, error)); ok {
-		return rf(id, link)
+	if rf, ok := ret.Get(0).(func(context.Context, int64, *domain.Link) (domain.Link, error)); ok {
+		return rf(ctx, id, link)
 	}
-	if rf, ok := ret.Get(0).(func(int64, domain.Link) domain.Link); ok {
-		r0 = rf(id, link)
+	if rf, ok := ret.Get(0).(func(context.Context, int64, *domain.Link) domain.Link); ok {
+		r0 = rf(ctx, id, link)
 	} else {
 		r0 = ret.Get(0).(domain.Link)
 	}
 
-	if rf, ok := ret.Get(1).(func(int64, domain.Link) error); ok {
-		r1 = rf(id, link)
+	if rf, ok := ret.Get(1).(func(context.Context, int64, *domain.Link) error); ok {
+		r1 = rf(ctx, id, link)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -55,15 +56,16 @@ type LinkAdder_AddLink_Call struct {
 }
 
 // AddLink is a helper method to define mock.On call
+//   - ctx context.Context
 //   - id int64
-//   - link domain.Link
-func (_e *LinkAdder_Expecter) AddLink(id interface{}, link interface{}) *LinkAdder_AddLink_Call {
-	return &LinkAdder_AddLink_Call{Call: _e.mock.On("AddLink", id, link)}
+//   - link *domain.Link
+func (_e *LinkAdder_Expecter) AddLink(ctx interface{}, id interface{}, link interface{}) *LinkAdder_AddLink_Call {
+	return &LinkAdder_AddLink_Call{Call: _e.mock.On("AddLink", ctx, id, link)}
 }
 
-func (_c *LinkAdder_AddLink_Call) Run(run func(id int64, link domain.Link)) *LinkAdder_AddLink_Call {
+func (_c *LinkAdder_AddLink_Call) Run(run func(ctx context.Context, id int64, link *domain.Link)) *LinkAdder_AddLink_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(int64), args[1].(domain.Link))
+		run(args[0].(context.Context), args[1].(int64), args[2].(*domain.Link))
 	})
 	return _c
 }
@@ -73,7 +75,7 @@ func (_c *LinkAdder_AddLink_Call) Return(_a0 domain.Link, _a1 error) *LinkAdder_
 	return _c
 }
 
-func (_c *LinkAdder_AddLink_Call) RunAndReturn(run func(int64, domain.Link) (domain.Link, error)) *LinkAdder_AddLink_Call {
+func (_c *LinkAdder_AddLink_Call) RunAndReturn(run func(context.Context, int64, *domain.Link) (domain.Link, error)) *LinkAdder_AddLink_Call {
 	_c.Call.Return(run)
 	return _c
 }

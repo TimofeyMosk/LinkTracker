@@ -1,120 +1,137 @@
 package clients_test
 
 import (
-	"encoding/json"
+	"bytes"
+	"context"
+	"fmt"
+	"io"
 	"net/http"
-	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 
-	"LinkTracker/internal/domain"
 	"LinkTracker/internal/infrastructure/clients"
 )
 
-const soQuestion = "https://stackoverflow.com/questions/12345/some-question-title"
+// roundTripSOFunc используется для подмены транспорта HTTP-клиента.
+type roundTripSOFunc func(req *http.Request) (*http.Response, error)
 
-type roundTripFunc func(req *http.Request) (*http.Response, error)
-
-func (f roundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
+func (f roundTripSOFunc) RoundTrip(req *http.Request) (*http.Response, error) {
 	return f(req)
 }
 
-// newTestClient создаёт экземпляр StackOverflowHTTPClient, чей транспорт перенаправляет запросы на testServer.
-func newTestClient(testServerURL string, _ time.Duration) *clients.StackOverflowHTTPClient {
+// testQuestionLink — тестовая ссылка на вопрос.
+const testQuestionLink = "https://stackoverflow.com/questions/12345/some-question-title"
+
+// newTestClient создаёт поддельный StackOverflowHTTPClient с кастомным RoundTripper.
+func newTestClient(rt roundTripSOFunc) *clients.StackOverflowHTTPClient {
 	client := clients.NewStackOverflowHTTPClient()
-	// Переопределяем Transport, чтобы перенаправлять запросы, начинающиеся с реального API-адреса,
-	// на адрес нашего тестового сервера.
-	client.Client.Transport = roundTripFunc(func(req *http.Request) (*http.Response, error) {
-		// если URL начинается с "https://api.stackexchange.com/2.2", заменяем на testServerURL
-		if strings.HasPrefix(req.URL.String(), "https://api.stackexchange.com/2.2") {
-			// Изменяем схему и host запроса на значения из testServerURL.
-			parsed, err := http.NewRequest(req.Method, testServerURL, http.NoBody)
-			if err != nil {
-				return nil, err
-			}
-
-			req.URL.Scheme = parsed.URL.Scheme
-			req.URL.Host = parsed.URL.Host
-		}
-
-		return http.DefaultTransport.RoundTrip(req)
-	})
+	client.Client.Transport = rt
 
 	return client
 }
 
-func Test_StackOverflowHTTPClient_GetLastActivityQuestion_Success(t *testing.T) {
-	expectedTimestamp := time.Now().Unix()
-	soResponse := map[string]interface{}{
-		"items": []map[string]interface{}{
-			{
-				"last_activity_date": expectedTimestamp,
-			},
+func TestStackOverflowHTTPClient_GetLatestAnswerOrComment(t *testing.T) {
+	tests := []struct {
+		name               string
+		questionResponse   string
+		answerResponse     string
+		commentResponse    string
+		expectError        bool
+		expectedDescSubstr string
+		expectedTime       time.Time
+	}{
+		{
+			name: "Valid answer exists",
+			questionResponse: `{
+				"items": [{"title": "Test Question"}]
+			}`,
+			answerResponse: `{
+				"items": [{
+					"owner": {"display_name": "AnswerUser"},
+					"creation_date": 1580505600,
+					"body": "This is the answer body"
+				}]
+			}`,
+			commentResponse:    `{"items": []}`,
+			expectError:        false,
+			expectedDescSubstr: "Question: Test Question",
+			expectedTime:       time.Unix(1580505600, 0),
+		},
+		{
+			name: "No answer, valid comment exists",
+			questionResponse: `{
+				"items": [{"title": "Test Question 2"}]
+			}`,
+			answerResponse: `{"items": []}`,
+			commentResponse: `{
+				"items": [{
+					"owner": {"display_name": "CommentUser"},
+					"creation_date": 1609459200,
+					"body": "This is a comment body"
+				}]
+			}`,
+			expectError:        false,
+			expectedDescSubstr: "Question: Test Question 2",
+			expectedTime:       time.Unix(1609459200, 0),
+		},
+		{
+			name: "No answer and no comment",
+			questionResponse: `{
+				"items": [{"title": "Test Question 3"}]
+			}`,
+			answerResponse:  `{"items": []}`,
+			commentResponse: `{"items": []}`,
+			expectError:     true,
+		},
+		{
+			name:             "Invalid question details",
+			questionResponse: `invalid json`,
+			answerResponse:   `{"items": []}`,
+			commentResponse:  `{"items": []}`,
+			expectError:      true,
 		},
 	}
 
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Проверяем, что путь запроса сформирован корректно: должен содержать /questions/{id}
-		assert.Contains(t, r.URL.Path, "/questions/12345")
-		w.WriteHeader(http.StatusOK)
-		_ = json.NewEncoder(w).Encode(soResponse)
-	}))
-	defer ts.Close()
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			rt := roundTripSOFunc(func(req *http.Request) (*http.Response, error) {
+				var bodyStr string
 
-	client := newTestClient(ts.URL, 5*time.Second)
-	link := soQuestion
+				switch {
+				case strings.Contains(req.URL.Path, "/questions/12345") && !strings.Contains(req.URL.Path, "/answers") &&
+					!strings.Contains(req.URL.Path, "/comments"):
+					bodyStr = tc.questionResponse
+				case strings.Contains(req.URL.Path, "/questions/12345/answers"):
+					bodyStr = tc.answerResponse
+				case strings.Contains(req.URL.Path, "/questions/12345/comments"):
+					bodyStr = tc.commentResponse
+				default:
+					return nil, fmt.Errorf("unexpected request: %s", req.URL.Path)
+				}
 
-	lastActivity, err := client.GetLastActivityQuestion(link)
+				resp := &http.Response{
+					StatusCode: 200,
+					Body:       io.NopCloser(bytes.NewBufferString(bodyStr)),
+					Header:     make(http.Header),
+				}
 
-	require.NoError(t, err)
-	assert.Equal(t, time.Unix(expectedTimestamp, 0), lastActivity)
-}
+				return resp, nil
+			})
 
-func Test_StackOverflowHTTPClient_GetLastActivityQuestion_NoItems(t *testing.T) {
-	soResponse := map[string]interface{}{
-		"items": []interface{}{},
+			client := newTestClient(rt)
+			lastUpdate, description, err := client.GetLatestAnswerOrComment(context.Background(), testQuestionLink)
+
+			if tc.expectError {
+				assert.Error(t, err, "expected an error but got none")
+				return
+			}
+
+			assert.NoError(t, err, "unexpected error occurred")
+			assert.Equal(t, tc.expectedTime, lastUpdate, "unexpected timestamp")
+			assert.Contains(t, description, tc.expectedDescSubstr, "description does not contain expected substring")
+		})
 	}
-
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		_ = json.NewEncoder(w).Encode(soResponse)
-	}))
-	defer ts.Close()
-
-	client := newTestClient(ts.URL, 5*time.Second)
-	link := soQuestion
-
-	_, err := client.GetLastActivityQuestion(link)
-
-	require.Error(t, err)
-	assert.ErrorAs(t, err, &domain.ErrQuestionNotFound{})
-}
-
-func Test_StackOverflowHTTPClient_GetLastActivityQuestion_InvalidJSON(t *testing.T) {
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte("invalid json"))
-	}))
-	defer ts.Close()
-
-	client := newTestClient(ts.URL, 5*time.Second)
-	link := soQuestion
-
-	_, err := client.GetLastActivityQuestion(link)
-
-	require.Error(t, err)
-}
-
-func Test_StackOverflowHTTPClient_GetLastActivityQuestion_InvalidLink(t *testing.T) {
-	client := clients.NewStackOverflowHTTPClient()
-	invalidLink := "https://stackoverflow.com/users/12345" // не questions
-
-	_, err := client.GetLastActivityQuestion(invalidLink)
-
-	require.Error(t, err)
-	assert.Contains(t, err.Error(), "wrong url format")
 }

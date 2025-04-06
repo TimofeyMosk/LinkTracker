@@ -4,21 +4,23 @@ import (
 	"net/http"
 	"time"
 
-	"LinkTracker/internal/application"
+	"LinkTracker/internal/application/scrapper"
+
 	"LinkTracker/internal/infrastructure/clients"
 	"LinkTracker/internal/infrastructure/httpapi/links"
 	"LinkTracker/internal/infrastructure/httpapi/tgchat"
 	"LinkTracker/internal/infrastructure/httpapi/updates"
 )
 
-func InitScrapperRouting(scrapper *application.Scrapper) *http.ServeMux {
+func InitScrapperRouting(scrapper *scrapper.Scrapper) *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.Handle("GET /links", links.GetLinksHandler{LinkGetter: scrapper})
 	mux.Handle("POST /links", links.PostLinkHandler{LinkAdder: scrapper})
 	mux.Handle("DELETE /links", links.DeleteLinksHandler{LinkDeleter: scrapper})
+
 	mux.Handle("POST /tg-chat/{id}", tgchat.PostUserHandler{UserAdder: scrapper})
 	mux.Handle("DELETE /tg-chat/{id}", tgchat.DeleteUserHandler{UserDeleter: scrapper})
-
+	
 	return mux
 }
 
