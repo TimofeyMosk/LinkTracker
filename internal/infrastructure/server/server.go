@@ -1,9 +1,10 @@
 package server
 
 import (
-	"LinkTracker/internal/application/bot"
 	"net/http"
 	"time"
+
+	"LinkTracker/internal/application/bot"
 
 	"LinkTracker/internal/application/scrapper"
 	"LinkTracker/internal/infrastructure/httpapi/links"

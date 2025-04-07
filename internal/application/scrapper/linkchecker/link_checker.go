@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"LinkTracker/internal/application/scrapper"
-
 	"LinkTracker/internal/domain"
 )
 

@@ -11,7 +11,7 @@ import (
 )
 
 type StateUpdater interface {
-	UpdateState(ctx context.Context, tgID int64, state int, link domain.Link) error
+	UpdateState(ctx context.Context, tgID int64, state int, link *domain.Link) error
 }
 
 type PutStatesHandler struct {
@@ -38,12 +38,14 @@ func (h PutStatesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if stateRequest.Tags == nil {
 		stateRequest.Tags = &[]string{}
 	}
+
 	if stateRequest.Filters == nil {
 		stateRequest.Filters = &[]string{}
 	}
 
 	link := domain.Link{URL: *stateRequest.Link, Tags: *stateRequest.Tags, Filters: *stateRequest.Filters}
-	err = h.StateUpdater.UpdateState(r.Context(), tgID, *stateRequest.State, link)
+
+	err = h.StateUpdater.UpdateState(r.Context(), tgID, *stateRequest.State, &link)
 	if err != nil {
 		httpapi.SendErrorResponse(w, http.StatusInternalServerError, "FAILED",
 			"Failed to update state", err.Error(), "Server Error")

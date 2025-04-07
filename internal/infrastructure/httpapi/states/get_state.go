@@ -27,6 +27,7 @@ func (h GetStatesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
+
 	state, link, err := h.StateGetter.GetState(r.Context(), tgID)
 	if err != nil {
 		httpapi.SendErrorResponse(w, http.StatusInternalServerError, "FAILED",

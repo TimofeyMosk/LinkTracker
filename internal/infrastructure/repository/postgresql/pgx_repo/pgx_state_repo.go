@@ -70,6 +70,7 @@ func (r *StateRepoPgx) GetState(ctx context.Context, tgID int64) (int, domain.Li
 	if tags.Valid {
 		link.Tags = tags.Elements
 	}
+
 	if filters.Valid {
 		link.Filters = filters.Elements
 	}
@@ -77,12 +78,13 @@ func (r *StateRepoPgx) GetState(ctx context.Context, tgID int64) (int, domain.Li
 	return state, link, nil
 }
 
-func (r *StateRepoPgx) UpdateState(ctx context.Context, tgID int64, state int, link domain.Link) error {
+func (r *StateRepoPgx) UpdateState(ctx context.Context, tgID int64, state int, link *domain.Link) error {
 	url := link.URL
 	tags := link.Tags
 	filters := link.Filters
 
 	sql := "UPDATE states SET state = $1, url=$2,tags = $3, filters= $4 WHERE tg_id = $5"
+
 	_, err := r.pool.Exec(ctx, sql, state, url, tags, filters, tgID)
 	if err != nil {
 		return err

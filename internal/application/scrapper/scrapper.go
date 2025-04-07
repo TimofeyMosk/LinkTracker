@@ -30,7 +30,7 @@ type StateRepo interface {
 	CreateState(ctx context.Context, tgID int64, state int) error
 	DeleteState(ctx context.Context, tgID int64) error
 	GetState(ctx context.Context, tgID int64) (state int, link domain.Link, err error)
-	UpdateState(ctx context.Context, tgID int64, state int, link domain.Link) error
+	UpdateState(ctx context.Context, tgID int64, state int, link *domain.Link) error
 }
 
 type Notifier interface {
@@ -159,24 +159,29 @@ func (s *Scrapper) DeleteLink(ctx context.Context, tgID int64, link *domain.Link
 
 func (s *Scrapper) CreateState(ctx context.Context, tgID int64, state int) error {
 	slog.Info("Creating state")
+
 	err := s.stateManager.CreateState(ctx, tgID, state)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func (s *Scrapper) DeleteState(ctx context.Context, tgID int64) error {
 	slog.Info("Deleting state")
+
 	err := s.stateManager.DeleteState(ctx, tgID)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func (s *Scrapper) GetState(ctx context.Context, tgID int64) (int, domain.Link, error) {
 	slog.Info("Getting state")
+
 	state, link, err := s.stateManager.GetState(ctx, tgID)
 	if err != nil {
 		return -1, domain.Link{}, err
@@ -185,49 +190,16 @@ func (s *Scrapper) GetState(ctx context.Context, tgID int64) (int, domain.Link, 
 	return state, link, nil
 }
 
-func (s *Scrapper) UpdateState(ctx context.Context, tgID int64, state int, link domain.Link) error {
+func (s *Scrapper) UpdateState(ctx context.Context, tgID int64, state int, link *domain.Link) error {
 	slog.Info("Updating state")
+
 	err := s.stateManager.UpdateState(ctx, tgID, state, link)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
-
-//func (s *Scrapper) UpdateURL(ctx context.Context, tgID int64, linkURL string) error {
-//	slog.Info("Updating URL")
-//	err := s.stateManager.UpdateURL(ctx, tgID, linkURL)
-//	if err != nil {
-//		return err
-//	}
-//	return nil
-//}
-//func (s *Scrapper) UpdateTags(ctx context.Context, tgID int64, tags []string) error {
-//	slog.Info("Updating tags")
-//	err := s.stateManager.UpdateTags(ctx, tgID, tags)
-//	if err != nil {
-//		return err
-//	}
-//	return nil
-//}
-//func (s *Scrapper) UpdateFilters(ctx context.Context, tgID int64, filters []string) error {
-//	slog.Info("Updating filters")
-//	err := s.stateManager.UpdateFilters(ctx, tgID, filters)
-//	if err != nil {
-//		return err
-//	}
-//	return nil
-//}
-//
-//func (s *Scrapper) GetStateLink(ctx context.Context, tgID int64) (domain.Link, error) {
-//	slog.Info("Getting State link")
-//	link, err := s.stateManager.GetStateLink(ctx, tgID)
-//	if err != nil {
-//		return domain.Link{}, err
-//	}
-//
-//	return link, nil
-//}
 
 func initScrapperScheduler(ctx context.Context, interval time.Duration, scrapeFunc func(ctx context.Context)) (gocron.Scheduler, error) {
 	scheduler, err := gocron.NewScheduler()

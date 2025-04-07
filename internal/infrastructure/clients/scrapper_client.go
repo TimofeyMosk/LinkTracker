@@ -245,12 +245,19 @@ func (c *ScrapperHTTPClient) CreateState(ctx context.Context, tgID int64, state 
 	if err != nil {
 		return err
 	}
+
 	request.Header.Set("Tg-Chat-Id", fmt.Sprint(tgID))
 
 	response, err := c.client.Do(request)
 	if err != nil {
 		return err
 	}
+
+	defer func() {
+		if Cerr := response.Body.Close(); Cerr != nil {
+			slog.Error("could not close resource", "error", Cerr.Error())
+		}
+	}()
 
 	switch response.StatusCode {
 	case http.StatusOK:
@@ -269,12 +276,19 @@ func (c *ScrapperHTTPClient) DeleteState(ctx context.Context, tgID int64) error 
 	if err != nil {
 		return err
 	}
+
 	request.Header.Set("Tg-Chat-Id", fmt.Sprint(tgID))
 
 	response, err := c.client.Do(request)
 	if err != nil {
 		return err
 	}
+
+	defer func() {
+		if Cerr := response.Body.Close(); Cerr != nil {
+			slog.Error("could not close resource", "error", Cerr.Error())
+		}
+	}()
 
 	switch response.StatusCode {
 	case http.StatusOK:
@@ -286,7 +300,7 @@ func (c *ScrapperHTTPClient) DeleteState(ctx context.Context, tgID int64) error 
 	}
 }
 
-func (c *ScrapperHTTPClient) UpdateState(ctx context.Context, tgID int64, state int, link domain.Link) error {
+func (c *ScrapperHTTPClient) UpdateState(ctx context.Context, tgID int64, state int, link *domain.Link) error {
 	endpoint := c.scrapperBaseURL.JoinPath("/states")
 
 	payload, err := json.Marshal(scrapperdto.StateRequest{State: &state, Link: &link.URL, Tags: &link.Tags, Filters: &link.Filters})
@@ -298,12 +312,19 @@ func (c *ScrapperHTTPClient) UpdateState(ctx context.Context, tgID int64, state 
 	if err != nil {
 		return err
 	}
+
 	request.Header.Set("Tg-Chat-Id", fmt.Sprint(tgID))
 
 	response, err := c.client.Do(request)
 	if err != nil {
 		return err
 	}
+
+	defer func() {
+		if Cerr := response.Body.Close(); Cerr != nil {
+			slog.Error("could not close resource", "error", Cerr.Error())
+		}
+	}()
 
 	switch response.StatusCode {
 	case http.StatusOK:
@@ -322,12 +343,19 @@ func (c *ScrapperHTTPClient) GetState(ctx context.Context, tgID int64) (int, dom
 	if err != nil {
 		return -1, domain.Link{}, err
 	}
+
 	request.Header.Set("Tg-Chat-Id", fmt.Sprint(tgID))
 
 	response, err := c.client.Do(request)
 	if err != nil {
 		return -1, domain.Link{}, err
 	}
+
+	defer func() {
+		if Cerr := response.Body.Close(); Cerr != nil {
+			slog.Error("could not close resource", "error", Cerr.Error())
+		}
+	}()
 
 	switch response.StatusCode {
 	case http.StatusOK:
@@ -339,12 +367,15 @@ func (c *ScrapperHTTPClient) GetState(ctx context.Context, tgID int64) (int, dom
 		if responseData.Link == nil {
 			*responseData.Link = ""
 		}
+
 		if responseData.Tags == nil {
 			*responseData.Tags = []string{}
 		}
+
 		if responseData.Filters == nil {
 			*responseData.Filters = []string{}
 		}
+
 		responseLink := domain.Link{URL: *responseData.Link, Tags: *responseData.Tags, Filters: *responseData.Filters}
 
 		return *responseData.State, responseLink, nil

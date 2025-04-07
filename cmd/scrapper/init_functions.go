@@ -17,7 +17,8 @@ func InitLinksSourceHandlers() []linkchecker.LinkSourceHandler {
 	}
 }
 
-func InitRepositories(ctx context.Context, dbConfig application.DBConfig) (*pgxrepo.UserRepoPgx, *pgxrepo.LinkRepoPgx, *pgxrepo.StateRepoPgx, error) {
+func InitRepositories(ctx context.Context, dbConfig application.DBConfig) (
+	*pgxrepo.UserRepoPgx, *pgxrepo.LinkRepoPgx, *pgxrepo.StateRepoPgx, error) {
 	connStr := "postgres://" + dbConfig.PostgresUser +
 		":" + dbConfig.PostgresPassword +
 		"@localhost:5432/" + dbConfig.PostgresDB + "?pool_max_conns=10"
