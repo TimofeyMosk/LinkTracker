@@ -5,6 +5,7 @@ import (
 	"LinkTracker/internal/infrastructure/repository/postgresql/goqurepo"
 	"context"
 	"fmt"
+	"log/slog"
 
 	"LinkTracker/internal/application"
 	"LinkTracker/internal/application/scrapper/linkchecker"
@@ -37,6 +38,7 @@ func InitRepositories(ctx context.Context, dbConfig application.DBConfig, access
 		stateRepo scrapper.StateRepo
 	)
 	if accessType == "GOQU" {
+		slog.Info("GOQU ACCESS TYPE")
 		userRepo = goqurepo.NewUserRepoGoqu(pool)
 		linkRepo = goqurepo.NewLinkRepoGoqu(pool)
 		stateRepo = goqurepo.NewStateRepoGoqu(pool)

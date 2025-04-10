@@ -804,3 +804,34 @@ time=2025-04-09T10:47:54.791+04:00 level=INFO msg="Command /settags execution" c
 time=2025-04-09T10:48:00.037+04:00 level=INFO msg="Command /list execution" chatId=503492049
 time=2025-04-09T10:48:28.043+04:00 level=INFO msg="server stopped"
 time=2025-04-09T10:48:28.043+04:00 level=INFO msg="bot shutdown"
+time=2025-04-10T12:17:43.600+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-10T12:17:47.331+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-04-10T12:17:50.332+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-10T12:18:00.514+04:00 level=INFO msg="Added link" url=https://github.com/oapi-codegen/oapi-codegen ID=0
+time=2025-04-10T12:18:03.307+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-10T12:18:18.194+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-10T12:18:31.398+04:00 level=INFO msg="Added link" url=https://github.com/central-university-dev/backend-academy-2025-spring ID=0
+time=2025-04-10T12:18:33.460+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-10T12:18:39.598+04:00 level=INFO msg="Command /untrack execution" chatId=503492049
+time=2025-04-10T12:18:41.814+04:00 level=ERROR msg="api error DELETE_LINK_FAILED: no rows in result set"
+time=2025-04-10T12:18:46.089+04:00 level=INFO msg="Command /untrack execution" chatId=503492049
+time=2025-04-10T12:18:52.775+04:00 level=INFO msg="Removed link" url=https://github.com/central-university-dev/backend-academy-2025-spring
+time=2025-04-10T12:18:55.702+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-10T12:18:59.038+04:00 level=INFO msg="Command /settags execution" chatId=503492049
+time=2025-04-10T12:19:11.239+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-10T12:19:17.504+04:00 level=INFO msg="Command /untrack execution" chatId=503492049
+time=2025-04-10T12:19:20.686+04:00 level=INFO msg="Removed link" url=https://github.com/oapi-codegen/oapi-codegen
+time=2025-04-10T12:19:22.883+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-10T12:19:26.675+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-10T12:19:29.665+04:00 level=INFO msg="Added link" url=https://github.com/oapi-codegen/oapi-codegen ID=0
+time=2025-04-10T12:19:31.719+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-10T12:19:34.287+04:00 level=ERROR msg="api error LINKS_ALREADY_EXIST: link already tracking"
+time=2025-04-10T12:19:57.537+04:00 level=INFO msg="server stopped"
+time=2025-04-10T12:19:57.537+04:00 level=INFO msg="bot shutdown"
+time=2025-04-10T12:20:20.556+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-10T12:20:26.615+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-10T12:20:52.038+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-10T12:20:57.669+04:00 level=INFO msg="Added link" url=https://github.com/TimofeyMosk/DatsCity ID=0
+time=2025-04-10T12:21:00.074+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-10T12:21:57.496+04:00 level=INFO msg="server stopped"
+time=2025-04-10T12:21:57.496+04:00 level=INFO msg="bot shutdown"

@@ -8,7 +8,7 @@ scrapper:
   logger_path: "./logs/scrapper_logs.txt"
   checker_links_workers: 4
   size_links_page: 500
-  db_access_type: "PGX"  #  PGX/GOQU
+  db_access_type: "GOQU"  #  PGX/GOQU
 
 bot:
   tg_token: "your_tg_token"
