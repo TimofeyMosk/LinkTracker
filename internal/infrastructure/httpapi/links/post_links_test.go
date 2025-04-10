@@ -1,7 +1,7 @@
 package links_test
 
 //
-//import (
+// import (
 //	"bytes"
 //	"encoding/json"
 //	"errors"
@@ -20,7 +20,7 @@ package links_test
 //	"LinkTracker/internal/infrastructure/httpapi/links/mocks"
 //)
 //
-//func ptr(s string) *string {
+// func ptr(s string) *string {
 //	return &s
 //}
 //

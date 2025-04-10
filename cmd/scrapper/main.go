@@ -28,7 +28,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	userRepo, linkRepo, stateManager, err := InitRepositories(ctx, config.DBConfig)
+	userRepo, linkRepo, stateManager, err := InitRepositories(ctx, config.DBConfig, config.ScrapConfig.DBAccessType)
 	if err != nil {
 		slog.Error("Error initializing repositories", "error", err)
 		return

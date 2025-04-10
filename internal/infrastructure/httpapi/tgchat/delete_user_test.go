@@ -1,6 +1,6 @@
 package tgchat_test
 
-//func Test_DeleteUserHandler_InvalidChatID(t *testing.T) {
+// func Test_DeleteUserHandler_InvalidChatID(t *testing.T) {
 //	mockScrapper := &mocks.UserDeleter{}
 //	handler := tgchat.DeleteUserHandler{UserDeleter: mockScrapper}
 //	id := "errorID"
@@ -20,7 +20,7 @@ package tgchat_test
 //	assert.Equal(t, "BadRequest", *apiErrorBody.ExceptionName)
 //}
 //
-//func Test_DeleteUserHandler_UserNotExist(t *testing.T) {
+// func Test_DeleteUserHandler_UserNotExist(t *testing.T) {
 //	mockScrapper := &mocks.UserDeleter{}
 //	tgID := int64(123)
 //	mockScrapper.On("DeleteUser", tgID).Return(domain.ErrUserNotExist{}).Once()

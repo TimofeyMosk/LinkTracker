@@ -1,6 +1,6 @@
 package tgchat_test
 
-//func Test_PostUserHandler_Success(t *testing.T) {
+// func Test_PostUserHandler_Success(t *testing.T) {
 //	mockScrapper := &mocks.UserAdder{}
 //	mockScrapper.On("AddUser", mock.Anything).Return(nil).Once()
 //
@@ -18,7 +18,7 @@ package tgchat_test
 //	mockScrapper.AssertExpectations(t)
 //}
 //
-//func Test_PostUserHandler_InvalidChatID(t *testing.T) {
+// func Test_PostUserHandler_InvalidChatID(t *testing.T) {
 //	mockScrapper := &mocks.UserAdder{}
 //	handler := tgchat.PostUserHandler{UserAdder: mockScrapper}
 //	request := httptest.NewRequest(http.MethodPost, "/users/invalid", http.NoBody)

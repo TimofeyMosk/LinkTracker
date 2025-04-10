@@ -33,7 +33,7 @@ func Test_PostUpdatesHandler_InvalidRequestBody(t *testing.T) {
 	assert.Equal(t, "BadRequest", *responseData.ExceptionName)
 }
 
-//func Test_PostUpdatesHandler_ValidRequest(t *testing.T) {
+// func Test_PostUpdatesHandler_ValidRequest(t *testing.T) {
 //	bot := &mocks.UpdateSender{}
 //	handler := updates.PostUpdatesHandler{UpdateSender: bot}
 //

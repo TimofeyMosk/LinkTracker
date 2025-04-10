@@ -57,7 +57,7 @@ func Test_DeleteLinksHandler_InvalidRequestBody(t *testing.T) {
 	assert.Equal(t, "BadRequest", *apiErrorBody.ExceptionName)
 }
 
-//func Test_DeleteLinksHandler_UserNotExist(t *testing.T) {
+// func Test_DeleteLinksHandler_UserNotExist(t *testing.T) {
 //	mockScrapper := &mocks.LinkDeleter{}
 //	tgChatID := int64(123)
 //	linkURL := "https://example.com"
@@ -89,7 +89,7 @@ func Test_DeleteLinksHandler_InvalidRequestBody(t *testing.T) {
 //	mockScrapper.AssertExpectations(t)
 //}
 
-//func Test_DeleteLinksHandler_DeleteLinkFailed(t *testing.T) {
+// func Test_DeleteLinksHandler_DeleteLinkFailed(t *testing.T) {
 //	mockScrapper := &mocks.LinkDeleter{}
 //	tgChatID := int64(123)
 //	linkURL := "https://example.com"
@@ -121,7 +121,7 @@ func Test_DeleteLinksHandler_InvalidRequestBody(t *testing.T) {
 //	mockScrapper.AssertExpectations(t)
 //}
 //
-//func Test_DeleteLinksHandler_Success(t *testing.T) {
+// func Test_DeleteLinksHandler_Success(t *testing.T) {
 //	mockScrapper := &mocks.LinkDeleter{}
 //	tgChatID := int64(123)
 //	expectedLink := domain.Link{

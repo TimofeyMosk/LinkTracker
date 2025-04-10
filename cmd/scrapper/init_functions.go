@@ -1,6 +1,8 @@
 package main
 
 import (
+	"LinkTracker/internal/application/scrapper"
+	"LinkTracker/internal/infrastructure/repository/postgresql/goqurepo"
 	"context"
 	"fmt"
 
@@ -17,8 +19,8 @@ func InitLinksSourceHandlers() []linkchecker.LinkSourceHandler {
 	}
 }
 
-func InitRepositories(ctx context.Context, dbConfig application.DBConfig) (
-	*pgxrepo.UserRepoPgx, *pgxrepo.LinkRepoPgx, *pgxrepo.StateRepoPgx, error) {
+func InitRepositories(ctx context.Context, dbConfig application.DBConfig, accessType string) (
+	scrapper.UserRepo, scrapper.LinkRepo, scrapper.StateRepo, error) {
 	connStr := "postgres://" + dbConfig.PostgresUser +
 		":" + dbConfig.PostgresPassword +
 		"@localhost:5432/" + dbConfig.PostgresDB + "?pool_max_conns=10"
@@ -29,9 +31,22 @@ func InitRepositories(ctx context.Context, dbConfig application.DBConfig) (
 		return nil, nil, nil, err
 	}
 
-	userRepo := pgxrepo.NewUserRepo(pool)
-	linkRepo := pgxrepo.NewLinkRepo(pool)
-	stateManager := pgxrepo.NewStateRepoPgx(pool)
+	var (
+		userRepo  scrapper.UserRepo
+		linkRepo  scrapper.LinkRepo
+		stateRepo scrapper.StateRepo
+	)
+	if accessType == "GOQU" {
+		userRepo = goqurepo.NewUserRepoGoqu(pool)
+		linkRepo = goqurepo.NewLinkRepoGoqu(pool)
+		stateRepo = goqurepo.NewStateRepoGoqu(pool)
 
-	return userRepo, linkRepo, stateManager, nil
+		return userRepo, linkRepo, stateRepo, nil
+	}
+
+	userRepo = pgxrepo.NewUserRepo(pool)
+	linkRepo = pgxrepo.NewLinkRepo(pool)
+	stateRepo = pgxrepo.NewStateRepoPgx(pool)
+
+	return userRepo, linkRepo, stateRepo, nil
 }

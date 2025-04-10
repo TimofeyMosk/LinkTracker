@@ -18,6 +18,7 @@ type ScrapperConfig struct {
 	LogsPath            string        `yaml:"logger_path" `
 	CheckerLinksWorkers int           `yaml:"checker_links_workers" `
 	SizeLinksPage       int64         `yaml:"size_links_page" `
+	DBAccessType        string        `yaml:"db_access_type" `
 }
 
 type BotConfig struct {
@@ -67,6 +68,7 @@ func ReadYAMLConfig(filePath string) (*Config, error) {
 			LogsPath:            viper.GetString("scrapper.logger_path"),
 			CheckerLinksWorkers: viper.GetInt("scrapper.checker_links_workers"),
 			SizeLinksPage:       viper.GetInt64("scrapper.size_links_page"),
+			DBAccessType:        viper.GetString("scrapper.db_access_type"),
 		},
 		BotConfig: BotConfig{
 			TgToken:               viper.GetString("bot.tg_token"),

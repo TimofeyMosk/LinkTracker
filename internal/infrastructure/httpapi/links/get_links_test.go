@@ -1,7 +1,7 @@
 package links_test
 
 //
-//import (
+// import (
 //	"encoding/json"
 //	"errors"
 //	"net/http"
@@ -19,7 +19,7 @@ package links_test
 //	"LinkTracker/internal/infrastructure/httpapi/links/mocks"
 //)
 //
-//func Test_GetLinksHandler_InvalidChatID(t *testing.T) {
+// func Test_GetLinksHandler_InvalidChatID(t *testing.T) {
 //	mockGetter := &mocks.LinkGetter{}
 //	handler := links.GetLinksHandler{LinkGetter: mockGetter}
 //
