@@ -430,8 +430,56 @@ func (_c *ScrapperClient_RemoveLink_Call) RunAndReturn(run func(context.Context,
 	return _c
 }
 
+// UpdateLink provides a mock function with given fields: ctx, tgID, link
+func (_m *ScrapperClient) UpdateLink(ctx context.Context, tgID int64, link *domain.Link) error {
+	ret := _m.Called(ctx, tgID, link)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateLink")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64, *domain.Link) error); ok {
+		r0 = rf(ctx, tgID, link)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ScrapperClient_UpdateLink_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateLink'
+type ScrapperClient_UpdateLink_Call struct {
+	*mock.Call
+}
+
+// UpdateLink is a helper method to define mock.On call
+//   - ctx context.Context
+//   - tgID int64
+//   - link *domain.Link
+func (_e *ScrapperClient_Expecter) UpdateLink(ctx interface{}, tgID interface{}, link interface{}) *ScrapperClient_UpdateLink_Call {
+	return &ScrapperClient_UpdateLink_Call{Call: _e.mock.On("UpdateLink", ctx, tgID, link)}
+}
+
+func (_c *ScrapperClient_UpdateLink_Call) Run(run func(ctx context.Context, tgID int64, link *domain.Link)) *ScrapperClient_UpdateLink_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64), args[2].(*domain.Link))
+	})
+	return _c
+}
+
+func (_c *ScrapperClient_UpdateLink_Call) Return(_a0 error) *ScrapperClient_UpdateLink_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *ScrapperClient_UpdateLink_Call) RunAndReturn(run func(context.Context, int64, *domain.Link) error) *ScrapperClient_UpdateLink_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // UpdateState provides a mock function with given fields: ctx, tgID, state, link
-func (_m *ScrapperClient) UpdateState(ctx context.Context, tgID int64, state int, link domain.Link) error {
+func (_m *ScrapperClient) UpdateState(ctx context.Context, tgID int64, state int, link *domain.Link) error {
 	ret := _m.Called(ctx, tgID, state, link)
 
 	if len(ret) == 0 {
@@ -439,7 +487,7 @@ func (_m *ScrapperClient) UpdateState(ctx context.Context, tgID int64, state int
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, int64, int, domain.Link) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int64, int, *domain.Link) error); ok {
 		r0 = rf(ctx, tgID, state, link)
 	} else {
 		r0 = ret.Error(0)
@@ -457,14 +505,14 @@ type ScrapperClient_UpdateState_Call struct {
 //   - ctx context.Context
 //   - tgID int64
 //   - state int
-//   - link domain.Link
+//   - link *domain.Link
 func (_e *ScrapperClient_Expecter) UpdateState(ctx interface{}, tgID interface{}, state interface{}, link interface{}) *ScrapperClient_UpdateState_Call {
 	return &ScrapperClient_UpdateState_Call{Call: _e.mock.On("UpdateState", ctx, tgID, state, link)}
 }
 
-func (_c *ScrapperClient_UpdateState_Call) Run(run func(ctx context.Context, tgID int64, state int, link domain.Link)) *ScrapperClient_UpdateState_Call {
+func (_c *ScrapperClient_UpdateState_Call) Run(run func(ctx context.Context, tgID int64, state int, link *domain.Link)) *ScrapperClient_UpdateState_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(int64), args[2].(int), args[3].(domain.Link))
+		run(args[0].(context.Context), args[1].(int64), args[2].(int), args[3].(*domain.Link))
 	})
 	return _c
 }
@@ -474,7 +522,7 @@ func (_c *ScrapperClient_UpdateState_Call) Return(_a0 error) *ScrapperClient_Upd
 	return _c
 }
 
-func (_c *ScrapperClient_UpdateState_Call) RunAndReturn(run func(context.Context, int64, int, domain.Link) error) *ScrapperClient_UpdateState_Call {
+func (_c *ScrapperClient_UpdateState_Call) RunAndReturn(run func(context.Context, int64, int, *domain.Link) error) *ScrapperClient_UpdateState_Call {
 	_c.Call.Return(run)
 	return _c
 }

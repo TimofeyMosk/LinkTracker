@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 )
 
 func SignalWarden(signals ...os.Signal) chan struct{} {
@@ -23,23 +24,30 @@ func SignalWarden(signals ...os.Signal) chan struct{} {
 	return result
 }
 
-func StopScrapperSignalReceiving(cancel context.CancelFunc, server *http.Server) {
+func StopScrapperSignalReceiving(ctx context.Context, cancel context.CancelFunc, server *http.Server) {
 	<-SignalWarden(syscall.SIGINT, syscall.SIGTERM)
-	cancel()
 
-	err := server.Shutdown(context.TODO())
+	ctxServerShutdown, cancelServerShutdown := context.WithTimeout(ctx, 10*time.Second)
+	defer cancelServerShutdown()
+
+	err := server.Shutdown(ctxServerShutdown)
 	if err != nil {
 		slog.Error(err.Error())
 	}
+
+	cancel()
 }
 
-func StopBotSignalReceiving(cancel context.CancelFunc, server *http.Server) {
+func StopBotSignalReceiving(ctx context.Context, cancel context.CancelFunc, server *http.Server) {
 	<-SignalWarden(syscall.SIGINT, syscall.SIGTERM)
 
-	cancel()
+	ctxServerShutdown, cancelServerShutdown := context.WithTimeout(ctx, 10*time.Second)
+	defer cancelServerShutdown()
 
-	err := server.Shutdown(context.TODO())
+	err := server.Shutdown(ctxServerShutdown)
 	if err != nil {
 		slog.Error(err.Error())
 	}
+
+	cancel()
 }

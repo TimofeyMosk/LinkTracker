@@ -6,6 +6,8 @@ scrapper:
   write_timeout: 15s
   bot_client_timeout: 5s
   logger_path: "./logs/scrapper_logs.txt"
+  checker_links_workers: 4
+  size_links_page: 500
 
 bot:
   tg_token: "your_tg_token"

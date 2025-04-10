@@ -143,7 +143,7 @@ func (c *ScrapperHTTPClient) GetLinks(ctx context.Context, tgID int64) ([]domain
 func (c *ScrapperHTTPClient) AddLink(ctx context.Context, tgID int64, link *domain.Link) error {
 	endpoint := c.scrapperBaseURL.JoinPath("/links")
 
-	payload, err := json.Marshal(LinkToAddLinkRequestDTO(link))
+	payload, err := json.Marshal(LinkToLinkRequestDTO(link))
 	if err != nil {
 		return err
 	}
@@ -227,6 +227,42 @@ func (c *ScrapperHTTPClient) RemoveLink(ctx context.Context, tgID int64, link *d
 	case http.StatusBadRequest:
 		return HandleAPIErrorResponseFromScrapper(response)
 	case http.StatusNotFound:
+		return HandleAPIErrorResponseFromScrapper(response)
+	default:
+		return domain.ErrUnexpectedStatusCode{StatusCode: response.StatusCode}
+	}
+}
+
+func (c *ScrapperHTTPClient) UpdateLink(ctx context.Context, tgID int64, link *domain.Link) error {
+	endpoint := c.scrapperBaseURL.JoinPath("/links")
+
+	payload, err := json.Marshal(LinkToLinkRequestDTO(link))
+	if err != nil {
+		return err
+	}
+
+	request, err := http.NewRequestWithContext(ctx, http.MethodPut, endpoint.String(), bytes.NewReader(payload))
+	if err != nil {
+		return err
+	}
+
+	request.Header.Set("Tg-Chat-Id", fmt.Sprint(tgID))
+
+	response, err := c.client.Do(request)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		if Cerr := response.Body.Close(); Cerr != nil {
+			slog.Error("could not close resource", "error", Cerr.Error())
+		}
+	}()
+
+	switch response.StatusCode {
+	case http.StatusOK:
+		return nil
+	case http.StatusBadRequest:
 		return HandleAPIErrorResponseFromScrapper(response)
 	default:
 		return domain.ErrUnexpectedStatusCode{StatusCode: response.StatusCode}
@@ -416,7 +452,7 @@ func HandleAPIErrorResponseFromScrapper(resp *http.Response) error {
 	return apiError
 }
 
-func LinkToAddLinkRequestDTO(link *domain.Link) scrapperdto.LinkRequest {
+func LinkToLinkRequestDTO(link *domain.Link) scrapperdto.LinkRequest {
 	return scrapperdto.LinkRequest{
 		Link:    &link.URL,
 		Tags:    &link.Tags,

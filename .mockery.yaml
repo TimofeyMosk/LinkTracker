@@ -43,6 +43,7 @@ packages:
       dir: "{{.InterfaceDir}}/mocks"
     interfaces:
       BotClient:
+      LinkRepo:
   LinkTracker/internal/application/scrapper/linkchecker:
     config:
       dir: "{{.InterfaceDir}}/mocks"

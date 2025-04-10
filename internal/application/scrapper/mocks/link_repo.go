@@ -188,6 +188,66 @@ func (_c *LinkRepo_GetAllLinks_Call) RunAndReturn(run func(context.Context) ([]d
 	return _c
 }
 
+// GetLinksAfter provides a mock function with given fields: ctx, lastUpdate, limit
+func (_m *LinkRepo) GetLinksAfter(ctx context.Context, lastUpdate time.Time, limit int64) ([]domain.Link, error) {
+	ret := _m.Called(ctx, lastUpdate, limit)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetLinksAfter")
+	}
+
+	var r0 []domain.Link
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, time.Time, int64) ([]domain.Link, error)); ok {
+		return rf(ctx, lastUpdate, limit)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, time.Time, int64) []domain.Link); ok {
+		r0 = rf(ctx, lastUpdate, limit)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.Link)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, time.Time, int64) error); ok {
+		r1 = rf(ctx, lastUpdate, limit)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// LinkRepo_GetLinksAfter_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetLinksAfter'
+type LinkRepo_GetLinksAfter_Call struct {
+	*mock.Call
+}
+
+// GetLinksAfter is a helper method to define mock.On call
+//   - ctx context.Context
+//   - lastUpdate time.Time
+//   - limit int64
+func (_e *LinkRepo_Expecter) GetLinksAfter(ctx interface{}, lastUpdate interface{}, limit interface{}) *LinkRepo_GetLinksAfter_Call {
+	return &LinkRepo_GetLinksAfter_Call{Call: _e.mock.On("GetLinksAfter", ctx, lastUpdate, limit)}
+}
+
+func (_c *LinkRepo_GetLinksAfter_Call) Run(run func(ctx context.Context, lastUpdate time.Time, limit int64)) *LinkRepo_GetLinksAfter_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(time.Time), args[2].(int64))
+	})
+	return _c
+}
+
+func (_c *LinkRepo_GetLinksAfter_Call) Return(_a0 []domain.Link, _a1 error) *LinkRepo_GetLinksAfter_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *LinkRepo_GetLinksAfter_Call) RunAndReturn(run func(context.Context, time.Time, int64) ([]domain.Link, error)) *LinkRepo_GetLinksAfter_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetUserLinks provides a mock function with given fields: ctx, tgID
 func (_m *LinkRepo) GetUserLinks(ctx context.Context, tgID int64) ([]domain.Link, error) {
 	ret := _m.Called(ctx, tgID)
@@ -302,6 +362,54 @@ func (_c *LinkRepo_GetUsersByLink_Call) Return(_a0 []int64, _a1 error) *LinkRepo
 }
 
 func (_c *LinkRepo_GetUsersByLink_Call) RunAndReturn(run func(context.Context, int64) ([]int64, error)) *LinkRepo_GetUsersByLink_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateLink provides a mock function with given fields: ctx, tgID, link
+func (_m *LinkRepo) UpdateLink(ctx context.Context, tgID int64, link *domain.Link) error {
+	ret := _m.Called(ctx, tgID, link)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateLink")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64, *domain.Link) error); ok {
+		r0 = rf(ctx, tgID, link)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// LinkRepo_UpdateLink_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateLink'
+type LinkRepo_UpdateLink_Call struct {
+	*mock.Call
+}
+
+// UpdateLink is a helper method to define mock.On call
+//   - ctx context.Context
+//   - tgID int64
+//   - link *domain.Link
+func (_e *LinkRepo_Expecter) UpdateLink(ctx interface{}, tgID interface{}, link interface{}) *LinkRepo_UpdateLink_Call {
+	return &LinkRepo_UpdateLink_Call{Call: _e.mock.On("UpdateLink", ctx, tgID, link)}
+}
+
+func (_c *LinkRepo_UpdateLink_Call) Run(run func(ctx context.Context, tgID int64, link *domain.Link)) *LinkRepo_UpdateLink_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64), args[2].(*domain.Link))
+	})
+	return _c
+}
+
+func (_c *LinkRepo_UpdateLink_Call) Return(_a0 error) *LinkRepo_UpdateLink_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *LinkRepo_UpdateLink_Call) RunAndReturn(run func(context.Context, int64, *domain.Link) error) *LinkRepo_UpdateLink_Call {
 	_c.Call.Return(run)
 	return _c
 }

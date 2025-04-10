@@ -34,31 +34,31 @@ func main() {
 	}
 
 	tgClient, err := clients.NewTelegramHTTPClient(config.BotConfig.TgToken)
+	if err != nil {
+		fmt.Printf("Error creating tgClient: %v\n", err)
+		return
+	}
+
 	Bot := bot.NewBot(scrapperHTTPClient, tgClient)
-	wg := sync.WaitGroup{}
+	serv := server.InitServer(config.BotConfig.Address,
+		server.InitBotRouting(Bot),
+		config.BotConfig.ReadTimeout,
+		config.BotConfig.WriteTimeout)
+
+	wg := &sync.WaitGroup{}
+
+	wg.Add(1)
+
+	go func() {
+		defer wg.Done()
+		application.StopBotSignalReceiving(ctx, cancel, serv)
+	}()
 
 	wg.Add(1)
 
 	go func() {
 		defer wg.Done()
 		Bot.Run(ctx)
-	}()
-
-	if err != nil {
-		fmt.Printf("Error creating tgClient: %v\n", err)
-		return
-	}
-
-	serv := server.InitServer(config.BotConfig.Address,
-		server.InitBotRouting(Bot),
-		config.BotConfig.ReadTimeout,
-		config.BotConfig.WriteTimeout)
-
-	wg.Add(1)
-
-	go func() {
-		defer wg.Done()
-		application.StopBotSignalReceiving(cancel, serv)
 	}()
 
 	if err := serv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {

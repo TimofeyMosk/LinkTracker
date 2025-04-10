@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log/slog"
 	"net/url"
-	"strconv"
 	"strings"
 	"sync"
 	"unicode/utf8"
@@ -15,12 +14,12 @@ import (
 )
 
 const (
-	NotState = iota
-	WaitingLink
+	WaitingLink = iota
 	WaitingTags
 	WaitingFilters
 	WaitingDelete
-	WaitingReplaceTags
+	WaitingSetTagsWaitingLink
+	WaitingSetTagsWaitingTags
 )
 
 const errorText = "Не удалось выполнить операцию"
@@ -38,6 +37,7 @@ type ScrapperClient interface {
 	AddLink(ctx context.Context, tgID int64, link *domain.Link) error
 	GetLinks(ctx context.Context, tgID int64) ([]domain.Link, error)
 	RemoveLink(ctx context.Context, tgID int64, link *domain.Link) error
+	UpdateLink(ctx context.Context, tgID int64, link *domain.Link) error
 	StateManager
 }
 
@@ -139,6 +139,8 @@ func (bot *Bot) handleCommand(ctx context.Context, tgID int64, text string) stri
 		return bot.commandUntrack(ctx, tgID)
 	case "/list":
 		return bot.commandList(ctx, tgID)
+	case "/settags":
+		return bot.commandSetTags(ctx, tgID)
 	default:
 		responseText := "Команда не распознана. Введите /help , чтобы увидеть список доступных команд"
 		return responseText
@@ -152,8 +154,6 @@ func (bot *Bot) changeState(ctx context.Context, tgID int64, text string) string
 	}
 
 	switch state {
-	case NotState:
-		return ""
 	case WaitingLink:
 		return bot.stateWaitLink(ctx, tgID, text, &link)
 	case WaitingTags:
@@ -162,6 +162,10 @@ func (bot *Bot) changeState(ctx context.Context, tgID int64, text string) string
 		return bot.stateWaitFilters(ctx, tgID, text, &link)
 	case WaitingDelete:
 		return bot.stateWaitDelete(ctx, tgID, text)
+	case WaitingSetTagsWaitingLink:
+		return bot.stateSetTagsWaitingLink(ctx, tgID, text)
+	case WaitingSetTagsWaitingTags:
+		return bot.stateSetTagsWaitingTags(ctx, tgID, text, &link)
 	default:
 		return ""
 	}
@@ -172,7 +176,7 @@ func (bot *Bot) commandStart(ctx context.Context, id int64) string {
 
 	err := bot.scrapper.RegisterUser(ctx, id)
 	if err != nil {
-		return errorText
+		return errorText + ". Возможно, вы уже зарегистрированы в приложении"
 	}
 
 	responseText := "Добро пожаловать в LinkTracker, " +
@@ -221,6 +225,19 @@ func (bot *Bot) commandUntrack(ctx context.Context, tgID int64) string {
 	return responseText
 }
 
+func (bot *Bot) commandSetTags(ctx context.Context, tgID int64) string {
+	slog.Info("Command /settags execution", "chatId", tgID)
+
+	err := bot.scrapper.CreateState(ctx, tgID, WaitingSetTagsWaitingLink)
+	if err != nil {
+		return errorText
+	}
+
+	responseText := "Введите ссылку, для которой хотите изменить тег/теги"
+
+	return responseText
+}
+
 func (bot *Bot) commandList(ctx context.Context, tgID int64) string {
 	slog.Info("Command /list execution", "chatId", tgID)
 
@@ -243,7 +260,9 @@ func (bot *Bot) commandList(ctx context.Context, tgID int64) string {
 
 func (bot *Bot) stateWaitLink(ctx context.Context, tgID int64, text string, link *domain.Link) string {
 	linkURL := text
-	if !validateLink(linkURL) {
+	valid, validURL := validateLink(linkURL)
+
+	if !valid {
 		err := bot.scrapper.DeleteState(ctx, tgID)
 		if err != nil {
 			return errorText
@@ -255,7 +274,7 @@ func (bot *Bot) stateWaitLink(ctx context.Context, tgID int64, text string, link
 		return responseText
 	}
 
-	link.URL = linkURL
+	link.URL = validURL
 
 	err := bot.scrapper.UpdateState(ctx, tgID, WaitingTags, link)
 	if err != nil {
@@ -324,17 +343,17 @@ func (bot *Bot) stateWaitFilters(ctx context.Context, tgID int64, text string, l
 	return responseText
 }
 
-func (bot *Bot) stateWaitDelete(ctx context.Context, id int64, text string) string {
+func (bot *Bot) stateWaitDelete(ctx context.Context, tgID int64, text string) string {
 	link := text
 
-	err := bot.scrapper.RemoveLink(ctx, id, &domain.Link{URL: link})
+	err := bot.scrapper.RemoveLink(ctx, tgID, &domain.Link{URL: link})
 	if err != nil {
 		slog.Error(err.Error())
 
 		return errorText
 	}
 
-	err = bot.scrapper.DeleteState(ctx, id)
+	err = bot.scrapper.DeleteState(ctx, tgID)
 	if err != nil {
 		return errorText
 	}
@@ -344,10 +363,57 @@ func (bot *Bot) stateWaitDelete(ctx context.Context, id int64, text string) stri
 	return responseText
 }
 
-func validateLink(link string) bool {
+func (bot *Bot) stateSetTagsWaitingLink(ctx context.Context, tgID int64, text string) string {
+	links, err := bot.scrapper.GetLinks(ctx, tgID)
+	if err != nil {
+		slog.Error(err.Error())
+		return errorText
+	}
+
+	var link *domain.Link
+
+	for i := range links {
+		if links[i].URL == text {
+			link = &links[i]
+		}
+	}
+
+	if link == nil {
+		return errorText + ". Данная ссылка не найдена"
+	}
+
+	err = bot.scrapper.UpdateState(ctx, tgID, WaitingSetTagsWaitingTags, link)
+	if err != nil {
+		return errorText
+	}
+
+	responseText := "Отправьте новые теги разделённые пробелами. Если не хотите добавлять теги отправьте '-' без кавычек"
+
+	return responseText
+}
+
+func (bot *Bot) stateSetTagsWaitingTags(ctx context.Context, tgID int64, text string, link *domain.Link) string {
+	if text == "-" {
+		link.Tags = []string{}
+	} else {
+		link.Tags = strings.Split(text, " ")
+	}
+
+	err := bot.scrapper.UpdateLink(ctx, tgID, link)
+	if err != nil {
+		slog.Error(err.Error())
+		return errorText
+	}
+
+	responseText := "Теги успешно изменены"
+
+	return responseText
+}
+
+func validateLink(link string) (valid bool, validURL string) {
 	parsedURL, err := url.Parse(link)
 	if err != nil {
-		return false
+		return false, ""
 	}
 
 	const (
@@ -358,42 +424,82 @@ func validateLink(link string) bool {
 	parts := strings.Split(strings.Trim(parsedURL.Path, "/"), "/")
 
 	if parsedURL.Host == github && len(parts) >= 2 {
-		return true
+		validURL, err := url.JoinPath(parsedURL.Scheme+"://"+parsedURL.Host, parts[0], parts[1])
+		if err != nil {
+			return false, ""
+		}
+
+		return true, validURL
 	}
 
 	if parsedURL.Host == stackoverflow && len(parts) >= 2 && parts[0] == "questions" {
-		return true
+		if len(parts) == 2 {
+			validURL, err := url.JoinPath(parsedURL.Scheme+"://"+parsedURL.Host, parts[0], parts[1])
+			if err != nil {
+				return false, ""
+			}
+
+			return true, validURL
+		}
+
+		validURL, err := url.JoinPath(parsedURL.Scheme+"://"+parsedURL.Host, parts[0], parts[1], parts[2])
+		if err != nil {
+			return false, ""
+		}
+
+		return true, validURL
 	}
 
-	return false
+	return false, ""
+}
+
+func formatLink(link *domain.Link) string {
+	var parts []string
+	parts = append(parts, fmt.Sprintf("linkID: %d Url: %s", link.ID, link.URL))
+
+	if len(link.Tags) > 0 {
+		parts = append(parts, "Tags: "+strings.Join(link.Tags, " "))
+	}
+
+	if len(link.Filters) > 0 {
+		parts = append(parts, "Filters: "+strings.Join(link.Filters, " "))
+	}
+
+	return strings.Join(parts, " ")
 }
 
 func listLinksToString(links []domain.Link) string {
+	tagsLinks := make(map[string][]domain.Link)
+
+	for _, link := range links {
+		for _, tag := range link.Tags {
+			tagsLinks[tag] = append(tagsLinks[tag], link)
+		}
+	}
+
 	var sb strings.Builder
 
 	sb.WriteString("Список отслеживаемых ссылок:\n")
 
+	if len(tagsLinks) > 0 {
+		for tag, taggedlinks := range tagsLinks {
+			sb.WriteString(tag + ": \n")
+
+			for _, link := range taggedlinks {
+				sb.WriteString(formatLink(&link) + "\n")
+			}
+
+			sb.WriteString("\n")
+		}
+	}
+
+	sb.WriteString("Без тегов: \n")
+
 	for i := range links {
-		sb.WriteString("linkID: " + strconv.Itoa(int(links[i].ID)))
-		sb.WriteString(" Url: " + links[i].URL)
-
-		if len(links[i].Tags) > 0 {
-			sb.WriteString(" Tags: ")
-
-			for j := range links[i].Tags {
-				sb.WriteString(links[i].Tags[j] + " ")
-			}
+		if len(links[i].Tags) == 0 {
+			sb.WriteString(formatLink(&links[i]))
+			sb.WriteString("\n")
 		}
-
-		if len(links[i].Filters) > 0 {
-			sb.WriteString(" Filters: ")
-
-			for j := range links[i].Filters {
-				sb.WriteString(links[i].Filters[j] + " ")
-			}
-		}
-
-		sb.WriteString("\n")
 	}
 
 	return sb.String()

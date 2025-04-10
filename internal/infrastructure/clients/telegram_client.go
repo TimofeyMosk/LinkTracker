@@ -42,6 +42,10 @@ func NewTelegramHTTPClient(token string) (*TelegramHTTPClient, error) {
 			Description: "Прекратить отслеживание",
 		},
 		{
+			Command:     "settags",
+			Description: "Изменить теги у ссылки",
+		},
+		{
 			Command:     "list",
 			Description: "Список отслеживаемых ссылок",
 		},
@@ -79,6 +83,7 @@ func (t *TelegramHTTPClient) SendMessage(ctx context.Context, chatID int64, text
 	err := t.globalLimiter.Wait(ctx)
 	if err != nil {
 		slog.Error("Rate limit error", "chatID", chatID, "text", text, "error", err.Error())
+		return
 	}
 
 	msg := tgbotapi.NewMessage(chatID, text)

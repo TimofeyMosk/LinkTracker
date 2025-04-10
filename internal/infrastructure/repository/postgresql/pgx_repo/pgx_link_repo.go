@@ -91,7 +91,7 @@ func (r *LinkRepoPgx) AddLink(ctx context.Context, id int64, link *domain.Link) 
 
 	sqlInsertLink := "INSERT INTO urls(url, last_update) VALUES($1, $2) RETURNING id"
 
-	err = tx.QueryRow(ctx, sqlInsertLink, link.URL, time.Now()).Scan(&urlID)
+	err = tx.QueryRow(ctx, sqlInsertLink, link.URL, time.Now().UTC()).Scan(&urlID)
 	if err != nil {
 		return err
 	}
@@ -200,6 +200,67 @@ func (r *LinkRepoPgx) GetAllLinks(ctx context.Context) ([]domain.Link, error) {
 	}
 
 	return links, rows.Err()
+}
+
+func (r *LinkRepoPgx) GetLinksAfter(ctx context.Context, lastUpdate time.Time, limit int64) ([]domain.Link, error) {
+	sql := `
+		SELECT id, url, last_update
+		FROM urls
+		WHERE last_update > $1
+		ORDER BY last_update
+		LIMIT $2
+	`
+
+	rows, err := r.pool.Query(ctx, sql, lastUpdate, limit)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var links []domain.Link
+
+	for rows.Next() {
+		var link domain.Link
+		if err := rows.Scan(&link.ID, &link.URL, &link.LastUpdated); err != nil {
+			return nil, err
+		}
+
+		links = append(links, link)
+	}
+
+	return links, rows.Err()
+}
+
+func (r *LinkRepoPgx) UpdateLink(ctx context.Context, tgID int64, link *domain.Link) error {
+	tx, err := r.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		if err != nil {
+			err = errors.Join(err, tx.Rollback(ctx))
+		}
+	}()
+
+	getURLIDsql := "SELECT id FROM urls WHERE url = $1"
+
+	var urlID int64
+
+	err = tx.QueryRow(ctx, getURLIDsql, link.URL).Scan(&urlID)
+	if err != nil {
+		return err
+	}
+
+	sql := "UPDATE tracks SET tags = $1, filters = $2 WHERE tg_id = $3 AND url_id = $4"
+
+	_, err = tx.Exec(ctx, sql, link.Tags, link.Filters, tgID, urlID)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit(ctx)
 }
 
 func (r *LinkRepoPgx) UpdateTimeLink(ctx context.Context, lastUpdate time.Time, id int64) error {

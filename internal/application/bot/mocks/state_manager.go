@@ -182,7 +182,7 @@ func (_c *StateManager_GetState_Call) RunAndReturn(run func(context.Context, int
 }
 
 // UpdateState provides a mock function with given fields: ctx, tgID, state, link
-func (_m *StateManager) UpdateState(ctx context.Context, tgID int64, state int, link domain.Link) error {
+func (_m *StateManager) UpdateState(ctx context.Context, tgID int64, state int, link *domain.Link) error {
 	ret := _m.Called(ctx, tgID, state, link)
 
 	if len(ret) == 0 {
@@ -190,7 +190,7 @@ func (_m *StateManager) UpdateState(ctx context.Context, tgID int64, state int, 
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, int64, int, domain.Link) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int64, int, *domain.Link) error); ok {
 		r0 = rf(ctx, tgID, state, link)
 	} else {
 		r0 = ret.Error(0)
@@ -208,14 +208,14 @@ type StateManager_UpdateState_Call struct {
 //   - ctx context.Context
 //   - tgID int64
 //   - state int
-//   - link domain.Link
+//   - link *domain.Link
 func (_e *StateManager_Expecter) UpdateState(ctx interface{}, tgID interface{}, state interface{}, link interface{}) *StateManager_UpdateState_Call {
 	return &StateManager_UpdateState_Call{Call: _e.mock.On("UpdateState", ctx, tgID, state, link)}
 }
 
-func (_c *StateManager_UpdateState_Call) Run(run func(ctx context.Context, tgID int64, state int, link domain.Link)) *StateManager_UpdateState_Call {
+func (_c *StateManager_UpdateState_Call) Run(run func(ctx context.Context, tgID int64, state int, link *domain.Link)) *StateManager_UpdateState_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(int64), args[2].(int), args[3].(domain.Link))
+		run(args[0].(context.Context), args[1].(int64), args[2].(int), args[3].(*domain.Link))
 	})
 	return _c
 }
@@ -225,7 +225,7 @@ func (_c *StateManager_UpdateState_Call) Return(_a0 error) *StateManager_UpdateS
 	return _c
 }
 
-func (_c *StateManager_UpdateState_Call) RunAndReturn(run func(context.Context, int64, int, domain.Link) error) *StateManager_UpdateState_Call {
+func (_c *StateManager_UpdateState_Call) RunAndReturn(run func(context.Context, int64, int, *domain.Link) error) *StateManager_UpdateState_Call {
 	_c.Call.Return(run)
 	return _c
 }

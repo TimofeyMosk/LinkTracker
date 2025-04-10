@@ -15,10 +15,11 @@ type HTTPNotifier struct {
 }
 
 func NewHTTPNotifier(botClient BotClient) *HTTPNotifier {
-	return &HTTPNotifier{botClient: botClient}
+	return &HTTPNotifier{
+		botClient: botClient}
 }
 
-func (n HTTPNotifier) PostUpdates(ctx context.Context, link *domain.Link, tgID []int64, description string) error {
+func (n *HTTPNotifier) PostUpdates(ctx context.Context, link *domain.Link, tgID []int64, description string) error {
 	err := n.botClient.PostUpdates(ctx, link, tgID, description)
 	if err != nil {
 		return err

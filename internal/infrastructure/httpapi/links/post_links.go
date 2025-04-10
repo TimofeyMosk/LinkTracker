@@ -21,7 +21,7 @@ type PostLinksHandler struct {
 }
 
 func (h PostLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	tgChatID, err := httpapi.GetTgIDFromString(r.Header.Get("Tg-Chat-Id"))
+	tgID, err := httpapi.GetTgIDFromString(r.Header.Get("Tg-Chat-Id"))
 	if err != nil {
 		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_CHAT_ID",
 			"Invalid or missing chat ID", err.Error(), "BadRequest")
@@ -29,15 +29,15 @@ func (h PostLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var addLinkRequest scrapperdto.LinkRequest
-	if err = json.NewDecoder(r.Body).Decode(&addLinkRequest); err != nil {
+	var LinkRequest scrapperdto.LinkRequest
+	if err = json.NewDecoder(r.Body).Decode(&LinkRequest); err != nil {
 		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_REQUEST_BODY",
 			"Invalid or missing request body", err.Error(), "BadRequest")
 
 		return
 	}
 
-	link, err := AddLinkRequestDtoToLink(addLinkRequest)
+	link, err := httpapi.LinkRequestDtoToLink(LinkRequest)
 	if err != nil {
 		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_REQUEST_BODY",
 			"Invalid or missing request body", err.Error(), "BadRequest")
@@ -45,7 +45,7 @@ func (h PostLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	link, err = h.LinkAdder.AddLink(r.Context(), tgChatID, &link)
+	link, err = h.LinkAdder.AddLink(r.Context(), tgID, &link)
 	if err != nil {
 		switch {
 		case errors.As(err, &domain.ErrUserNotExist{}):
@@ -76,18 +76,4 @@ func (h PostLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		slog.Error(err.Error())
 	}
-}
-
-func AddLinkRequestDtoToLink(addLinkRequest scrapperdto.LinkRequest) (domain.Link, error) {
-	var link domain.Link
-
-	if addLinkRequest.Link == nil {
-		return link, domain.ErrNoRequiredAttribute{Attribute: "link"}
-	}
-
-	link.URL = *addLinkRequest.Link
-	link.Tags = *addLinkRequest.Tags
-	link.Filters = *addLinkRequest.Filters
-
-	return link, nil
 }

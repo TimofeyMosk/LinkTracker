@@ -32,6 +32,8 @@ CREATE TABLE "urls"
     PRIMARY KEY ("id")
 );
 
+CREATE INDEX idx_urls_last_update ON urls (last_update);
+
 ALTER TABLE "tracks"
     ADD FOREIGN KEY ("url_id") REFERENCES "urls" ("id")
         ON UPDATE NO ACTION ON DELETE NO ACTION;

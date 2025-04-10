@@ -44,6 +44,20 @@ func LinksToDTO(links []domain.Link) scrapperdto.ListLinksResponse {
 	return scrapperdto.ListLinksResponse{Links: &linksResponse, Size: &length}
 }
 
+func LinkRequestDtoToLink(addLinkRequest scrapperdto.LinkRequest) (domain.Link, error) {
+	var link domain.Link
+
+	if addLinkRequest.Link == nil {
+		return link, domain.ErrNoRequiredAttribute{Attribute: "link"}
+	}
+
+	link.URL = *addLinkRequest.Link
+	link.Tags = *addLinkRequest.Tags
+	link.Filters = *addLinkRequest.Filters
+
+	return link, nil
+}
+
 func GetTgIDFromString(s string) (int64, error) {
 	if s == "" {
 		return 0, domain.ErrEmptyString{}

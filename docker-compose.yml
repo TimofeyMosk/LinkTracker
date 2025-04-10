@@ -34,6 +34,13 @@ services:
     networks:
       - backend
 
+volumes:
+  pgdata:
+
+networks:
+  backend:
+    driver: bridge
+
 
 #  liquibase-migrations:
 #    container_name: migrationsLiquid
@@ -56,9 +63,4 @@ services:
 
 
 
-volumes:
-  pgdata:
 
-networks:
-  backend:
-    driver: bridge

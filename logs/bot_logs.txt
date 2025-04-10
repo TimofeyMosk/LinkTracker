@@ -655,3 +655,152 @@ time=2025-04-06T22:49:56.782+04:00 level=ERROR msg="api error LINKS_ALREADY_EXIS
 time=2025-04-06T22:50:00.576+04:00 level=INFO msg="Command /start execution" chatId=503492049
 time=2025-04-06T23:06:39.168+04:00 level=INFO msg="bot shutdown"
 time=2025-04-06T23:06:39.168+04:00 level=INFO msg="server stopped"
+time=2025-04-08T14:08:22.088+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T14:08:26.005+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-04-08T14:08:28.744+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T14:09:28.242+04:00 level=INFO msg="Command /untrack execution" chatId=503492049
+time=2025-04-08T14:09:32.036+04:00 level=INFO msg="Removed link" url=https://github.com/central-university-dev/go-TimofeyMosk
+time=2025-04-08T14:09:34.261+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T14:09:36.682+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-08T14:09:46.940+04:00 level=INFO msg="Added link" url=https://github.com/TimofeyMosk/DatsCity ID=0
+time=2025-04-08T14:09:50.084+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T14:15:38.234+04:00 level=INFO msg="server stopped"
+time=2025-04-08T14:15:38.235+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T14:16:11.853+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T14:16:11.921+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T14:16:11.922+04:00 level=ERROR msg="Failed to get links" error="Get \"http://localhost:8080/links\": dial tcp [::1]:8080: connect: connection refused" chatId=503492049
+time=2025-04-08T14:17:22.502+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T14:17:27.503+04:00 level=ERROR msg="Failed to get links" error="Get \"http://localhost:8080/links\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)" chatId=503492049
+time=2025-04-08T14:17:32.264+04:00 level=INFO msg="server stopped"
+time=2025-04-08T14:17:32.264+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T14:17:33.274+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T14:21:56.530+04:00 level=INFO msg="server stopped"
+time=2025-04-08T14:21:56.530+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T14:21:57.577+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T14:22:03.755+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-04-08T14:22:06.452+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-08T14:22:11.719+04:00 level=INFO msg="Added link" url=https://github.com/TimofeyMosk/DatsCity ID=0
+time=2025-04-08T14:32:35.517+04:00 level=INFO msg="server stopped"
+time=2025-04-08T14:32:35.518+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T14:33:52.762+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T14:34:59.351+04:00 level=INFO msg="server stopped"
+time=2025-04-08T14:34:59.351+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T14:35:53.591+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T14:35:59.435+04:00 level=INFO msg="server stopped"
+time=2025-04-08T14:35:59.436+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T14:36:05.242+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T14:36:20.619+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T14:39:37.215+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T14:40:57.606+04:00 level=INFO msg="Command /untrack execution" chatId=503492049
+time=2025-04-08T14:40:59.262+04:00 level=INFO msg="Removed link" url=https://github.com/TimofeyMosk/DatsCity
+time=2025-04-08T16:47:21.993+04:00 level=INFO msg="server stopped"
+time=2025-04-08T16:47:21.994+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T16:56:06.088+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T16:56:06.188+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T16:56:10.452+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-08T16:56:23.454+04:00 level=INFO msg="Added link" url=https://github.com/TimofeyMosk/DatsCity ID=0
+time=2025-04-08T16:56:26.224+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T17:02:40.100+04:00 level=INFO msg="server stopped"
+time=2025-04-08T17:02:40.100+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T17:46:38.700+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T17:46:38.797+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T17:46:43.183+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-08T17:46:50.175+04:00 level=ERROR msg="api error LINKS_ALREADY_EXIST: link already tracking"
+time=2025-04-08T17:46:58.346+04:00 level=INFO msg="server stopped"
+time=2025-04-08T17:46:58.347+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T17:53:18.289+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T17:53:20.426+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T17:53:20.469+04:00 level=ERROR msg="Failed to get links" error="api error LINKS_NOT_RECEIVED: ERROR: relation \"tracks\" does not exist (SQLSTATE 42P01)" chatId=503492049
+time=2025-04-08T17:53:24.182+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-04-08T17:53:28.037+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-04-08T17:53:39.797+04:00 level=INFO msg="server stopped"
+time=2025-04-08T17:53:39.797+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T17:54:26.841+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T17:54:30.460+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T17:54:51.638+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-04-08T17:55:06.482+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-08T17:55:10.741+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-04-08T17:55:12.998+04:00 level=INFO msg="Command /untrack execution" chatId=503492049
+time=2025-04-08T17:55:14.750+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T17:55:14.753+04:00 level=ERROR msg="Failed to get links" error="api error LINKS_NOT_RECEIVED: ERROR: relation \"tracks\" does not exist (SQLSTATE 42P01)" chatId=503492049
+time=2025-04-08T17:55:16.437+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-04-08T17:55:23.092+04:00 level=INFO msg="server stopped"
+time=2025-04-08T17:55:23.092+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T17:55:29.162+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T17:55:31.668+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T17:55:31.678+04:00 level=ERROR msg="Failed to get links" error="api error LINKS_NOT_RECEIVED: ERROR: relation \"tracks\" does not exist (SQLSTATE 42P01)" chatId=503492049
+time=2025-04-08T17:55:34.716+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-04-08T17:55:51.132+04:00 level=INFO msg="server stopped"
+time=2025-04-08T17:55:51.132+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T17:55:57.268+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T17:56:00.385+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T17:56:00.414+04:00 level=ERROR msg="Failed to get links" error="api error LINKS_NOT_RECEIVED: ERROR: relation \"tracks\" does not exist (SQLSTATE 42P01)" chatId=503492049
+time=2025-04-08T17:56:07.213+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T17:56:07.215+04:00 level=ERROR msg="Failed to get links" error="api error LINKS_NOT_RECEIVED: ERROR: relation \"tracks\" does not exist (SQLSTATE 42P01)" chatId=503492049
+time=2025-04-08T17:56:09.554+04:00 level=INFO msg="Command /help execution" chatId=503492049
+time=2025-04-08T17:56:11.210+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-08T17:56:13.158+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-04-08T17:56:46.796+04:00 level=INFO msg="server stopped"
+time=2025-04-08T17:56:46.796+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T17:57:21.057+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T17:57:37.051+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T17:57:39.383+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-08T17:57:53.315+04:00 level=ERROR msg="api error ADD_LINK_FAILED: ERROR: insert or update on table \"tracks\" violates foreign key constraint \"tracks_tg_id_fkey\" (SQLSTATE 23503)"
+time=2025-04-08T17:57:56.677+04:00 level=INFO msg="Command /start execution" chatId=503492049
+time=2025-04-08T17:58:11.348+04:00 level=INFO msg="server stopped"
+time=2025-04-08T17:58:11.349+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T18:01:03.833+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T18:01:07.230+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T18:01:08.800+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-08T18:01:19.268+04:00 level=INFO msg="Added link" url=https://github.com/TimofeyMosk/DatsCity ID=0
+time=2025-04-08T18:01:21.360+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T18:01:27.337+04:00 level=INFO msg="server stopped"
+time=2025-04-08T18:01:27.337+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T23:09:48.499+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T23:10:02.501+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T23:10:07.609+04:00 level=INFO msg="Command /settags execution" chatId=503492049
+time=2025-04-08T23:10:22.885+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T23:10:30.856+04:00 level=INFO msg="Command /settags execution" chatId=503492049
+time=2025-04-08T23:10:45.427+04:00 level=INFO msg="Command /settags execution" chatId=503492049
+time=2025-04-08T23:11:04.402+04:00 level=INFO msg="server stopped"
+time=2025-04-08T23:11:04.402+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T23:12:25.193+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T23:12:29.757+04:00 level=INFO msg="server stopped"
+time=2025-04-08T23:12:29.757+04:00 level=INFO msg="bot shutdown"
+time=2025-04-08T23:13:19.155+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-08T23:13:45.255+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-08T23:13:57.504+04:00 level=INFO msg="Added link" url=https://github.com/central-university-dev/backend-academy-2025-spring/blob/main/Go/seminar01/readme/4%20-%20http%20клиент.md ID=0
+time=2025-04-08T23:14:18.303+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-08T23:14:20.413+04:00 level=INFO msg="Added link" url=https://github.com/oapi-codegen/oapi-codegen ID=0
+time=2025-04-08T23:14:47.038+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-08T23:14:51.161+04:00 level=INFO msg="Added link" url=https://github.com/doug-martin/goqu ID=0
+time=2025-04-08T23:19:34.772+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-08T23:35:21.437+04:00 level=INFO msg="server stopped"
+time=2025-04-08T23:35:21.438+04:00 level=INFO msg="bot shutdown"
+time=2025-04-09T01:23:17.672+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-09T01:23:35.183+04:00 level=INFO msg="Command /untrack execution" chatId=503492049
+time=2025-04-09T01:23:40.423+04:00 level=INFO msg="Removed link" url=https://github.com/TimofeyMosk/DatsCity
+time=2025-04-09T01:23:46.740+04:00 level=INFO msg="Command /untrack execution" chatId=503492049
+time=2025-04-09T01:23:48.000+04:00 level=INFO msg="Removed link" url=https://github.com/central-university-dev/backend-academy-2025-spring/blob/main/Go/seminar01/readme/4%20-%20http%20клиент.md
+time=2025-04-09T01:23:55.430+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-09T01:23:59.471+04:00 level=INFO msg="Command /track execution" chatId=503492049
+time=2025-04-09T01:24:11.906+04:00 level=INFO msg="Added link" url=github.com/central-university-dev/central-university-dev ID=0
+time=2025-04-09T01:24:15.683+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-09T01:24:32.169+04:00 level=INFO msg="server stopped"
+time=2025-04-09T01:24:32.169+04:00 level=INFO msg="bot shutdown"
+time=2025-04-09T10:45:59.106+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-09T10:46:07.851+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-09T10:46:10.617+04:00 level=INFO msg="Command /settags execution" chatId=503492049
+time=2025-04-09T10:46:26.916+04:00 level=INFO msg="Command /settags execution" chatId=503492049
+time=2025-04-09T10:46:40.108+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-09T10:46:49.009+04:00 level=INFO msg="Command /settags execution" chatId=503492049
+time=2025-04-09T10:47:01.941+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-09T10:47:30.161+04:00 level=INFO msg="server stopped"
+time=2025-04-09T10:47:30.161+04:00 level=INFO msg="bot shutdown"
+time=2025-04-09T10:47:35.070+04:00 level=INFO msg="tgBOTApi create"
+time=2025-04-09T10:47:37.999+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-09T10:47:49.196+04:00 level=INFO msg="Command /settags execution" chatId=503492049
+time=2025-04-09T10:47:54.791+04:00 level=INFO msg="Command /settags execution" chatId=503492049
+time=2025-04-09T10:48:00.037+04:00 level=INFO msg="Command /list execution" chatId=503492049
+time=2025-04-09T10:48:28.043+04:00 level=INFO msg="server stopped"
+time=2025-04-09T10:48:28.043+04:00 level=INFO msg="bot shutdown"

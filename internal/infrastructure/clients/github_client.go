@@ -11,21 +11,27 @@ import (
 	"time"
 
 	"LinkTracker/internal/domain"
+
+	"golang.org/x/time/rate"
 )
 
 const (
-	githubAPIBaseURL  = "https://api.github.com"
-	githubHTTPTimeout = 5 * time.Second
+	githubAPIBaseURL       = "https://api.github.com"
+	githubHTTPTimeout      = 5 * time.Second
+	allowedRequestsPerHour = 60
 )
 
 // GitHubHTTPClient используется для работы с API GitHub.
 type GitHubHTTPClient struct {
-	Client *http.Client
+	Client        *http.Client
+	globalLimiter *rate.Limiter
 }
 
 // NewGitHubHTTPClient создаёт нового клиента с заданным timeout.
 func NewGitHubHTTPClient() *GitHubHTTPClient {
-	return &GitHubHTTPClient{Client: &http.Client{Timeout: githubHTTPTimeout}}
+	return &GitHubHTTPClient{Client: &http.Client{
+		Timeout: githubHTTPTimeout},
+		globalLimiter: rate.NewLimiter(rate.Every(time.Hour/allowedRequestsPerHour), allowedRequestsPerHour)}
 }
 
 func (c *GitHubHTTPClient) Supports(link *url.URL) bool {
@@ -33,6 +39,12 @@ func (c *GitHubHTTPClient) Supports(link *url.URL) bool {
 }
 
 func (c *GitHubHTTPClient) Check(ctx context.Context, link *domain.Link) (lastUpdate time.Time, description string, err error) {
+	err = c.globalLimiter.Wait(ctx)
+	if err != nil {
+		slog.Error("Rate limit error", "error", err.Error())
+		return time.Time{}, "", err
+	}
+
 	return c.GetLatestPROrIssue(ctx, link.URL)
 }
 
@@ -98,7 +110,7 @@ func (c *GitHubHTTPClient) GetLatestPROrIssue(ctx context.Context, link string) 
 	}
 
 	if len(issues) == 0 {
-		return time.Time{}, "", fmt.Errorf("no issues or pull requests found")
+		return time.Time{}, "", domain.ErrUpdatesNotFound{}
 	}
 
 	issue := issues[0]

@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log/slog"
 	"net/http"
 	"sync"
@@ -20,7 +19,7 @@ import (
 func main() {
 	config, err := application.ReadYAMLConfig("config.yaml")
 	if err != nil {
-		fmt.Printf("Error reading config: %v\n", err)
+		slog.Error("Error reading config", "error", err)
 		return
 	}
 
@@ -31,45 +30,60 @@ func main() {
 
 	userRepo, linkRepo, stateManager, err := InitRepositories(ctx, config.DBConfig)
 	if err != nil {
-		fmt.Printf("Error initializing repository: %v\n", err)
+		slog.Error("Error initializing repositories", "error", err)
 		return
 	}
 
 	botHTTPClient, err := clients.NewBotHTTPClient(config.ScrapConfig.BotBaseURL, config.ScrapConfig.BotClientTimeout)
 	if err != nil {
-		fmt.Printf("Error creating scrapper client: %v\n", err)
+		slog.Error("Error creating bot client", "error", err)
 		return
 	}
 
+	linkSourceHandlers := InitLinksSourceHandlers()
+	linkChecker := linkchecker.NewLinkChecker(linkRepo, linkSourceHandlers,
+		config.ScrapConfig.SizeLinksPage,
+		config.ScrapConfig.CheckerLinksWorkers,
+	)
+
 	messageNotifier := notifier.NewHTTPNotifier(botHTTPClient)
 
-	linkSourceHandlers := InitLinksSourceHandlers()
-	linkChecker := linkchecker.NewLinkChecker(linkRepo, linkSourceHandlers)
+	scrap := scrapper.NewScrapper(userRepo, linkRepo, stateManager,
+		config.ScrapConfig.Interval,
+		messageNotifier,
+		linkChecker,
+	)
 
-	scrap := scrapper.NewScrapper(userRepo, linkRepo, stateManager, config.ScrapConfig.Interval, messageNotifier, linkChecker)
 	serv := server.InitServer(
 		config.ScrapConfig.Address,
 		server.InitScrapperRouting(scrap),
 		config.ScrapConfig.ReadTimeout,
-		config.ScrapConfig.WriteTimeout)
+		config.ScrapConfig.WriteTimeout,
+	)
 
-	go application.StopScrapperSignalReceiving(cancel, serv)
+	var wg sync.WaitGroup
 
-	wg := sync.WaitGroup{}
 	wg.Add(1)
 
 	go func() {
-		if err := scrap.Run(ctx); err != nil {
-			slog.Error(err.Error())
-		}
+		defer wg.Done()
+		application.StopScrapperSignalReceiving(ctx, cancel, serv)
+	}()
 
-		wg.Done()
+	wg.Add(1)
+
+	go func() {
+		defer wg.Done()
+
+		if err := scrap.Run(ctx); err != nil {
+			slog.Error("Scrapper run failed", "error", err)
+		}
 	}()
 
 	if err := serv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		slog.Error("server failed to start or finished with error", "error", err)
+		slog.Error("Server failed to start or finished with error", "error", err)
 	} else {
-		slog.Info("server stopped")
+		slog.Info("Server stopped gracefully")
 	}
 
 	wg.Wait()

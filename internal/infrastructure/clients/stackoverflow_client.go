@@ -11,19 +11,25 @@ import (
 	"time"
 
 	"LinkTracker/internal/domain"
+
+	"golang.org/x/time/rate"
 )
 
 const (
 	stackOverflowAPIBaseURL  = "https://api.stackexchange.com/2.3"
 	stackOverflowHTTPTimeout = 5 * time.Second
+	allowedRequestsPerDay    = 3333
 )
 
 type StackOverflowHTTPClient struct {
-	Client *http.Client
+	Client        *http.Client
+	globalLimiter *rate.Limiter
 }
 
 func NewStackOverflowHTTPClient() *StackOverflowHTTPClient {
-	return &StackOverflowHTTPClient{Client: &http.Client{Timeout: stackOverflowHTTPTimeout}}
+	return &StackOverflowHTTPClient{
+		Client:        &http.Client{Timeout: stackOverflowHTTPTimeout},
+		globalLimiter: rate.NewLimiter(rate.Limit(allowedRequestsPerDay), allowedRequestsPerDay)}
 }
 
 func (c *StackOverflowHTTPClient) Supports(link *url.URL) bool {
@@ -31,6 +37,12 @@ func (c *StackOverflowHTTPClient) Supports(link *url.URL) bool {
 }
 
 func (c *StackOverflowHTTPClient) Check(ctx context.Context, link *domain.Link) (lastUpdate time.Time, description string, err error) {
+	err = c.globalLimiter.Wait(ctx)
+	if err != nil {
+		slog.Error("Rate limit error", "error", err.Error())
+		return time.Time{}, "", err
+	}
+
 	return c.GetLatestAnswerOrComment(ctx, link.URL)
 }
 
@@ -203,7 +215,7 @@ func (c *StackOverflowHTTPClient) GetLatestAnswerOrComment(ctx context.Context, 
 		}
 
 		if latestComment == nil {
-			return time.Time{}, "", fmt.Errorf("no answers or comments found")
+			return time.Time{}, "", domain.ErrUpdatesNotFound{}
 		}
 
 		latestPost = latestComment

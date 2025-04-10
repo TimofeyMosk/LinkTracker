@@ -9,13 +9,15 @@ import (
 )
 
 type ScrapperConfig struct {
-	Address          string        `yaml:"address"`
-	BotBaseURL       string        `yaml:"bot_baseurl"`
-	Interval         time.Duration `yaml:"scrap_interval" `
-	ReadTimeout      time.Duration `yaml:"read_timeout" `
-	WriteTimeout     time.Duration `yaml:"write_timeout" `
-	BotClientTimeout time.Duration `yaml:"bot_client_timeout" `
-	LogsPath         string        `yaml:"logger_path" `
+	Address             string        `yaml:"address"`
+	BotBaseURL          string        `yaml:"bot_baseurl"`
+	Interval            time.Duration `yaml:"scrap_interval" `
+	ReadTimeout         time.Duration `yaml:"read_timeout" `
+	WriteTimeout        time.Duration `yaml:"write_timeout" `
+	BotClientTimeout    time.Duration `yaml:"bot_client_timeout" `
+	LogsPath            string        `yaml:"logger_path" `
+	CheckerLinksWorkers int           `yaml:"checker_links_workers" `
+	SizeLinksPage       int64         `yaml:"size_links_page" `
 }
 
 type BotConfig struct {
@@ -56,13 +58,15 @@ func ReadYAMLConfig(filePath string) (*Config, error) {
 	viper.AutomaticEnv()
 	config := Config{
 		ScrapConfig: ScrapperConfig{
-			Address:          viper.GetString("scrapper.address"),
-			BotBaseURL:       viper.GetString("scrapper.bot_baseurl"),
-			Interval:         viper.GetDuration("scrapper.scrap_interval"),
-			ReadTimeout:      viper.GetDuration("scrapper.read_timeout"),
-			WriteTimeout:     viper.GetDuration("scrapper.write_timeout"),
-			BotClientTimeout: viper.GetDuration("scrapper.bot_client_timeout"),
-			LogsPath:         viper.GetString("scrapper.logger_path"),
+			Address:             viper.GetString("scrapper.address"),
+			BotBaseURL:          viper.GetString("scrapper.bot_baseurl"),
+			Interval:            viper.GetDuration("scrapper.scrap_interval"),
+			ReadTimeout:         viper.GetDuration("scrapper.read_timeout"),
+			WriteTimeout:        viper.GetDuration("scrapper.write_timeout"),
+			BotClientTimeout:    viper.GetDuration("scrapper.bot_client_timeout"),
+			LogsPath:            viper.GetString("scrapper.logger_path"),
+			CheckerLinksWorkers: viper.GetInt("scrapper.checker_links_workers"),
+			SizeLinksPage:       viper.GetInt64("scrapper.size_links_page"),
 		},
 		BotConfig: BotConfig{
 			TgToken:               viper.GetString("bot.tg_token"),

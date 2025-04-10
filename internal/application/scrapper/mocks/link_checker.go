@@ -3,6 +3,7 @@
 package mocks
 
 import (
+	domain "LinkTracker/internal/domain"
 	context "context"
 
 	mock "github.com/stretchr/testify/mock"
@@ -21,35 +22,36 @@ func (_m *LinkChecker) EXPECT() *LinkChecker_Expecter {
 	return &LinkChecker_Expecter{mock: &_m.Mock}
 }
 
-// Scrape provides a mock function with given fields: ctx
-func (_m *LinkChecker) Scrape(ctx context.Context) {
-	_m.Called(ctx)
+// CheckLinks provides a mock function with given fields: ctx, linkUpdates
+func (_m *LinkChecker) CheckLinks(ctx context.Context, linkUpdates chan<- domain.LinkUpdate) {
+	_m.Called(ctx, linkUpdates)
 }
 
-// LinkChecker_Scrape_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Scrape'
-type LinkChecker_Scrape_Call struct {
+// LinkChecker_CheckLinks_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CheckLinks'
+type LinkChecker_CheckLinks_Call struct {
 	*mock.Call
 }
 
-// Scrape is a helper method to define mock.On call
+// CheckLinks is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *LinkChecker_Expecter) Scrape(ctx interface{}) *LinkChecker_Scrape_Call {
-	return &LinkChecker_Scrape_Call{Call: _e.mock.On("Scrape", ctx)}
+//   - linkUpdates chan<- domain.LinkUpdate
+func (_e *LinkChecker_Expecter) CheckLinks(ctx interface{}, linkUpdates interface{}) *LinkChecker_CheckLinks_Call {
+	return &LinkChecker_CheckLinks_Call{Call: _e.mock.On("CheckLinks", ctx, linkUpdates)}
 }
 
-func (_c *LinkChecker_Scrape_Call) Run(run func(ctx context.Context)) *LinkChecker_Scrape_Call {
+func (_c *LinkChecker_CheckLinks_Call) Run(run func(ctx context.Context, linkUpdates chan<- domain.LinkUpdate)) *LinkChecker_CheckLinks_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context))
+		run(args[0].(context.Context), args[1].(chan<- domain.LinkUpdate))
 	})
 	return _c
 }
 
-func (_c *LinkChecker_Scrape_Call) Return() *LinkChecker_Scrape_Call {
+func (_c *LinkChecker_CheckLinks_Call) Return() *LinkChecker_CheckLinks_Call {
 	_c.Call.Return()
 	return _c
 }
 
-func (_c *LinkChecker_Scrape_Call) RunAndReturn(run func(context.Context)) *LinkChecker_Scrape_Call {
+func (_c *LinkChecker_CheckLinks_Call) RunAndReturn(run func(context.Context, chan<- domain.LinkUpdate)) *LinkChecker_CheckLinks_Call {
 	_c.Call.Return(run)
 	return _c
 }
