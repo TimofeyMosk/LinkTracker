@@ -1,4 +1,4 @@
-package pgxrepo
+package postgresql
 
 import (
 	"context"

@@ -1,4 +1,4 @@
-package pgxrepo_test
+package goqurepo_test
 
 import (
 	"context"
@@ -6,8 +6,7 @@ import (
 	"time"
 
 	"LinkTracker/internal/infrastructure/repository/postgresql"
-
-	pgxrepo "LinkTracker/internal/infrastructure/repository/postgresql/pgx_repo"
+	"LinkTracker/internal/infrastructure/repository/postgresql/goqurepo"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/stretchr/testify/assert"
@@ -23,7 +22,7 @@ func Test_UserRepo(t *testing.T) {
 	require.NoError(t, err)
 	defer cleanup()
 
-	userRepo := pgxrepo.NewUserRepo(pool)
+	userRepo := goqurepo.NewUserRepoGoqu(pool)
 
 	t.Run("CreateUser and GetAllUsers", func(t *testing.T) {
 		// Создаём тестового пользователя

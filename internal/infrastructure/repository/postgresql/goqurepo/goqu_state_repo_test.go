@@ -1,4 +1,4 @@
-package pgxrepo_test
+package goqurepo_test
 
 import (
 	"context"
@@ -6,8 +6,7 @@ import (
 	"time"
 
 	"LinkTracker/internal/infrastructure/repository/postgresql"
-
-	pgxrepo "LinkTracker/internal/infrastructure/repository/postgresql/pgx_repo"
+	"LinkTracker/internal/infrastructure/repository/postgresql/goqurepo"
 
 	"LinkTracker/internal/domain"
 
@@ -25,7 +24,7 @@ func Test_StateRepo(t *testing.T) {
 	require.NoError(t, err)
 	defer cleanup()
 
-	stateRepo := pgxrepo.NewStateRepoPgx(pool)
+	stateRepo := goqurepo.NewStateRepoGoqu(pool)
 
 	// Используем некоторое тестовое значение tg_id
 	const tgID int64 = 55555

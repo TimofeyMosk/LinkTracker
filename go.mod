@@ -3,6 +3,7 @@ module LinkTracker
 go 1.23.2
 
 require (
+	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/go-co-op/gocron/v2 v2.16.1
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/jackc/pgx/v5 v5.7.4

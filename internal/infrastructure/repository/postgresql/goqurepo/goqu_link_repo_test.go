@@ -1,19 +1,20 @@
-package pgxrepo_test
+package goqurepo_test
 
 import (
-	"LinkTracker/internal/domain"
-	"LinkTracker/internal/infrastructure/repository/postgresql"
-
 	"context"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+
+	"LinkTracker/internal/infrastructure/repository/postgresql/goqurepo"
+
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	pgxrepo "LinkTracker/internal/infrastructure/repository/postgresql/pgx_repo"
-
-	"github.com/jackc/pgx/v5/pgxpool"
+	"LinkTracker/internal/domain"
+	"LinkTracker/internal/infrastructure/repository/postgresql"
 )
 
 // helperInsertUser проверяет, что пользователь с данным tg_id существует, и если нет, вставляет его.
@@ -32,7 +33,7 @@ func Test_LinkRepo(t *testing.T) {
 	defer cleanup()
 	require.NoError(t, err)
 
-	linkRepo := pgxrepo.NewLinkRepo(pool)
+	linkRepo := goqurepo.NewLinkRepoGoqu(pool)
 
 	// Идентификатор тестового пользователя
 	const tgID int64 = 12345
