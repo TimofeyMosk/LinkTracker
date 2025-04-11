@@ -12,17 +12,14 @@ import (
 	"LinkTracker/internal/application/bot"
 	"LinkTracker/internal/infrastructure/clients"
 	"LinkTracker/internal/infrastructure/server"
-	"LinkTracker/pkg"
 )
 
 func main() {
-	config, err := application.ReadYAMLConfig("config.yaml")
+	config, err := application.ReadYAMLConfig()
 	if err != nil {
 		fmt.Printf("Error reading config: %v\n", err)
 		return
 	}
-
-	pkg.InitLogger(config.BotConfig.LogsPath)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

@@ -24,7 +24,7 @@ func InitRepositories(ctx context.Context, dbConfig application.DBConfig, access
 	scrapper.UserRepo, scrapper.LinkRepo, scrapper.StateRepo, error) {
 	connStr := "postgres://" + dbConfig.PostgresUser +
 		":" + dbConfig.PostgresPassword +
-		"@localhost:5432/" + dbConfig.PostgresDB + "?pool_max_conns=10"
+		"@postgres:5432/" + dbConfig.PostgresDB + "?pool_max_conns=10"
 
 	pool, err := pgxrepo.NewPool(ctx, connStr)
 	if err != nil {

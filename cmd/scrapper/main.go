@@ -13,17 +13,14 @@ import (
 	"LinkTracker/internal/application/scrapper/notifier"
 	"LinkTracker/internal/infrastructure/clients"
 	"LinkTracker/internal/infrastructure/server"
-	"LinkTracker/pkg"
 )
 
 func main() {
-	config, err := application.ReadYAMLConfig("config.yaml")
+	config, err := application.ReadYAMLConfig()
 	if err != nil {
 		slog.Error("Error reading config", "error", err)
 		return
 	}
-
-	pkg.InitLogger(config.ScrapConfig.LogsPath)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -43,7 +40,7 @@ func main() {
 	linkSourceHandlers := InitLinksSourceHandlers()
 	linkChecker := linkchecker.NewLinkChecker(linkRepo, linkSourceHandlers,
 		config.ScrapConfig.SizeLinksPage,
-		config.ScrapConfig.CheckerLinksWorkers,
+		config.ScrapConfig.CheckLinksWorkers,
 	)
 
 	messageNotifier := notifier.NewHTTPNotifier(botHTTPClient)

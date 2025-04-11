@@ -1,106 +1,73 @@
 package application
 
 import (
-	"log/slog"
 	"time"
 
-	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 )
 
 type ScrapperConfig struct {
-	Address             string        `yaml:"address"`
-	BotBaseURL          string        `yaml:"bot_baseurl"`
-	Interval            time.Duration `yaml:"scrap_interval" `
-	ReadTimeout         time.Duration `yaml:"read_timeout" `
-	WriteTimeout        time.Duration `yaml:"write_timeout" `
-	BotClientTimeout    time.Duration `yaml:"bot_client_timeout" `
-	LogsPath            string        `yaml:"logger_path" `
-	CheckerLinksWorkers int           `yaml:"checker_links_workers" `
-	SizeLinksPage       int64         `yaml:"size_links_page" `
-	DBAccessType        string        `yaml:"db_access_type" `
+	Address           string
+	BotBaseURL        string
+	Interval          time.Duration
+	ReadTimeout       time.Duration
+	WriteTimeout      time.Duration
+	BotClientTimeout  time.Duration
+	LogsPath          string
+	CheckLinksWorkers int
+	SizeLinksPage     int64
+	DBAccessType      string
 }
 
 type BotConfig struct {
-	TgToken               string        `yaml:"tg_token" `
-	Address               string        `yaml:"address"`
-	ScrapperBaseURL       string        `yaml:"scrapper_baseurl"`
-	ReadTimeout           time.Duration `yaml:"read_timeout" `
-	WriteTimeout          time.Duration `yaml:"write_timeout" `
-	ScrapperClientTimeout time.Duration `yaml:"scrapper_client_timeout" `
-	LogsPath              string        `yaml:"logger_path" `
+	TgToken               string
+	Address               string
+	ScrapperBaseURL       string
+	ReadTimeout           time.Duration
+	WriteTimeout          time.Duration
+	ScrapperClientTimeout time.Duration
+	LogsPath              string
 }
 
 type DBConfig struct {
-	PostgresUser     string `yaml:"postgres_user"`
-	PostgresPassword string `yaml:"postgres_password"`
-	PostgresDB       string `yaml:"postgres_db"`
+	PostgresUser     string
+	PostgresPassword string
+	PostgresDB       string
 }
 
 type Config struct {
-	ScrapConfig ScrapperConfig `yaml:"scrapper" `
-	BotConfig   BotConfig      `yaml:"bot" `
-	DBConfig    DBConfig       `yaml:"db"`
+	ScrapConfig ScrapperConfig
+	BotConfig   BotConfig
+	DBConfig    DBConfig
 }
 
-func ReadYAMLConfig(filePath string) (*Config, error) {
-	if err := godotenv.Load(); err != nil {
-		slog.Error("Failed to load the .env file, continue without it")
-	}
-
-	viper.SetConfigFile(filePath)
-	viper.SetConfigType("yaml")
-
-	if err := viper.ReadInConfig(); err != nil {
-		slog.Error("Error reading configuration file", "error", err)
-		return nil, err
-	}
-
+func ReadYAMLConfig() (*Config, error) {
 	viper.AutomaticEnv()
 	config := Config{
 		ScrapConfig: ScrapperConfig{
-			Address:             viper.GetString("scrapper.address"),
-			BotBaseURL:          viper.GetString("scrapper.bot_baseurl"),
-			Interval:            viper.GetDuration("scrapper.scrap_interval"),
-			ReadTimeout:         viper.GetDuration("scrapper.read_timeout"),
-			WriteTimeout:        viper.GetDuration("scrapper.write_timeout"),
-			BotClientTimeout:    viper.GetDuration("scrapper.bot_client_timeout"),
-			LogsPath:            viper.GetString("scrapper.logger_path"),
-			CheckerLinksWorkers: viper.GetInt("scrapper.checker_links_workers"),
-			SizeLinksPage:       viper.GetInt64("scrapper.size_links_page"),
-			DBAccessType:        viper.GetString("scrapper.db_access_type"),
+			Address:           viper.GetString("SCRAPPER_ADDRESS"),
+			BotBaseURL:        viper.GetString("BOT_BASEURL"),
+			Interval:          viper.GetDuration("CHECK_LINKS_INTERVAL"),
+			ReadTimeout:       viper.GetDuration("SCRAPPER_READ_TIMEOUT"),
+			WriteTimeout:      viper.GetDuration("SCRAPPER_WRITE_TIMEOUT"),
+			BotClientTimeout:  viper.GetDuration("BOT_CLIENT_TIMEOUT"),
+			CheckLinksWorkers: viper.GetInt("CHECK_LINKS_WORKERS"),
+			SizeLinksPage:     viper.GetInt64("SIZE_LINKS_PAGE"),
+			DBAccessType:      viper.GetString("DB_ACCESS_TYPE"),
 		},
 		BotConfig: BotConfig{
-			TgToken:               viper.GetString("bot.tg_token"),
-			Address:               viper.GetString("bot.address"),
-			ScrapperBaseURL:       viper.GetString("bot.scrapper_baseurl"),
-			ReadTimeout:           viper.GetDuration("bot.read_timeout"),
-			WriteTimeout:          viper.GetDuration("bot.write_timeout"),
-			ScrapperClientTimeout: viper.GetDuration("bot.scrapper_client_timeout"),
-			LogsPath:              viper.GetString("bot.logger_path"),
+			TgToken:               viper.GetString("TG_TOKEN"),
+			Address:               viper.GetString("BOT_ADDRESS"),
+			ScrapperBaseURL:       viper.GetString("SCRAPPER_BASEURL"),
+			ReadTimeout:           viper.GetDuration("BOT_READ_TIMEOUT"),
+			WriteTimeout:          viper.GetDuration("BOT_WRITE_TIMEOUT"),
+			ScrapperClientTimeout: viper.GetDuration("SCRAPPER_CLIENT_TIMEOUT"),
 		},
 		DBConfig: DBConfig{
-			PostgresUser:     viper.GetString("db.postgres_user"),
-			PostgresPassword: viper.GetString("db.postgres_password"),
-			PostgresDB:       viper.GetString("db.postgres_db"),
+			PostgresUser:     viper.GetString("POSTGRES_USER"),
+			PostgresPassword: viper.GetString("POSTGRES_PASSWORD"),
+			PostgresDB:       viper.GetString("POSTGRES_DB"),
 		},
-	}
-
-	// Replace with a token from an environment variable if one exists
-	if viper.GetString("tg_token") != "" {
-		config.BotConfig.TgToken = viper.GetString("tg_token")
-	}
-
-	if viper.GetString("postgres_user") != "" {
-		config.DBConfig.PostgresUser = viper.GetString("postgres_user")
-	}
-
-	if viper.GetString("postgres_password") != "" {
-		config.DBConfig.PostgresPassword = viper.GetString("postgres_password")
-	}
-
-	if viper.GetString("postgres_db") != "" {
-		config.DBConfig.PostgresDB = viper.GetString("postgres_db")
 	}
 
 	return &config, nil

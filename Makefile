@@ -1,58 +1,20 @@
 COVERAGE_FILE ?= coverage.out
-# Имена бинарных файлов
-BOT_BINARY=./bin/bot
-SCRAPPER_BINARY=./bin/scrapper
 
-# PID-файлы для хранения идентификаторов процессов
-BOT_PIDFILE=./bin/bot.pid
-SCRAPPER_PIDFILE=./bin/scrapper.pid
-
-# Цель для сборки обоих приложений
 .PHONY: build
-build: build_bot build_scrapper
+build:
+	@docker compose up -d --build
 
-# Цель для запуска обоих приложений
 .PHONY: run
-run: build
-	@echo "Запуск bot и scrapper в фоновом режиме"
-	@$(BOT_BINARY) & echo $$! > $(BOT_PIDFILE)
-	@$(SCRAPPER_BINARY) & echo $$! > $(SCRAPPER_PIDFILE)
+run:
+	@docker compose up -d
 	@echo "Приложения запущены. Используйте 'make stop' для остановки."
 
-# Цель для остановки всех запущенных приложений с передачей SIGINT
 .PHONY: stop
 stop:
-	@echo "Остановка всех запущенных приложений с передачей SIGINT"
-	@-kill -INT $$(cat $(BOT_PIDFILE)) 2>/dev/null || true
-	@-kill -INT $$(cat $(SCRAPPER_PIDFILE)) 2>/dev/null || true
-	@rm -f $(BOT_PIDFILE) $(SCRAPPER_PIDFILE)
+	@docker compose down
 	@echo "Приложения остановлены."
 
-# Сборка bot
-.PHONY: build_bot
-build_bot:
-	@echo "Сборка bot..."
-	@mkdir -p ./bin
-	@go build -o $(BOT_BINARY) ./cmd/bot
 
-# Сборка scrapper
-.PHONY: build_scrapper
-build_scrapper:
-	@echo "Сборка scrapper..."
-	@mkdir -p ./bin
-	@go build -o $(SCRAPPER_BINARY) ./cmd/scrapper
-
-# Запуск bot (отдельно)
-.PHONY: run_bot
-run_bot:
-	@echo "Запуск bot..."
-	@$(BOT_BINARY)
-
-# Запуск scrapper (отдельно)
-.PHONY: run_scrapper
-run_scrapper:
-	@echo "Запуск scrapper..."
-	@$(SCRAPPER_BINARY)
 
 
 ## test: run all tests
@@ -103,4 +65,4 @@ generate_openapi:
 
 .PHONY: clean
 clean:
-	@rm -rf./bin
+	@docker compose down -v
