@@ -10,6 +10,8 @@ import (
 	"net/url"
 	"time"
 
+	"LinkTracker/internal/infrastructure/dto"
+
 	"LinkTracker/internal/domain"
 	scrapperdto "LinkTracker/internal/infrastructure/dto/dto_scrapper"
 )
@@ -143,7 +145,7 @@ func (c *ScrapperHTTPClient) GetLinks(ctx context.Context, tgID int64) ([]domain
 func (c *ScrapperHTTPClient) AddLink(ctx context.Context, tgID int64, link *domain.Link) error {
 	endpoint := c.scrapperBaseURL.JoinPath("/links")
 
-	payload, err := json.Marshal(LinkToLinkRequestDTO(link))
+	payload, err := json.Marshal(dto.LinkToLinkRequestDTO(link))
 	if err != nil {
 		return err
 	}
@@ -189,7 +191,7 @@ func (c *ScrapperHTTPClient) AddLink(ctx context.Context, tgID int64, link *doma
 func (c *ScrapperHTTPClient) RemoveLink(ctx context.Context, tgID int64, link *domain.Link) error {
 	endpoint := c.scrapperBaseURL.JoinPath("/links")
 
-	payload, err := json.Marshal(LinkToRemoveListRequestDTO(link))
+	payload, err := json.Marshal(dto.LinkToRemoveListRequestDTO(link))
 	if err != nil {
 		return err
 	}
@@ -236,7 +238,7 @@ func (c *ScrapperHTTPClient) RemoveLink(ctx context.Context, tgID int64, link *d
 func (c *ScrapperHTTPClient) UpdateLink(ctx context.Context, tgID int64, link *domain.Link) error {
 	endpoint := c.scrapperBaseURL.JoinPath("/links")
 
-	payload, err := json.Marshal(LinkToLinkRequestDTO(link))
+	payload, err := json.Marshal(dto.LinkToLinkRequestDTO(link))
 	if err != nil {
 		return err
 	}
@@ -450,18 +452,4 @@ func HandleAPIErrorResponseFromScrapper(resp *http.Response) error {
 	}
 
 	return apiError
-}
-
-func LinkToLinkRequestDTO(link *domain.Link) scrapperdto.LinkRequest {
-	return scrapperdto.LinkRequest{
-		Link:    &link.URL,
-		Tags:    &link.Tags,
-		Filters: &link.Filters,
-	}
-}
-
-func LinkToRemoveListRequestDTO(link *domain.Link) scrapperdto.RemoveLinkRequest {
-	return scrapperdto.RemoveLinkRequest{
-		Link: &link.URL,
-	}
 }

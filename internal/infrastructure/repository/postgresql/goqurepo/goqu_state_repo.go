@@ -1,9 +1,11 @@
 package goqurepo
 
 import (
-	"LinkTracker/internal/domain"
 	"context"
+
 	"github.com/jackc/pgx/v5/stdlib"
+
+	"LinkTracker/internal/domain"
 
 	"github.com/doug-martin/goqu/v9"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -36,6 +38,7 @@ func (r *StateRepoGoqu) CreateState(ctx context.Context, tgID int64, state int) 
 	}
 
 	_, err = r.pool.Exec(ctx, sql, args...)
+
 	return err
 }
 
@@ -48,6 +51,7 @@ func (r *StateRepoGoqu) DeleteState(ctx context.Context, tgID int64) error {
 	}
 
 	_, err = r.pool.Exec(ctx, sql, args...)
+
 	return err
 }
 
@@ -78,9 +82,11 @@ func (r *StateRepoGoqu) GetState(ctx context.Context, tgID int64) (int, domain.L
 	if url.Valid {
 		link.URL = url.String
 	}
+
 	if tags.Valid {
 		link.Tags = tags.Elements
 	}
+
 	if filters.Valid {
 		link.Filters = filters.Elements
 	}
@@ -104,5 +110,6 @@ func (r *StateRepoGoqu) UpdateState(ctx context.Context, tgID int64, state int, 
 	}
 
 	_, err = r.pool.Exec(ctx, sql, args...)
+
 	return err
 }

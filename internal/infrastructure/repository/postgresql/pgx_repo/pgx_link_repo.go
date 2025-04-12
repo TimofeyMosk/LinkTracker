@@ -133,6 +133,10 @@ func (r *LinkRepoPgx) DeleteLink(ctx context.Context, id int64, link *domain.Lin
 
 	err = tx.QueryRow(ctx, sqlSelectUrlsAndTracks, link.URL, id).Scan(&urlID, &lastUpdate, &filters, &tags)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return domain.Link{}, domain.ErrLinkNotExist{}
+		}
+
 		return domain.Link{}, err
 	}
 
@@ -170,11 +174,7 @@ func (r *LinkRepoPgx) DeleteLink(ctx context.Context, id int64, link *domain.Lin
 		return domain.Link{}, err
 	}
 
-	return domain.Link{URL: link.URL,
-		ID:      urlID,
-		Filters: filters,
-		Tags:    tags,
-	}, nil
+	return domain.Link{URL: link.URL, ID: urlID, Filters: filters, Tags: tags}, nil
 }
 
 func (r *LinkRepoPgx) GetAllLinks(ctx context.Context) ([]domain.Link, error) {

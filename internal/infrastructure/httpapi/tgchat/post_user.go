@@ -18,16 +18,16 @@ type PostUserHandler struct {
 func (h PostUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	chatID, err := httpapi.GetTgIDFromString(r.PathValue("id"))
 	if err != nil {
-		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_CHAT_ID",
-			"Invalid or missing chat ID", err.Error(), "BadRequest")
+		httpapi.SendErrorResponse(w, http.StatusBadRequest, "400",
+			"Invalid or missing tgID", err.Error(), "INVALID_TG_ID")
 
 		return
 	}
 
 	err = h.UserAdder.AddUser(r.Context(), chatID)
 	if err != nil {
-		httpapi.SendErrorResponse(w, http.StatusBadRequest, "CREATE_CHAT_FAILED",
-			"Failed to create chat", err.Error(), "BadRequest")
+		httpapi.SendErrorResponse(w, http.StatusBadRequest, "500",
+			"Failed to create user", err.Error(), "CREATE_USER_FAILED")
 
 		return
 	}

@@ -20,8 +20,8 @@ type DeleteUserHandler struct {
 func (h DeleteUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	chatID, err := httpapi.GetTgIDFromString(r.PathValue("id"))
 	if err != nil {
-		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_CHAT_ID",
-			"Invalid or missing chat ID", err.Error(), "BadRequest")
+		httpapi.SendErrorResponse(w, http.StatusBadRequest, "400",
+			"Invalid or missing tgID", err.Error(), "INVALID_TG_ID")
 
 		return
 	}
@@ -29,11 +29,11 @@ func (h DeleteUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	err = h.UserDeleter.DeleteUser(r.Context(), chatID)
 	if err != nil {
 		if errors.As(err, &domain.ErrUserNotExist{}) {
-			httpapi.SendErrorResponse(w, http.StatusNotFound, "CHAT_NOT_EXIST",
-				"Chat not exist", err.Error(), "Not Found")
+			httpapi.SendErrorResponse(w, http.StatusNotFound, "404",
+				"User not exist", err.Error(), "USER_NOT_EXIST")
 		} else {
-			httpapi.SendErrorResponse(w, http.StatusBadRequest, "CHAT_NOT_DELETED",
-				"Chat has not been deleted", err.Error(), "BadRequest")
+			httpapi.SendErrorResponse(w, http.StatusBadRequest, "500",
+				"Chat has not been deleted", err.Error(), "CHAT_NOT_DELETED")
 		}
 
 		return

@@ -61,7 +61,7 @@ func main() {
 	if err := serv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		slog.Error("server failed to start or finished with error", "error", err)
 	} else {
-		slog.Info("server stopped")
+		slog.Info("Server stopped gracefully")
 	}
 
 	wg.Wait()

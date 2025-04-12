@@ -22,16 +22,16 @@ type GetStatesHandler struct {
 func (h GetStatesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	tgID, err := httpapi.GetTgIDFromString(r.Header.Get("Tg-Chat-Id"))
 	if err != nil {
-		httpapi.SendErrorResponse(w, http.StatusInternalServerError, "INVALID_CHAT_ID",
-			"Invalid or missing chat ID", err.Error(), "BadRequest")
+		httpapi.SendErrorResponse(w, http.StatusInternalServerError, "400",
+			"Invalid or missing tgID", err.Error(), "INVALID_TG_ID")
 
 		return
 	}
 
 	state, link, err := h.StateGetter.GetState(r.Context(), tgID)
 	if err != nil {
-		httpapi.SendErrorResponse(w, http.StatusInternalServerError, "FAILED",
-			"Failed to get state", err.Error(), "Server Error")
+		httpapi.SendErrorResponse(w, http.StatusInternalServerError, "500",
+			"Failed to get state", err.Error(), "GET_STATE_FAILED")
 
 		return
 	}

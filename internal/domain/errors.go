@@ -9,23 +9,28 @@ func (e ErrUserNotExist) Error() string {
 	return "user not exists"
 }
 
+type ErrRegistrationUser struct{}
+
+func (e ErrRegistrationUser) Error() string {
+	return "failed to register a user"
+}
+
 type ErrUserAlreadyExist struct{}
 
 func (e ErrUserAlreadyExist) Error() string {
 	return "user already exists"
 }
 
+type ErrDeletionUser struct{}
+
+func (e ErrDeletionUser) Error() string {
+	return "failed to deletion a user"
+}
+
 type ErrEmptyString struct{}
 
 func (e ErrEmptyString) Error() string {
 	return "empty string"
-}
-
-type ErrQuestionNotFound struct {
-}
-
-func (e ErrQuestionNotFound) Error() string {
-	return "question not found"
 }
 
 type ErrWrongURL struct {
@@ -39,18 +44,6 @@ type ErrUnsupportedHost struct{}
 
 func (e ErrUnsupportedHost) Error() string {
 	return "unsupported host"
-}
-
-type ErrRegistrationUser struct{}
-
-func (e ErrRegistrationUser) Error() string {
-	return "failed to register a user"
-}
-
-type ErrDeletionUser struct{}
-
-func (e ErrDeletionUser) Error() string {
-	return "failed to deletion a user"
 }
 
 type ErrAPI struct {
@@ -85,6 +78,12 @@ type ErrLinkAlreadyTracking struct{}
 
 func (e ErrLinkAlreadyTracking) Error() string {
 	return "link already tracking"
+}
+
+type ErrLinkNotExist struct{}
+
+func (e ErrLinkNotExist) Error() string {
+	return "link not exists"
 }
 
 type ErrUpdatesNotFound struct{}

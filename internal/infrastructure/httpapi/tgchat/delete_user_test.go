@@ -1,84 +1,105 @@
 package tgchat_test
 
-// func Test_DeleteUserHandler_InvalidChatID(t *testing.T) {
-//	mockScrapper := &mocks.UserDeleter{}
-//	handler := tgchat.DeleteUserHandler{UserDeleter: mockScrapper}
-//	id := "errorID"
-//	request := httptest.NewRequest(http.MethodDelete, fmt.Sprintf("/users/%s", id), http.NoBody)
-//	request.SetPathValue("id", id)
-//
-//	responseRecorder := httptest.NewRecorder()
-//
-//	handler.ServeHTTP(responseRecorder, request)
-//
-//	var apiErrorBody scrapperdto.ApiErrorResponse
-//	err := json.Unmarshal(responseRecorder.Body.Bytes(), &apiErrorBody)
-//	assert.NoError(t, err)
-//	assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
-//	assert.Equal(t, "INVALID_CHAT_ID", *apiErrorBody.Code)
-//	assert.Equal(t, "Invalid or missing chat ID", *apiErrorBody.Description)
-//	assert.Equal(t, "BadRequest", *apiErrorBody.ExceptionName)
-//}
-//
-// func Test_DeleteUserHandler_UserNotExist(t *testing.T) {
-//	mockScrapper := &mocks.UserDeleter{}
-//	tgID := int64(123)
-//	mockScrapper.On("DeleteUser", tgID).Return(domain.ErrUserNotExist{}).Once()
-//
-//	handler := tgchat.DeleteUserHandler{UserDeleter: mockScrapper}
-//	request := httptest.NewRequest(http.MethodDelete, fmt.Sprintf("/users/%d", tgID), http.NoBody)
-//	request.SetPathValue("id", strconv.Itoa(int(tgID)))
-//
-//	responseRecorder := httptest.NewRecorder()
-//
-//	handler.ServeHTTP(responseRecorder, request)
-//
-//	var apiErrorBody scrapperdto.ApiErrorResponse
-//	err := json.Unmarshal(responseRecorder.Body.Bytes(), &apiErrorBody)
-//	assert.NoError(t, err)
-//	assert.Equal(t, http.StatusNotFound, responseRecorder.Code)
-//	assert.Equal(t, "CHAT_NOT_EXIST", *apiErrorBody.Code)
-//	assert.Equal(t, "Chat not exist", *apiErrorBody.Description)
-//	assert.Equal(t, "Not Found", *apiErrorBody.ExceptionName)
-//	mockScrapper.AssertExpectations(t)
-//}
-//
-//func Test_DeleteUserHandler_ChatNotDeleted(t *testing.T) {
-//	mockScrapper := &mocks.UserDeleter{}
-//	tgID := int64(123)
-//	mockScrapper.On("DeleteUser", tgID).Return(errors.New("some error")).Once()
-//
-//	handler := tgchat.DeleteUserHandler{UserDeleter: mockScrapper}
-//	request := httptest.NewRequest(http.MethodDelete, fmt.Sprintf("/users/%d", tgID), http.NoBody)
-//	request.SetPathValue("id", strconv.Itoa(int(tgID)))
-//
-//	responseRecorder := httptest.NewRecorder()
-//
-//	handler.ServeHTTP(responseRecorder, request)
-//
-//	var apiErrorBody scrapperdto.ApiErrorResponse
-//	err := json.Unmarshal(responseRecorder.Body.Bytes(), &apiErrorBody)
-//	assert.NoError(t, err)
-//	assert.Equal(t, http.StatusBadRequest, responseRecorder.Code)
-//	assert.Equal(t, "CHAT_NOT_DELETED", *apiErrorBody.Code)
-//	assert.Equal(t, "Chat has not been deleted", *apiErrorBody.Description)
-//	assert.Equal(t, "BadRequest", *apiErrorBody.ExceptionName)
-//	mockScrapper.AssertExpectations(t)
-//}
-//
-//func Test_DeleteUserHandler_Success(t *testing.T) {
-//	mockScrapper := &mocks.UserDeleter{}
-//	tgID := int64(123)
-//	mockScrapper.On("DeleteUser", tgID).Return(nil).Once()
-//
-//	handler := tgchat.DeleteUserHandler{UserDeleter: mockScrapper}
-//	request := httptest.NewRequest(http.MethodDelete, fmt.Sprintf("/users/%d", tgID), http.NoBody)
-//	request.SetPathValue("id", strconv.Itoa(int(tgID)))
-//
-//	responseRecorder := httptest.NewRecorder()
-//
-//	handler.ServeHTTP(responseRecorder, request)
-//
-//	assert.Equal(t, http.StatusOK, responseRecorder.Code)
-//	mockScrapper.AssertExpectations(t)
-//}
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"strconv"
+	"testing"
+
+	"LinkTracker/internal/domain"
+
+	"github.com/stretchr/testify/assert"
+
+	scrapperdto "LinkTracker/internal/infrastructure/dto/dto_scrapper"
+	"LinkTracker/internal/infrastructure/httpapi/tgchat"
+	"LinkTracker/internal/infrastructure/httpapi/tgchat/mocks"
+)
+
+func Test_DeleteUserHandler_InvalidChatID(t *testing.T) {
+	ctx := context.Background()
+	tgID := "invalidID"
+	userDeleter := &mocks.UserDeleter{}
+	handler := tgchat.DeleteUserHandler{UserDeleter: userDeleter}
+
+	r := httptest.NewRequestWithContext(ctx, http.MethodDelete, fmt.Sprintf("/users/%s", tgID), http.NoBody)
+	r.SetPathValue("id", tgID)
+
+	w := httptest.NewRecorder()
+
+	handler.ServeHTTP(w, r)
+
+	var apiErrorBody scrapperdto.ApiErrorResponse
+	err := json.Unmarshal(w.Body.Bytes(), &apiErrorBody)
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+	assert.Equal(t, "Invalid or missing tgID", *apiErrorBody.Description)
+	assert.Equal(t, "400", *apiErrorBody.Code)
+	assert.Equal(t, "INVALID_TG_ID", *apiErrorBody.ExceptionName)
+}
+
+func Test_DeleteUserHandler_UserNotExist(t *testing.T) {
+	ctx := context.Background()
+	tgID := int64(123)
+	userDeleter := &mocks.UserDeleter{}
+	userDeleter.On("DeleteUser", ctx, tgID).Return(domain.ErrUserNotExist{})
+	handler := tgchat.DeleteUserHandler{UserDeleter: userDeleter}
+
+	r := httptest.NewRequestWithContext(ctx, http.MethodDelete, fmt.Sprintf("/users/%d", tgID), http.NoBody)
+	r.SetPathValue("id", strconv.FormatInt(tgID, 10))
+
+	w := httptest.NewRecorder()
+
+	handler.ServeHTTP(w, r)
+
+	var apiErrorBody scrapperdto.ApiErrorResponse
+	err := json.Unmarshal(w.Body.Bytes(), &apiErrorBody)
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusNotFound, w.Code)
+	assert.Equal(t, "User not exist", *apiErrorBody.Description)
+	assert.Equal(t, "404", *apiErrorBody.Code)
+	assert.Equal(t, "USER_NOT_EXIST", *apiErrorBody.ExceptionName)
+}
+
+func Test_DeleteUserHandler_ChatNotDeleted(t *testing.T) {
+	ctx := context.Background()
+	tgID := int64(123)
+	userDeleter := &mocks.UserDeleter{}
+	userDeleter.On("DeleteUser", ctx, tgID).Return(errors.New("some error"))
+	handler := tgchat.DeleteUserHandler{UserDeleter: userDeleter}
+
+	r := httptest.NewRequestWithContext(ctx, http.MethodDelete, fmt.Sprintf("/users/%d", tgID), http.NoBody)
+	r.SetPathValue("id", strconv.FormatInt(tgID, 10))
+
+	w := httptest.NewRecorder()
+
+	handler.ServeHTTP(w, r)
+
+	var apiErrorBody scrapperdto.ApiErrorResponse
+	err := json.Unmarshal(w.Body.Bytes(), &apiErrorBody)
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+	assert.Equal(t, "Chat has not been deleted", *apiErrorBody.Description)
+	assert.Equal(t, "500", *apiErrorBody.Code)
+	assert.Equal(t, "CHAT_NOT_DELETED", *apiErrorBody.ExceptionName)
+}
+
+func Test_DeleteUserHandler_Success(t *testing.T) {
+	ctx := context.Background()
+	tgID := int64(123)
+	userDeleter := &mocks.UserDeleter{}
+	userDeleter.On("DeleteUser", ctx, tgID).Return(nil)
+	handler := tgchat.DeleteUserHandler{UserDeleter: userDeleter}
+
+	r := httptest.NewRequestWithContext(ctx, http.MethodDelete, fmt.Sprintf("/users/%d", tgID), http.NoBody)
+	r.SetPathValue("id", strconv.FormatInt(tgID, 10))
+
+	w := httptest.NewRecorder()
+
+	handler.ServeHTTP(w, r)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+}

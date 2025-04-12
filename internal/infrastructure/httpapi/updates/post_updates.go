@@ -20,15 +20,16 @@ type PostUpdatesHandler struct {
 func (h PostUpdatesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var requestBody botdto.LinkUpdate
 	if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
-		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_REQUEST_BODY",
-			"Invalid or missing request body", err.Error(), "BadRequest")
-
+		httpapi.SendErrorResponse(w, http.StatusBadRequest, "400",
+			"Invalid or missing request body", err.Error(), "INVALID_REQUEST_BODY")
 		return
 	}
 
 	if requestBody.TgChatIds == nil || requestBody.Url == nil {
-		httpapi.SendErrorResponse(w, http.StatusBadRequest, "MISSING_REQUIRED_FIELDS",
-			"\"TgChatIds\" or \"Url\" is missing", "", "BadRequest")
+		httpapi.SendErrorResponse(w, http.StatusBadRequest, "400",
+			"\"TgChatIds\" or \"Url\" is missing", "requestBody.TgChatIds == nil || requestBody.Url == nil",
+			"MISSING_REQUIRED_FIELDS")
+
 		return
 	}
 
@@ -37,7 +38,6 @@ func (h PostUpdatesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.UpdateSender.UpdateSend(r.Context(), *requestBody.TgChatIds, *requestBody.Url, *requestBody.Description)
-
 	w.WriteHeader(http.StatusOK)
 }
 

@@ -1,6 +1,6 @@
 package linkchecker_test
 
-//// Test_LinkChecker_CheckLinks проверяет корректность работы метода CheckLinks.
+// Test_LinkChecker_CheckLinks проверяет корректность работы метода CheckLinks.
 // func Test_LinkChecker_CheckLinks(t *testing.T) {
 //	ctx := context.Background()
 //	linkRepoMock := &scrappermocks.LinkRepo{}

@@ -18,16 +18,16 @@ type DeleteStatesHandler struct {
 func (h DeleteStatesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	tgID, err := httpapi.GetTgIDFromString(r.Header.Get("Tg-Chat-Id"))
 	if err != nil {
-		httpapi.SendErrorResponse(w, http.StatusInternalServerError, "INVALID_CHAT_ID",
-			"Invalid or missing chat ID", err.Error(), "BadRequest")
+		httpapi.SendErrorResponse(w, http.StatusInternalServerError, "400",
+			"Invalid or missing tgID", err.Error(), "INVALID_TG_ID")
 
 		return
 	}
 
 	err = h.StateDeleter.DeleteState(r.Context(), tgID)
 	if err != nil {
-		httpapi.SendErrorResponse(w, http.StatusInternalServerError, "FAILED",
-			"Failed to delete state", err.Error(), "Server Error")
+		httpapi.SendErrorResponse(w, http.StatusInternalServerError, "500",
+			"Failed to delete state", err.Error(), "DELETE_STATE_FAILED")
 
 		return
 	}

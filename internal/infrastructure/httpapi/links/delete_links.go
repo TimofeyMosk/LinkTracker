@@ -7,6 +7,8 @@ import (
 	"log/slog"
 	"net/http"
 
+	"LinkTracker/internal/infrastructure/dto"
+
 	"LinkTracker/internal/domain"
 	scrapperdto "LinkTracker/internal/infrastructure/dto/dto_scrapper"
 	"LinkTracker/internal/infrastructure/httpapi"
@@ -21,48 +23,49 @@ type DeleteLinksHandler struct {
 }
 
 func (h DeleteLinksHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	tgChatID, err := httpapi.GetTgIDFromString(r.Header.Get("Tg-Chat-Id"))
+	tgID, err := httpapi.GetTgIDFromString(r.Header.Get("Tg-Chat-Id"))
 	if err != nil {
-		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_CHAT_ID",
-			"Invalid or missing chat ID", err.Error(), "BadRequest")
+		httpapi.SendErrorResponse(w, http.StatusBadRequest, "400",
+			"Invalid or missing tgID", err.Error(), "INVALID_TG_ID")
 
 		return
 	}
 
 	var removeLinkRequest scrapperdto.RemoveLinkRequest
 	if err = json.NewDecoder(r.Body).Decode(&removeLinkRequest); err != nil {
-		httpapi.SendErrorResponse(w, http.StatusBadRequest, "INVALID_REQUEST_BODY",
-			"Invalid or missing request body", err.Error(), "BadRequest")
+		httpapi.SendErrorResponse(w, http.StatusBadRequest, "400",
+			"Invalid or missing request body", err.Error(), "INVALID_REQUEST_BODY")
 
 		return
 	}
 
-	link := domain.Link{URL: *removeLinkRequest.Link, Tags: nil, Filters: nil, ID: 0}
-
-	deletedLink, err := h.LinkDeleter.DeleteLink(r.Context(), tgChatID, &link)
+	link, err := dto.RemoveLinkRequestDTOToLink(removeLinkRequest)
 	if err != nil {
-		if errors.As(err, &domain.ErrUserNotExist{}) {
-			httpapi.SendErrorResponse(w, http.StatusNotFound, "CHAT_NOT_EXIST",
-				"Chat not exist", err.Error(), "Not Found")
+		httpapi.SendErrorResponse(w, http.StatusBadRequest, "400",
+			"Missing required fields", err.Error(), "INVALID_REQUEST_BODY")
+
+		return
+	}
+
+	deletedLink, err := h.LinkDeleter.DeleteLink(r.Context(), tgID, &link)
+	if err != nil {
+		if errors.As(err, &domain.ErrLinkNotExist{}) {
+			httpapi.SendErrorResponse(w, http.StatusNotFound, "404",
+				"Link not found", err.Error(), "LINK_NOT_EXIST")
 
 			return
 		}
 
-		httpapi.SendErrorResponse(w, http.StatusBadRequest, "DELETE_LINK_FAILED",
-			"Failed to delete link", err.Error(), "BadRequest")
+		httpapi.SendErrorResponse(w, http.StatusBadRequest, "500",
+			"Failed to delete link", err.Error(), "DELETE_LINK_FAILED")
 
 		return
 	}
 
-	linkResponse := scrapperdto.LinkResponse{
-		Url:     &deletedLink.URL,
-		Id:      &tgChatID,
-		Tags:    &deletedLink.Tags,
-		Filters: &deletedLink.Filters,
-	}
-
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
+
+	linkResponse := dto.LinkToLinkResponseDTO(&deletedLink)
 
 	err = json.NewEncoder(w).Encode(linkResponse)
 	if err != nil {

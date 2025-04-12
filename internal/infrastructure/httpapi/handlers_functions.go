@@ -28,36 +28,6 @@ func SendErrorResponse(w http.ResponseWriter, statusCode int, code, description,
 	}
 }
 
-func LinksToDTO(links []domain.Link) scrapperdto.ListLinksResponse {
-	linksResponse := make([]scrapperdto.LinkResponse, len(links))
-	for i := range links {
-		linksResponse[i] = scrapperdto.LinkResponse{
-			Id:      &links[i].ID,
-			Url:     &links[i].URL,
-			Tags:    &links[i].Tags,
-			Filters: &links[i].Filters,
-		}
-	}
-
-	length := int32(len(linksResponse)) //nolint:gosec //api contract compliance(+ overflow is unlikely to be possible in real life)
-
-	return scrapperdto.ListLinksResponse{Links: &linksResponse, Size: &length}
-}
-
-func LinkRequestDtoToLink(addLinkRequest scrapperdto.LinkRequest) (domain.Link, error) {
-	var link domain.Link
-
-	if addLinkRequest.Link == nil {
-		return link, domain.ErrNoRequiredAttribute{Attribute: "link"}
-	}
-
-	link.URL = *addLinkRequest.Link
-	link.Tags = *addLinkRequest.Tags
-	link.Filters = *addLinkRequest.Filters
-
-	return link, nil
-}
-
 func GetTgIDFromString(s string) (int64, error) {
 	if s == "" {
 		return 0, domain.ErrEmptyString{}
