@@ -96,10 +96,10 @@ func (r *LinkRepoGoqu) GetUserLinks(ctx context.Context, id int64) ([]domain.Lin
 }
 
 // AddLink добавляет новую ссылку, вставляя её в таблицу urls и создавая трек в таблице tracks.
-func (r *LinkRepoGoqu) AddLink(ctx context.Context, id int64, link *domain.Link) (err error) {
+func (r *LinkRepoGoqu) AddLink(ctx context.Context, id int64, link *domain.Link) (domain.Link, error) {
 	tx, err := r.pool.Begin(ctx)
 	if err != nil {
-		return err
+		return domain.Link{}, err
 	}
 
 	defer func() {
@@ -116,12 +116,12 @@ func (r *LinkRepoGoqu) AddLink(ctx context.Context, id int64, link *domain.Link)
 
 	sqlURL, argsURL, err := dsInsertURL.ToSQL()
 	if err != nil {
-		return err
+		return domain.Link{}, err
 	}
 
 	var urlID int64
 	if err := tx.QueryRow(ctx, sqlURL, argsURL...).Scan(&urlID); err != nil {
-		return err
+		return domain.Link{}, err
 	}
 
 	// Вставляем трек для пользователя и созданного url
@@ -131,14 +131,16 @@ func (r *LinkRepoGoqu) AddLink(ctx context.Context, id int64, link *domain.Link)
 
 	sqlTrack, argsTrack, err := dsInsertTrack.ToSQL()
 	if err != nil {
-		return err
+		return domain.Link{}, err
 	}
 
 	if _, err = tx.Exec(ctx, sqlTrack, argsTrack...); err != nil {
-		return err
+		return domain.Link{}, err
 	}
 
-	return tx.Commit(ctx)
+	link.ID = urlID
+
+	return *link, tx.Commit(ctx)
 }
 
 // DeleteLink удаляет трек ссылки пользователя. Если для ссылки не осталось треков, удаляет запись из urls.
@@ -187,6 +189,10 @@ func (r *LinkRepoGoqu) selectLinkInfo(ctx context.Context, tx pgx.Tx, id int64, 
 
 	l.URL = link.URL
 	if err := tx.QueryRow(ctx, sql, args...).Scan(&l.ID, &l.LastUpdated, &l.Filters, &l.Tags); err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, domain.ErrLinkNotExist{}
+		}
+
 		return nil, err
 	}
 

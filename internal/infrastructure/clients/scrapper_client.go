@@ -10,9 +10,8 @@ import (
 	"net/url"
 	"time"
 
-	"LinkTracker/internal/infrastructure/dto"
-
 	"LinkTracker/internal/domain"
+	"LinkTracker/internal/infrastructure/dto"
 	scrapperdto "LinkTracker/internal/infrastructure/dto/dto_scrapper"
 )
 

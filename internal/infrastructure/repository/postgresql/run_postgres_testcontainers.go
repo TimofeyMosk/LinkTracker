@@ -118,7 +118,7 @@ func runMigrations(ctx context.Context, networkName string) error {
 	return container.Terminate(ctx)
 }
 
-func RunTestContainers(ctx context.Context) (*pgxpool.Pool, func(), error) {
+func RunPostgresAndMigrateTestContainers(ctx context.Context) (*pgxpool.Pool, func(), error) {
 	netw, networkName, err := createNetwork(ctx)
 	if err != nil {
 		return nil, nil, err

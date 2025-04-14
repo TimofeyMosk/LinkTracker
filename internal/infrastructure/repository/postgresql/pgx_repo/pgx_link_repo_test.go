@@ -28,7 +28,7 @@ func Test_LinkRepo(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 
-	pool, cleanup, err := postgresql.RunTestContainers(ctx)
+	pool, cleanup, err := postgresql.RunPostgresAndMigrateTestContainers(ctx)
 	defer cleanup()
 	require.NoError(t, err)
 
@@ -48,7 +48,7 @@ func Test_LinkRepo(t *testing.T) {
 
 	t.Run("Add and Get User Links", func(t *testing.T) {
 		// Добавляем ссылку для пользователя
-		err := linkRepo.AddLink(ctx, tgID, &testLink)
+		_, err := linkRepo.AddLink(ctx, tgID, &testLink)
 		require.NoError(t, err)
 
 		// Получаем ссылки пользователя и проверяем, что добавленная ссылка присутствует

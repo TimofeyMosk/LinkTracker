@@ -20,7 +20,7 @@ func Test_StateRepo(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 
-	pool, cleanup, err := postgresql.RunTestContainers(ctx)
+	pool, cleanup, err := postgresql.RunPostgresAndMigrateTestContainers(ctx)
 	require.NoError(t, err)
 	defer cleanup()
 

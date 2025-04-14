@@ -29,7 +29,7 @@ type StackOverflowHTTPClient struct {
 func NewStackOverflowHTTPClient() *StackOverflowHTTPClient {
 	return &StackOverflowHTTPClient{
 		Client:        &http.Client{Timeout: stackOverflowHTTPTimeout},
-		globalLimiter: rate.NewLimiter(rate.Limit(allowedRequestsPerDay), allowedRequestsPerDay)}
+		globalLimiter: rate.NewLimiter(rate.Every((24*time.Hour)/allowedRequestsPerDay), allowedRequestsPerDay)}
 }
 
 func (c *StackOverflowHTTPClient) Supports(link *url.URL) bool {
@@ -75,7 +75,7 @@ func extractQuestionID(link string) (string, error) {
 
 	parts := strings.Split(strings.Trim(parsedURL.Path, "/"), "/")
 	if len(parts) < 2 || parts[0] != "questions" {
-		return "", fmt.Errorf("wrong url format, expected stackoverflow.com/questions/{id}")
+		return "", domain.ErrWrongURL{}
 	}
 
 	return parts[1], nil
@@ -101,6 +101,10 @@ func (c *StackOverflowHTTPClient) getQuestionDetails(ctx context.Context, questi
 		}
 	}()
 
+	if response.StatusCode != http.StatusOK {
+		return SOQuestion{}, domain.ErrStatusNotOK{StatusCode: response.StatusCode}
+	}
+
 	var result struct {
 		Items []SOQuestion `json:"items"`
 	}
@@ -110,16 +114,15 @@ func (c *StackOverflowHTTPClient) getQuestionDetails(ctx context.Context, questi
 	}
 
 	if len(result.Items) == 0 {
-		return SOQuestion{}, fmt.Errorf("question not found")
+		return SOQuestion{}, domain.ErrWrongURL{}
 	}
 
 	return result.Items[0], nil
 }
 
-// getLatestAnswer получает последний ответ с использованием встроенного фильтра withbody.
-func (c *StackOverflowHTTPClient) getLatestAnswer(ctx context.Context, questionID string) (*SOPost, error) {
-	apiURL := fmt.Sprintf("%s/questions/%s/answers?order=desc&sort=creation&site=stackoverflow&filter=withbody",
-		stackOverflowAPIBaseURL, questionID)
+func (c *StackOverflowHTTPClient) getLatestByTag(ctx context.Context, questionID, tag string) (*SOPost, error) {
+	apiURL := fmt.Sprintf("%s/questions/%s/%s?order=desc&sort=creation&site=stackoverflow&filter=withbody",
+		stackOverflowAPIBaseURL, questionID, tag)
 
 	request, err := http.NewRequestWithContext(ctx, "GET", apiURL, http.NoBody)
 	if err != nil {
@@ -136,6 +139,10 @@ func (c *StackOverflowHTTPClient) getLatestAnswer(ctx context.Context, questionI
 			slog.Error("could not close resource", "error", cerr.Error())
 		}
 	}()
+
+	if response.StatusCode != http.StatusOK {
+		return nil, domain.ErrStatusNotOK{StatusCode: response.StatusCode}
+	}
 
 	var answerResp SOListResponse
 	if err := json.NewDecoder(response.Body).Decode(&answerResp); err != nil {
@@ -147,39 +154,6 @@ func (c *StackOverflowHTTPClient) getLatestAnswer(ctx context.Context, questionI
 	}
 
 	return &answerResp.Items[0], nil
-}
-
-// getLatestComment получает последний комментарий с использованием встроенного фильтра withbody.
-func (c *StackOverflowHTTPClient) getLatestComment(ctx context.Context, questionID string) (*SOPost, error) {
-	apiURL := fmt.Sprintf("%s/questions/%s/comments?order=desc&sort=creation&site=stackoverflow&filter=withbody",
-		stackOverflowAPIBaseURL, questionID)
-
-	request, err := http.NewRequestWithContext(ctx, "GET", apiURL, http.NoBody)
-	if err != nil {
-		return nil, err
-	}
-
-	response, err := c.Client.Do(request)
-	if err != nil {
-		return nil, err
-	}
-
-	defer func() {
-		if cerr := response.Body.Close(); cerr != nil {
-			slog.Error("could not close resource", "error", cerr.Error())
-		}
-	}()
-
-	var commentResp SOListResponse
-	if err := json.NewDecoder(response.Body).Decode(&commentResp); err != nil {
-		return nil, err
-	}
-
-	if len(commentResp.Items) == 0 {
-		return nil, nil // комментариев нет
-	}
-
-	return &commentResp.Items[0], nil
 }
 
 // GetLatestAnswerOrComment возвращает сообщение с данными о последнем ответе или комментарии к вопросу:
@@ -199,7 +173,7 @@ func (c *StackOverflowHTTPClient) GetLatestAnswerOrComment(ctx context.Context, 
 	}
 
 	// Пытаемся получить последний ответ.
-	latestAnswer, err := c.getLatestAnswer(ctx, questionID)
+	latestAnswer, err := c.getLatestByTag(ctx, questionID, "answers")
 	if err != nil {
 		return time.Time{}, "", err
 	}
@@ -209,7 +183,7 @@ func (c *StackOverflowHTTPClient) GetLatestAnswerOrComment(ctx context.Context, 
 	if latestAnswer != nil {
 		latestPost = latestAnswer
 	} else {
-		latestComment, err := c.getLatestComment(ctx, questionID)
+		latestComment, err := c.getLatestByTag(ctx, questionID, "comments")
 		if err != nil {
 			return time.Time{}, "", err
 		}

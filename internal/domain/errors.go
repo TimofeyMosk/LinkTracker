@@ -2,8 +2,7 @@ package domain
 
 import "fmt"
 
-type ErrUserNotExist struct {
-}
+type ErrUserNotExist struct{}
 
 func (e ErrUserNotExist) Error() string {
 	return "user not exists"
@@ -90,4 +89,12 @@ type ErrUpdatesNotFound struct{}
 
 func (e ErrUpdatesNotFound) Error() string {
 	return "updates not found"
+}
+
+type ErrStatusNotOK struct {
+	StatusCode int
+}
+
+func (e ErrStatusNotOK) Error() string {
+	return fmt.Sprintf("status not ok, status code [%d]", e.StatusCode)
 }

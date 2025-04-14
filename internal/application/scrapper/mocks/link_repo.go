@@ -25,21 +25,31 @@ func (_m *LinkRepo) EXPECT() *LinkRepo_Expecter {
 }
 
 // AddLink provides a mock function with given fields: ctx, tgID, link
-func (_m *LinkRepo) AddLink(ctx context.Context, tgID int64, link *domain.Link) error {
+func (_m *LinkRepo) AddLink(ctx context.Context, tgID int64, link *domain.Link) (domain.Link, error) {
 	ret := _m.Called(ctx, tgID, link)
 
 	if len(ret) == 0 {
 		panic("no return value specified for AddLink")
 	}
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, int64, *domain.Link) error); ok {
+	var r0 domain.Link
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64, *domain.Link) (domain.Link, error)); ok {
+		return rf(ctx, tgID, link)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int64, *domain.Link) domain.Link); ok {
 		r0 = rf(ctx, tgID, link)
 	} else {
-		r0 = ret.Error(0)
+		r0 = ret.Get(0).(domain.Link)
 	}
 
-	return r0
+	if rf, ok := ret.Get(1).(func(context.Context, int64, *domain.Link) error); ok {
+		r1 = rf(ctx, tgID, link)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // LinkRepo_AddLink_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'AddLink'
@@ -62,12 +72,12 @@ func (_c *LinkRepo_AddLink_Call) Run(run func(ctx context.Context, tgID int64, l
 	return _c
 }
 
-func (_c *LinkRepo_AddLink_Call) Return(_a0 error) *LinkRepo_AddLink_Call {
-	_c.Call.Return(_a0)
+func (_c *LinkRepo_AddLink_Call) Return(_a0 domain.Link, _a1 error) *LinkRepo_AddLink_Call {
+	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *LinkRepo_AddLink_Call) RunAndReturn(run func(context.Context, int64, *domain.Link) error) *LinkRepo_AddLink_Call {
+func (_c *LinkRepo_AddLink_Call) RunAndReturn(run func(context.Context, int64, *domain.Link) (domain.Link, error)) *LinkRepo_AddLink_Call {
 	_c.Call.Return(run)
 	return _c
 }

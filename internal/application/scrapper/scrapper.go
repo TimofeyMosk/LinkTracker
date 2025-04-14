@@ -2,6 +2,7 @@ package scrapper
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"time"
@@ -13,7 +14,7 @@ import (
 
 type LinkRepo interface {
 	GetUserLinks(ctx context.Context, tgID int64) ([]domain.Link, error)
-	AddLink(ctx context.Context, tgID int64, link *domain.Link) error
+	AddLink(ctx context.Context, tgID int64, link *domain.Link) (domain.Link, error)
 	DeleteLink(ctx context.Context, tgID int64, link *domain.Link) (domain.Link, error)
 	UpdateLink(ctx context.Context, tgID int64, link *domain.Link) error
 	GetAllLinks(ctx context.Context) ([]domain.Link, error)
@@ -55,7 +56,9 @@ type Scrapper struct {
 
 func NewScrapper(userRepo UserRepo, linkRepo LinkRepo, stateManager StateRepo,
 	interval time.Duration, notifier Notifier, linkChecker LinkChecker) *Scrapper {
-	slog.Info("Creating new Scrapper", "interval", interval)
+	linkUpdatesBufferSize := 1000
+
+	slog.Info("Creating new Scrapper", "interval", interval, "linkUpdatesBufferSize", linkUpdatesBufferSize)
 
 	return &Scrapper{
 		userRepo:     userRepo,
@@ -64,7 +67,7 @@ func NewScrapper(userRepo UserRepo, linkRepo LinkRepo, stateManager StateRepo,
 		interval:     interval,
 		notifier:     notifier,
 		linkCheck:    linkChecker,
-		linkUpdates:  make(chan domain.LinkUpdate, 100),
+		linkUpdates:  make(chan domain.LinkUpdate, linkUpdatesBufferSize),
 	}
 }
 
@@ -100,130 +103,136 @@ func (s *Scrapper) Run(ctx context.Context) error {
 }
 
 func (s *Scrapper) AddUser(ctx context.Context, tgID int64) error {
-	slog.Info("Adding user")
-
 	err := s.userRepo.CreateUser(ctx, tgID)
 	if err != nil {
-		slog.Error("Failed to add user", "error", err.Error(), "tgID", tgID)
+		slog.Error("Add user failed", "error", err.Error(), "tgID", tgID)
 		return err
 	}
+
+	slog.Info("Add user done", "tgID", tgID)
 
 	return nil
 }
 
 func (s *Scrapper) DeleteUser(ctx context.Context, tgID int64) error {
-	slog.Info("Deleting user", "tgID", tgID)
-
 	err := s.userRepo.DeleteUser(ctx, tgID)
 	if err != nil {
-		slog.Error("Failed to delete user", "error", err.Error(), "tgID", tgID)
+		slog.Error("Delete user failed", "error", err.Error(), "tgID", tgID)
 		return err
 	}
+
+	slog.Info("Delete user done", "tgID", tgID)
 
 	return nil
 }
 
 func (s *Scrapper) GetUserLinks(ctx context.Context, tgID int64) ([]domain.Link, error) {
-	slog.Info("Getting links", "tgID", tgID)
-
 	links, err := s.linkRepo.GetUserLinks(ctx, tgID)
 	if err != nil {
-		slog.Error("Failed to get links", "error", err.Error(), "tgID", tgID)
+		slog.Error("Get user links failed", "error", err.Error(), "tgID", tgID)
 		return nil, err
 	}
+
+	slog.Info("Get user links done", "tgID", tgID)
 
 	return links, nil
 }
 
 func (s *Scrapper) AddLink(ctx context.Context, tgID int64, newLink *domain.Link) (domain.Link, error) {
-	slog.Info("Adding link", "tgID", tgID, "link", newLink)
-
 	userLinks, err := s.linkRepo.GetUserLinks(ctx, tgID)
 	if err != nil {
-		slog.Error("Failed to get links", "error", err.Error(), "tgID", tgID)
-		return *newLink, err
+		slog.Error("Add link failed", "error", err.Error(), "tgID", tgID, "link", newLink.URL)
+		return domain.Link{}, err
 	}
 
 	for _, userLink := range userLinks {
 		if userLink.URL == newLink.URL {
-			return *newLink, domain.ErrLinkAlreadyTracking{}
+			return domain.Link{}, domain.ErrLinkAlreadyTracking{}
 		}
 	}
 
-	err = s.linkRepo.AddLink(ctx, tgID, newLink)
+	newLinkWithID, err := s.linkRepo.AddLink(ctx, tgID, newLink)
 	if err != nil {
-		slog.Error("Failed to add link", "error", err.Error(), "tgID", tgID, "link", newLink)
-		return *newLink, err
+		slog.Error("Add link failed", "error", err.Error(), "tgID", tgID, "link", newLink.URL)
+		return domain.Link{}, err
 	}
 
-	return *newLink, nil
+	slog.Info("Add link done", "tgID", tgID, "link", newLink.URL)
+
+	return newLinkWithID, nil
 }
 
 func (s *Scrapper) DeleteLink(ctx context.Context, tgID int64, link *domain.Link) (domain.Link, error) {
-	slog.Info("Deleting link", "tgID", tgID, "link", link)
-
 	deletedLink, err := s.linkRepo.DeleteLink(ctx, tgID, link)
 	if err != nil {
-		slog.Error("Failed to remove link", "error", err.Error(), "tgID", tgID, "link", link)
+		slog.Error("Delete link failed", "error", err.Error(), "tgID", tgID, "link", link.URL)
+
+		if errors.Is(err, domain.ErrLinkNotExist{}) {
+			return domain.Link{}, domain.ErrLinkNotExist{}
+		}
+
 		return domain.Link{}, err
 	}
+
+	slog.Info("Deleting link done", "tgID", tgID, "link", link.URL)
 
 	return deletedLink, nil
 }
 
 func (s *Scrapper) UpdateLink(ctx context.Context, tgID int64, link *domain.Link) error {
-	slog.Info("Updating link", "tgID", tgID, "link", link)
-
 	err := s.linkRepo.UpdateLink(ctx, tgID, link)
 	if err != nil {
-		slog.Error("Failed to update link", "error", err.Error(), "tgID", tgID, "link", link)
+		slog.Error("Update link failed", "error", err.Error(), "tgID", tgID, "link", link.URL)
 	}
+
+	slog.Info("Update link done", "tgID", tgID, "link", link.URL)
 
 	return err
 }
 
 func (s *Scrapper) CreateState(ctx context.Context, tgID int64, state int) error {
-	slog.Info("Creating state")
-
 	err := s.stateManager.CreateState(ctx, tgID, state)
 	if err != nil {
-		return err
+		slog.Error("Create state failed", "error", err.Error(), "tgID", tgID, "state", state)
 	}
 
-	return nil
+	slog.Info("Create state done", "tgID", tgID, "state", state)
+
+	return err
 }
 
 func (s *Scrapper) DeleteState(ctx context.Context, tgID int64) error {
-	slog.Info("Deleting state")
-
 	err := s.stateManager.DeleteState(ctx, tgID)
 	if err != nil {
-		return err
+		slog.Error("Delete state failed", "error", err.Error(), "tgID", tgID)
 	}
 
-	return nil
+	slog.Info("Deleting state done", "tgID", tgID)
+
+	return err
 }
 
 func (s *Scrapper) GetState(ctx context.Context, tgID int64) (int, domain.Link, error) {
-	slog.Info("Getting state")
-
 	state, link, err := s.stateManager.GetState(ctx, tgID)
 	if err != nil {
+		slog.Error("Get state failed", "error", err.Error(), "tgID", tgID)
 		return -1, domain.Link{}, err
 	}
+
+	slog.Info("Get state done", "tgID", tgID, "state", state, "link", link.URL)
 
 	return state, link, nil
 }
 
 func (s *Scrapper) UpdateState(ctx context.Context, tgID int64, state int, link *domain.Link) error {
-	slog.Info("Updating state")
-
 	err := s.stateManager.UpdateState(ctx, tgID, state, link)
 	if err != nil {
-		return err
+		slog.Error("Update state failed", "error", err.Error(), "tgID", tgID, "state", state, "link", link.URL)
 	}
 
-	return nil
+	slog.Info("Updating state done", "tgID", tgID, "state", state, "link", link.URL)
+
+	return err
 }
 
 func initLinksCheckerScheduler(ctx context.Context, interval time.Duration,

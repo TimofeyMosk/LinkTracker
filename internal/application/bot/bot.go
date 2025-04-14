@@ -53,7 +53,7 @@ type Bot struct {
 }
 
 func NewBot(scrapperClient ScrapperClient, tgAPI TelegramClient) *Bot {
-	slog.Info("tgBOTApi create")
+	slog.Info("Bot create")
 
 	return &Bot{
 		scrapper: scrapperClient,
@@ -61,9 +61,9 @@ func NewBot(scrapperClient ScrapperClient, tgAPI TelegramClient) *Bot {
 	}
 }
 
-func (bot *Bot) UpdateSend(ctx context.Context, tgIDs []int64, url, description string) {
+func (bot *Bot) UpdateSend(ctx context.Context, tgIDs []int64, linkURL, description string) {
 	for _, tgID := range tgIDs {
-		message := fmt.Sprintf("Было обновление: %s\n%s", url, description)
+		message := fmt.Sprintf("Было обновление: %s\n%s", linkURL, description)
 		bot.tgAPI.SendMessage(ctx, tgID, message)
 	}
 }
@@ -107,6 +107,7 @@ func (bot *Bot) Run(ctx context.Context) {
 		}
 	}()
 
+	slog.Info("Bot running", "workerCount", workerCount)
 	<-ctx.Done()
 	bot.tgAPI.StopReceiveMessage()
 	close(messageChannel)
@@ -116,7 +117,7 @@ func (bot *Bot) Run(ctx context.Context) {
 	}
 
 	wg.Wait()
-	slog.Info("bot shutdown")
+	slog.Info("Bot shutdown")
 }
 
 func (bot *Bot) HandleMessage(ctx context.Context, id int64, text string) string {
@@ -172,16 +173,17 @@ func (bot *Bot) changeState(ctx context.Context, tgID int64, text string) string
 }
 
 func (bot *Bot) commandStart(ctx context.Context, id int64) string {
-	slog.Info("Command /start execution", "chatId", id)
-
 	err := bot.scrapper.RegisterUser(ctx, id)
 	if err != nil {
+		slog.Error("Command /start failed", "error", err, "chatId", id)
 		return errorText + ". Возможно, вы уже зарегистрированы в приложении"
 	}
 
 	responseText := "Добро пожаловать в LinkTracker, " +
 		"это приложение для отслеживание изменений на github и stackoverflow." +
 		"Для получения списка команд введите /help"
+
+	slog.Info("Command /start done", "chatId", id)
 
 	return responseText
 }
@@ -200,14 +202,15 @@ func (bot *Bot) commandHelp(id int64) string {
 }
 
 func (bot *Bot) commandTrack(ctx context.Context, tgID int64) string {
-	slog.Info("Command /track execution", "chatId", tgID)
-
 	err := bot.scrapper.CreateState(ctx, tgID, WaitingLink)
 	if err != nil {
+		slog.Error("Command /track failed", "error", err, "chatId", tgID)
 		return errorText
 	}
 
 	responseText := "Введите адрес ссылки (поддерживается только gitHub и stackOverFlow)"
+
+	slog.Info("Command /track done", "chatId", tgID)
 
 	return responseText
 }
@@ -239,14 +242,14 @@ func (bot *Bot) commandSetTags(ctx context.Context, tgID int64) string {
 }
 
 func (bot *Bot) commandList(ctx context.Context, tgID int64) string {
-	slog.Info("Command /list execution", "chatId", tgID)
-
 	list, err := bot.scrapper.GetLinks(ctx, tgID)
 	if err != nil {
-		slog.Error("Failed to get links", "error", err.Error(), "chatId", tgID)
+		slog.Error("Command /list failed", "error", err.Error(), "chatId", tgID)
 
 		return errorText
 	}
+
+	slog.Info("Command /list done", "chatId", tgID)
 
 	if len(list) == 0 {
 		responseText := "Список отслеживаемых ссылок пуст. Добавьте ссылки с помощью /track"
@@ -265,8 +268,11 @@ func (bot *Bot) stateWaitLink(ctx context.Context, tgID int64, text string, link
 	if !valid {
 		err := bot.scrapper.DeleteState(ctx, tgID)
 		if err != nil {
+			slog.Error("stateWaitLink failed", "error", err.Error(), "chatId", tgID)
 			return errorText
 		}
+
+		slog.Info("stateWaitLink  done", "chatId", tgID)
 
 		responseText := "Поддерживается только gitHub(https://github.com/{owner}/{repo}) и " +
 			"stackOverflow(https://stackoverflow.com/questions/{id}). Повторите команду /track"
@@ -278,8 +284,11 @@ func (bot *Bot) stateWaitLink(ctx context.Context, tgID int64, text string, link
 
 	err := bot.scrapper.UpdateState(ctx, tgID, WaitingTags, link)
 	if err != nil {
+		slog.Error("stateWaitLink failed", "error", err.Error(), "chatId", tgID)
 		return errorText
 	}
+
+	slog.Info("stateWaitLink  done", "chatId", tgID)
 
 	responseText := "Отправьте теги разделённые пробелами. Если не хотите добавлять теги введите \"-\" без кавычек"
 
@@ -292,6 +301,7 @@ func (bot *Bot) stateWaitTags(ctx context.Context, tgID int64, text string, link
 
 		err := bot.scrapper.UpdateState(ctx, tgID, WaitingFilters, link)
 		if err != nil {
+			slog.Error("stateWaitTags failed", "error", err.Error(), "chatId", tgID)
 			return errorText
 		}
 	} else {
@@ -299,9 +309,12 @@ func (bot *Bot) stateWaitTags(ctx context.Context, tgID int64, text string, link
 
 		err := bot.scrapper.UpdateState(ctx, tgID, WaitingFilters, link)
 		if err != nil {
+			slog.Error("stateWaitTags failed", "error", err.Error(), "chatId", tgID)
 			return errorText
 		}
 	}
+
+	slog.Info("stateWaitTags  done", "chatId", tgID)
 
 	responseText := "Отправьте фильтры разделённые пробелами. Если не хотите добавлять фильтры введите '-' без кавычек"
 
@@ -317,26 +330,31 @@ func (bot *Bot) stateWaitFilters(ctx context.Context, tgID int64, text string, l
 
 	err := bot.scrapper.AddLink(ctx, tgID, link)
 	if err != nil {
-		slog.Error(err.Error())
-
 		if errors.As(err, &domain.ErrAPI{}) && (err.(domain.ErrAPI).ExceptionMessage == domain.ErrLinkAlreadyTracking{}.Error()) {
 			err = bot.scrapper.DeleteState(ctx, tgID)
 			if err != nil {
 				return errorText
 			}
 
+			slog.Info("stateWaitTags  done", "chatId", tgID)
+
 			responseText := "Данная ссылка уже отслеживается"
 
 			return responseText
 		}
+
+		slog.Error("stateWaitFilters failed", "error", err.Error(), "chatId", tgID)
 
 		return errorText
 	}
 
 	err = bot.scrapper.DeleteState(ctx, tgID)
 	if err != nil {
+		slog.Error("stateWaitFilters failed", "error", err.Error(), "chatId", tgID)
 		return errorText
 	}
+
+	slog.Info("stateWaitTags  done", "chatId", tgID)
 
 	responseText := "Ссылка отслеживается"
 
@@ -348,15 +366,17 @@ func (bot *Bot) stateWaitDelete(ctx context.Context, tgID int64, text string) st
 
 	err := bot.scrapper.RemoveLink(ctx, tgID, &domain.Link{URL: link})
 	if err != nil {
-		slog.Error(err.Error())
-
+		slog.Error("stateWaitDelete failed", "error", err.Error(), "chatId", tgID)
 		return errorText
 	}
 
 	err = bot.scrapper.DeleteState(ctx, tgID)
 	if err != nil {
+		slog.Error("stateWaitDelete failed", "error", err.Error(), "chatId", tgID)
 		return errorText
 	}
+
+	slog.Info("stateWaitDelete done", "chatId", tgID)
 
 	responseText := "Ссылка успешно удалена"
 
@@ -366,7 +386,7 @@ func (bot *Bot) stateWaitDelete(ctx context.Context, tgID int64, text string) st
 func (bot *Bot) stateSetTagsWaitingLink(ctx context.Context, tgID int64, text string) string {
 	links, err := bot.scrapper.GetLinks(ctx, tgID)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("stateSetTagsWaitingLink failed", "error", err.Error(), "chatId", tgID)
 		return errorText
 	}
 
@@ -379,13 +399,17 @@ func (bot *Bot) stateSetTagsWaitingLink(ctx context.Context, tgID int64, text st
 	}
 
 	if link == nil {
+		slog.Error("stateSetTagsWaitingLink failed", "error", "Данная ссылка не найдена", "chatId", tgID)
 		return errorText + ". Данная ссылка не найдена"
 	}
 
 	err = bot.scrapper.UpdateState(ctx, tgID, WaitingSetTagsWaitingTags, link)
 	if err != nil {
+		slog.Error("stateSetTagsWaitingLink failed", "error", err.Error(), "chatId", tgID)
 		return errorText
 	}
+
+	slog.Info("stateSetTagsWaitingLink done", "chatId", tgID)
 
 	responseText := "Отправьте новые теги разделённые пробелами. Если не хотите добавлять теги отправьте '-' без кавычек"
 
@@ -401,9 +425,11 @@ func (bot *Bot) stateSetTagsWaitingTags(ctx context.Context, tgID int64, text st
 
 	err := bot.scrapper.UpdateLink(ctx, tgID, link)
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("stateSetTagsWaitingTags done", "error", err.Error(), "chatId", tgID)
 		return errorText
 	}
+
+	slog.Info("stateSetTagsWaitingTags done", "chatId", tgID)
 
 	responseText := "Теги успешно изменены"
 
@@ -413,6 +439,7 @@ func (bot *Bot) stateSetTagsWaitingTags(ctx context.Context, tgID int64, text st
 func validateLink(link string) (valid bool, validURL string) {
 	parsedURL, err := url.Parse(link)
 	if err != nil {
+		slog.Error("validateLink failed", "error", err.Error(), "link", link)
 		return false, ""
 	}
 
@@ -426,6 +453,7 @@ func validateLink(link string) (valid bool, validURL string) {
 	if parsedURL.Host == github && len(parts) >= 2 {
 		validURL, err := url.JoinPath(parsedURL.Scheme+"://"+parsedURL.Host, parts[0], parts[1])
 		if err != nil {
+			slog.Error("validateLink failed", "error", err.Error(), "link", link)
 			return false, ""
 		}
 
@@ -433,17 +461,9 @@ func validateLink(link string) (valid bool, validURL string) {
 	}
 
 	if parsedURL.Host == stackoverflow && len(parts) >= 2 && parts[0] == "questions" {
-		if len(parts) == 2 {
-			validURL, err := url.JoinPath(parsedURL.Scheme+"://"+parsedURL.Host, parts[0], parts[1])
-			if err != nil {
-				return false, ""
-			}
-
-			return true, validURL
-		}
-
-		validURL, err := url.JoinPath(parsedURL.Scheme+"://"+parsedURL.Host, parts[0], parts[1], parts[2])
+		validURL, err := url.JoinPath(parsedURL.Scheme+"://"+parsedURL.Host, parts[0], parts[1])
 		if err != nil {
+			slog.Error("validateLink failed", "error", err.Error(), "link", link)
 			return false, ""
 		}
 

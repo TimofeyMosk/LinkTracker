@@ -75,10 +75,10 @@ func (r *LinkRepoPgx) GetUserLinks(ctx context.Context, id int64) ([]domain.Link
 	return links, rows.Err()
 }
 
-func (r *LinkRepoPgx) AddLink(ctx context.Context, id int64, link *domain.Link) error {
+func (r *LinkRepoPgx) AddLink(ctx context.Context, id int64, link *domain.Link) (domain.Link, error) {
 	tx, err := r.pool.Begin(ctx)
 	if err != nil {
-		return err
+		return domain.Link{}, err
 	}
 
 	defer func() {
@@ -87,23 +87,25 @@ func (r *LinkRepoPgx) AddLink(ctx context.Context, id int64, link *domain.Link) 
 		}
 	}()
 
-	var urlID int
+	var urlID int64
 
 	sqlInsertLink := "INSERT INTO urls(url, last_update) VALUES($1, $2) RETURNING id"
 
 	err = tx.QueryRow(ctx, sqlInsertLink, link.URL, time.Now().UTC()).Scan(&urlID)
 	if err != nil {
-		return err
+		return domain.Link{}, err
 	}
 
 	sqlInsertTrack := "INSERT INTO tracks(tg_id, url_id, filters, tags) VALUES($1, $2, $3, $4)"
 
 	_, err = tx.Exec(ctx, sqlInsertTrack, id, urlID, link.Filters, link.Tags)
 	if err != nil {
-		return err
+		return domain.Link{}, err
 	}
 
-	return tx.Commit(ctx)
+	link.ID = urlID
+
+	return *link, tx.Commit(ctx)
 }
 
 func (r *LinkRepoPgx) DeleteLink(ctx context.Context, id int64, link *domain.Link) (domain.Link, error) {

@@ -13,27 +13,27 @@ import (
 	"LinkTracker/internal/infrastructure/httpapi/updates"
 )
 
-func InitScrapperRouting(scrapper *scrapper.Scrapper) *http.ServeMux {
+func InitScrapperRouting(s *scrapper.Scrapper) *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.Handle("GET /links", links.GetLinksHandler{LinkGetter: scrapper})
-	mux.Handle("POST /links", links.PostLinksHandler{LinkAdder: scrapper})
-	mux.Handle("DELETE /links", links.DeleteLinksHandler{LinkDeleter: scrapper})
-	mux.Handle("PUT /links", links.PutLinksHandler{LinkUpdater: scrapper})
+	mux.Handle("GET /links", links.GetLinksHandler{LinkGetter: s})
+	mux.Handle("POST /links", links.PostLinksHandler{LinkAdder: s})
+	mux.Handle("DELETE /links", links.DeleteLinksHandler{LinkDeleter: s})
+	mux.Handle("PUT /links", links.PutLinksHandler{LinkUpdater: s})
 
-	mux.Handle("POST /tg-chat/{id}", tgchat.PostUserHandler{UserAdder: scrapper})
-	mux.Handle("DELETE /tg-chat/{id}", tgchat.DeleteUserHandler{UserDeleter: scrapper})
+	mux.Handle("POST /tg-chat/{id}", tgchat.PostUserHandler{UserAdder: s})
+	mux.Handle("DELETE /tg-chat/{id}", tgchat.DeleteUserHandler{UserDeleter: s})
 
-	mux.Handle("POST /states", states.PostStatesHandler{StateCreator: scrapper})
-	mux.Handle("DELETE /states", states.DeleteStatesHandler{StateDeleter: scrapper})
-	mux.Handle("PUT /states", states.PutStatesHandler{StateUpdater: scrapper})
-	mux.Handle("GET /states", states.GetStatesHandler{StateGetter: scrapper})
+	mux.Handle("POST /states", states.PostStatesHandler{StateCreator: s})
+	mux.Handle("DELETE /states", states.DeleteStatesHandler{StateDeleter: s})
+	mux.Handle("PUT /states", states.PutStatesHandler{StateUpdater: s})
+	mux.Handle("GET /states", states.GetStatesHandler{StateGetter: s})
 
 	return mux
 }
 
-func InitBotRouting(bot *bot.Bot) *http.ServeMux {
+func InitBotRouting(b *bot.Bot) *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.Handle("POST /updates", updates.PostUpdatesHandler{UpdateSender: bot})
+	mux.Handle("POST /updates", updates.PostUpdatesHandler{UpdateSender: b})
 
 	return mux
 }
