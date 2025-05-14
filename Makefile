@@ -1,29 +1,30 @@
 COVERAGE_FILE ?= coverage.out
 
 .PHONY: build
-build: build_bot build_scrapper
+build:
+	@docker compose up -d --build
 
-.PHONY: build_bot
-build_bot:
-	@echo "Выполняется go build для таргета bot"
-	@mkdir -p .bin
-	@go build -o ./bin/bot ./cmd/bot
+.PHONY: run
+run:
+	@docker compose up -d
+	@echo "Приложения запущены. Используйте 'make stop' для остановки."
 
-.PHONY: build_scrapper
-build_scrapper:
-	@echo "Выполняется go build для таргета scrapper"
-	@mkdir -p .bin
-	@go build -o ./bin/scrapper ./cmd/scrapper
+.PHONY: stop
+stop:
+	@docker compose down
+	@echo "Приложения остановлены."
+
+
 
 
 ## test: run all tests
 .PHONY: test
 test:
-	@go test -coverpkg='github.com/es-debug/backend-academy-2024-go-template/...' --race -count=1 -coverprofile='$(COVERAGE_FILE)' ./...
+	@go test -coverpkg='./...' --race -count=1 -coverprofile='$(COVERAGE_FILE)' ./...
 	@go tool cover -func='$(COVERAGE_FILE)' | grep ^total | tr -s '\t'
 
 .PHONY: lint
-lint: lint-golang lint-proto
+lint: lint-golang #lint-proto
 
 .PHONY: lint-golang
 lint-golang:
@@ -32,22 +33,22 @@ lint-golang:
   	fi;
 	@golangci-lint -v run --fix ./...
 
-.PHONY: lint-proto
-lint-proto:
-	@if ! command -v 'easyp' &> /dev/null; then \
-  		echo "Please install easyp!"; exit 1; \
-	fi;
-	@easyp lint
+#.PHONY: lint-proto
+#lint-proto:
+#	@if ! command -v 'easyp' &> /dev/null; then \
+#  		echo "Please install easyp!"; exit 1; \
+#	fi;
+#	@easyp lint
 
 .PHONY: generate
-generate: generate_proto generate_openapi
+generate: generate_openapi  #generate_proto
 
-.PHONY: generate_proto
-generate_proto:
-	@if ! command -v 'easyp' &> /dev/null; then \
-		echo "Please install easyp!"; exit 1; \
-	fi;
-	@easyp generate
+#.PHONY: generate_proto
+#generate_proto:
+#	@if ! command -v 'easyp' &> /dev/null; then \
+#		echo "Please install easyp!"; exit 1; \
+#	fi;
+#	@easyp generate
 
 .PHONY: generate_openapi
 generate_openapi:
@@ -55,10 +56,13 @@ generate_openapi:
 		echo "Please install oapi-codegen!"; exit 1; \
 	fi;
 	@mkdir -p internal/api/openapi/v1
-	@oapi-codegen -package v1 \
-		-generate server,types \
-		api/openapi/v1/service.yaml > internal/api/openapi/v1/service.gen.go
+	@oapi-codegen -package botdto \
+		-generate types \
+		api/openapi/bot-api.yaml > internal/infrastructure/dto/dto_bot/bot-api.gen.go
+	@oapi-codegen -package scrapperdto \
+    		-generate types \
+    		api/openapi/scrapper-api.yaml > internal/infrastructure/dto/dto_scrapper/scrapper-api.gen.go
 
 .PHONY: clean
 clean:
-	@rm -rf./bin
+	@docker compose down -v

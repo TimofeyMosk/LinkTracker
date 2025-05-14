@@ -3,3 +3,59 @@ filename: "{{.InterfaceName | snakecase}}.go"
 mockname: "{{.InterfaceName | firstUpper}}"
 outpkg: mocks
 packages:
+  LinkTracker/internal/infrastructure/httpapi/links:
+    config:
+      dir: "{{.InterfaceDir}}/mocks"
+    interfaces:
+      LinkDeleter:
+      LinkGetter:
+      LinkAdder:
+  LinkTracker/internal/infrastructure/httpapi/tgchat:
+    config:
+      dir: "{{.InterfaceDir}}/mocks"
+    interfaces:
+      UserDeleter:
+      UserAdder:
+  LinkTracker/internal/infrastructure/httpapi/updates:
+    config:
+      dir: "{{.InterfaceDir}}/mocks"
+    interfaces:
+      UpdateSender:
+  LinkTracker/internal/infrastructure/httpapi/states:
+    config:
+      dir: "{{.InterfaceDir}}/mocks"
+    interfaces:
+      StateCreator:
+      StateDeleter:
+      StateGetter:
+      StateUpdater:
+  LinkTracker/internal/application/scrapper:
+    config:
+      dir: "{{.InterfaceDir}}/mocks"
+    interfaces:
+      UserRepo:
+      LinkRepo:
+      StateRepo:
+      Notifier:
+      LinkChecker:
+  LinkTracker/internal/application/scrapper/notifier:
+    config:
+      dir: "{{.InterfaceDir}}/mocks"
+    interfaces:
+      BotClient:
+      LinkRepo:
+  LinkTracker/internal/application/scrapper/linkchecker:
+    config:
+      dir: "{{.InterfaceDir}}/mocks"
+    interfaces:
+      LinkSourceHandler:
+  LinkTracker/internal/application/bot:
+    config:
+      dir: "{{.InterfaceDir}}/mocks"
+    interfaces:
+      StateManager:
+      ScrapperClient:
+      TelegramClient:
+
+
+
